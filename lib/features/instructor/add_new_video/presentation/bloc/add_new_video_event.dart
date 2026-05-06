@@ -1,3 +1,5 @@
+import 'package:file_picker/file_picker.dart';
+
 abstract class AddNewVideoEvent {}
 
 class AddVideoEvent extends AddNewVideoEvent {
@@ -5,7 +7,7 @@ class AddVideoEvent extends AddNewVideoEvent {
   final String title;
   final String course;
   final String? videoUrl;
-  final dynamic videoUpload; // File path or multipart file
+  final PlatformFile? videoFile;
   final String duration;
 
   AddVideoEvent({
@@ -13,7 +15,7 @@ class AddVideoEvent extends AddNewVideoEvent {
     required this.title,
     required this.course,
     this.videoUrl,
-    this.videoUpload,
+    this.videoFile,
     required this.duration,
   });
 }

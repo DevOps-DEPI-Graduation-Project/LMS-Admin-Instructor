@@ -152,13 +152,12 @@ class DioConsumer extends ApiConsumer {
       final responseData = response.data;
       final int statusCode = response.statusCode ?? 0;
 
-      // Handle successful status codes with no content (like 204)
       if (statusCode >= 200 && statusCode < 300 && responseData == null) {
         return Right(null as T);
       }
 
       if (responseData is Map<String, dynamic>) {
-        final bool success = responseData['success'] ?? true; // Default to true if not present
+        final bool success = responseData['success'] ?? true; 
         final int status = responseData['status'] ?? statusCode;
         final String message = responseData['message'] ?? 'Unknown error';
 
@@ -173,7 +172,6 @@ class DioConsumer extends ApiConsumer {
         }
       }
       
-      // If it's a success status code but not a Map, still consider it success if T is void/null
       if (statusCode >= 200 && statusCode < 300) {
         return Right(responseData as T);
       }

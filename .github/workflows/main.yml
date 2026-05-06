@@ -1,17 +1,66 @@
-name: Jira Deployment Sync
+name: Jira Sync and Flutter Deploy (Pages & S3)
+
 on:
   push:
-    branches: ["*"]
+    branches: ["main"]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     environment: production 
+    
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      # --- LOGIC: JIRA SYNC ---
       - name: Notify Jira
         run: |
           echo "Processing deployment for Jira issue keys found in commits/branches."
           echo "Successfully synced with Jira!"
+
+      # --- SETUP: FLUTTER ---
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          flutter-version: '3.19.0' 
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      # --- LOGIC 1: GITHUB PAGES ---
+      - name: Build for GitHub Pages
+        run: flutter build web --release --base-href "/LMS-Student-Web/"
+
+      - name: Setup GitHub Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: 'build/web'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+      # --- LOGIC 2: AWS S3 ---
+      - name: Build for AWS S3
+        run: flutter build web --release --base-href "/"
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ID }}
+          aws-region: us-east-1
+
+      - name: Deploy to S3
+        # Syncing to your new dashboard bucket
+        run: aws s3 sync build/web s3://commit-ma3ana-dashboard --delete
