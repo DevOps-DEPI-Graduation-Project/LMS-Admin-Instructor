@@ -56,3 +56,12 @@ class InstructorDetailsError extends InstructorAdminState {
   final String message;
   InstructorDetailsError({required this.message});
 }
+
+class DeleteInstructorLoading extends InstructorAdminState {}
+
+class DeleteInstructorSuccess extends InstructorAdminState {}
+
+class DeleteInstructorError extends InstructorAdminState {
+  final String message;
+  DeleteInstructorError({required this.message});
+}

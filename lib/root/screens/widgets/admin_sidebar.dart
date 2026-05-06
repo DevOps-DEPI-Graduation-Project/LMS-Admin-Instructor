@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
 import 'package:lms_admin_instructor/core/extensions/context_extensions.dart';
 import 'package:lms_admin_instructor/core/localization/app_localizations.dart';
-import 'package:lms_admin_instructor/core/routing/app_routes.dart';
 import 'package:lms_admin_instructor/root/models/nav_items.dart';
 
 class AdminSidebar extends StatelessWidget {
@@ -85,11 +83,10 @@ class AdminSidebar extends StatelessWidget {
                   isSelected: selectedIndex == navItems[5].index,
                   onTap: () => onItemTap(navItems[5].index),
                 ),
-                const AdminProfileWidget(),
+                SizedBox(height: 30.h),
               ],
             ),
           ),
-          SizedBox(height: 16.h),
         ],
       ),
     );
@@ -158,61 +155,6 @@ class ResponsiveNavItem extends StatelessWidget {
             ),
           ),
         ),
-      ),
-    );
-  }
-}
-
-class AdminProfileWidget extends StatelessWidget {
-  const AdminProfileWidget({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 12.h),
-      padding: EdgeInsets.all(12.w),
-      decoration: BoxDecoration(
-        color: context.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
-        borderRadius: BorderRadius.circular(16.r),
-      ),
-      child: Row(
-        children: [
-          CircleAvatar(
-            radius: 20.r,
-            backgroundColor: context.colorScheme.primary,
-            child: Icon(
-              Icons.person,
-              color: context.colorScheme.onPrimary,
-              size: 22.sp,
-            ),
-          ),
-          SizedBox(width: 12.w),
-          Expanded(
-            child: InkWell(
-              onTap: () => context.push(AppRoutes.loginScreen),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Admin User',
-                    style: context.textTheme.titleSmall?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Text(
-                    'admin@lms.com',
-                    style: context.textTheme.bodySmall?.copyWith(
-                      color: context.colorScheme.onSurface.withValues(
-                        alpha: 0.5,
-                      ),
-                    ),
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
       ),
     );
   }

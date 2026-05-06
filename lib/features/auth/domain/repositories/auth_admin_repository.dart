@@ -10,4 +10,5 @@ abstract class AuthRepository {
     ResetPasswordRequestModel request,
   );
   Future<Either<String, String>> resendOtp(String email);
+  Future<Either<String, String>> logout();
 }

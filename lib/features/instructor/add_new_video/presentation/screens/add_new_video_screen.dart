@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -36,16 +37,24 @@ class _AddNewVideoScreenState extends State<AddNewVideoScreen> {
   }
 
   Future<void> _pickVideo() async {
-    final result = await FilePicker.pickFiles(
-      type: FileType.video,
-      allowMultiple: false,
-    );
+    try {
+      FilePickerResult? result = await FilePicker.pickFiles(
+        type: FileType.video,
+        allowMultiple: false,
+        withData: kIsWeb,
+      );
 
-    if (result != null) {
-      setState(() {
-        _selectedFile = result.files.first;
-        _urlController.clear();
-      });
+      if (!mounted) return;
+
+      if (result != null && result.files.isNotEmpty) {
+        setState(() {
+          _selectedFile = result.files.first;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        _showErrorSnackBar('error in video file: $e');
+      }
     }
   }
 
@@ -207,7 +216,7 @@ class _AddNewVideoScreenState extends State<AddNewVideoScreen> {
                                   videoUrl: _urlController.text.isNotEmpty
                                       ? _urlController.text
                                       : null,
-                                  videoUpload: _selectedFile?.path,
+                                  videoFile: _selectedFile,
                                 ),
                               );
                             },
@@ -290,4 +299,14 @@ class _AddNewVideoScreenState extends State<AddNewVideoScreen> {
       ),
     );
   }
+
+    void _showErrorSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Colors.red,
+      ),
+    );
+  }
+
 }

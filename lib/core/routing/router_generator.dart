@@ -118,6 +118,7 @@ class RouterGenerator {
               BlocProvider.value(value: sl<StudentAdminBloc>()),
               BlocProvider.value(value: sl<RootBloc>()),
               BlocProvider.value(value: sl<CoursesInstructorBloc>()),
+              BlocProvider.value(value: sl<AuthBloc>()),
             ],
             child: CustomViewNavBar(role: role),
           );

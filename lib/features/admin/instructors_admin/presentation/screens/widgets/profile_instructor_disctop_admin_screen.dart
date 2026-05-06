@@ -3,8 +3,10 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:lms_admin_instructor/core/extensions/context_extensions.dart';
 import 'package:lms_admin_instructor/core/localization/app_localizations.dart';
+import 'package:lms_admin_instructor/core/routing/app_routes.dart';
 import 'package:lms_admin_instructor/features/admin/instructors_admin/presentation/bloc/instructor_admin_bloc.dart';
 import 'package:lms_admin_instructor/features/admin/instructors_admin/presentation/bloc/instructor_admin_event.dart';
 import 'package:lms_admin_instructor/features/admin/instructors_admin/presentation/bloc/instructor_admin_state.dart';
@@ -67,171 +69,191 @@ class _InstructorDetailsDisktopAdminScreenState
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text("Profile Instructor")),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.all(32.r),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            //***********************************??Instructor Informations??*****************
-            BlocBuilder<InstructorAdminBloc, InstructorAdminState>(
-              builder: (context, state) {
-                if (state is InstructorDetailsLoading) {
-                  return SizedBox(
-                    height: 150.h,
-                    child: const Center(child: CircularProgressIndicator()),
-                  );
-                }
-                if (state is InstructorDetailsError) {
-                  log(state.message);
-                  return Center(child: Text(state.message));
-                }
-                if (state is InstructorDetailsLoaded) {
-                  final instructor = state.instructorDetailsUiModel.data;
-                  return CustomInstructorInformationDisktop(
-                    name: "${instructor.first_name} ${instructor.last_name}",
-                    description: instructor.description ?? "",
-                    image: instructor.image ?? "",
-                  );
-                }
-                return const SizedBox.shrink();
-              },
+    return BlocListener<InstructorAdminBloc, InstructorAdminState>(
+      listener: (context, state) {
+        if (state is DeleteInstructorSuccess) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text("Instructor deleted successfully"),
+              backgroundColor: Colors.green,
             ),
-            SizedBox(height: 32.h),
+          );
+          context.pop();
+        }
+        if (state is DeleteInstructorError) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(state.message), backgroundColor: Colors.red),
+          );
+        }
+      },
+      child: Scaffold(
+        appBar: AppBar(title: const Text("Profile Instructor")),
+        body: SingleChildScrollView(
+          padding: EdgeInsets.all(32.r),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              //***********************************??Instructor Informations??*****************
+              BlocBuilder<InstructorAdminBloc, InstructorAdminState>(
+                builder: (context, state) {
+                  if (state is InstructorDetailsLoading ||
+                      state is DeleteInstructorLoading) {
+                    return SizedBox(
+                      height: 150.h,
+                      child: const Center(child: CircularProgressIndicator()),
+                    );
+                  }
+                  if (state is InstructorDetailsError) {
+                    log(state.message);
+                    return Center(child: Text(state.message));
+                  }
+                  if (state is InstructorDetailsLoaded) {
+                    final instructor = state.instructorDetailsUiModel.data;
+                    return CustomInstructorInformationDisktop(
+                      name: "${instructor.first_name} ${instructor.last_name}",
+                      description: instructor.description ?? "",
+                      image: instructor.image ?? "",
+                      slug: widget.slug,
+                    );
+                  }
+                  return const SizedBox.shrink();
+                },
+              ),
+              SizedBox(height: 32.h),
 
-            BlocBuilder<InstructorDetailsBloc, InstructorDetailsState>(
-              builder: (context, state) {
-                if (state is InstructorCoursesLoading) {
-                  return SizedBox(
-                    height: 150.h,
-                    child: const Center(child: CircularProgressIndicator()),
-                  );
-                }
-                if (state is InstructorCoursesError) {
-                  log(state.message);
-                  return Center(child: Text(state.message));
-                }
-                if (state is InstructorCoursesLoaded) {
-                  final instructor = state.instructorCourseAdminUiModel.data;
-                  return Column(
-                    children: [
-                      //***********************************??Instructor Stats??*****************
-                      Row(
-                        children: [
-                          StatsCardWidget(
-                            backGroundIconColor: context.colorScheme.primary
-                                .withValues(alpha: 0.1),
-                            title: "Total Students",
-                            value:
-                                "${state.instructorCourseAdminUiModel.data!.totalCourses}",
-                            icon: Icons.people_alt_rounded,
-                            iconColor: context.colorScheme.primary,
-                          ),
-                          SizedBox(width: 24.w),
-                          StatsCardWidget(
-                            title: "Avg. Total Course Rating",
-                            value: "4.9",
-                            icon: Icons.star_border_outlined,
-                            iconColor: Colors.amber,
-                            backGroundIconColor: Colors.amber.withValues(
-                              alpha: 0.1,
+              BlocBuilder<InstructorDetailsBloc, InstructorDetailsState>(
+                builder: (context, state) {
+                  if (state is InstructorCoursesLoading) {
+                    return SizedBox(
+                      height: 150.h,
+                      child: const Center(child: CircularProgressIndicator()),
+                    );
+                  }
+                  if (state is InstructorCoursesError) {
+                    log(state.message);
+                    return Center(child: Text(state.message));
+                  }
+                  if (state is InstructorCoursesLoaded) {
+                    final instructor = state.instructorCourseAdminUiModel.data;
+                    return Column(
+                      children: [
+                        //***********************************??Instructor Stats??*****************
+                        Row(
+                          children: [
+                            StatsCardWidget(
+                              backGroundIconColor: context.colorScheme.primary
+                                  .withValues(alpha: 0.1),
+                              title: "Total Students",
+                              value:
+                                  "${state.instructorCourseAdminUiModel.data!.totalCourses}",
+                              icon: Icons.people_alt_rounded,
+                              iconColor: context.colorScheme.primary,
                             ),
-                            subtitle: "/5",
-                            footerText: "Based on 3,420 reviews",
-                          ),
-                        ],
-                      ),
+                            SizedBox(width: 24.w),
+                            StatsCardWidget(
+                              title: "Avg. Total Course Rating",
+                              value: "4.9",
+                              icon: Icons.star_border_outlined,
+                              iconColor: Colors.amber,
+                              backGroundIconColor: Colors.amber.withValues(
+                                alpha: 0.1,
+                              ),
+                              subtitle: "/5",
+                              footerText: "Based on 3,420 reviews",
+                            ),
+                          ],
+                        ),
 
-                      SizedBox(height: 30.h),
+                        SizedBox(height: 30.h),
 
-                      //***********************************??Assigned Courses??*****************
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          "Assigned Courses",
-                          style: context.textTheme.headlineSmall?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: context.colorScheme.onSurface,
+                        //***********************************??Assigned Courses??*****************
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            "Assigned Courses",
+                            style: context.textTheme.headlineSmall?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: context.colorScheme.onSurface,
+                            ),
                           ),
                         ),
-                      ),
-                      SizedBox(height: 24.h),
+                        SizedBox(height: 24.h),
 
-                      SizedBox(
-                        height: 400.h,
-                        child: CustomDataTable(
-                          headers: [
-                            context.tr('course_name'),
-                            context.tr('students_enrolled'),
-                            context.tr('rating'),
-                            context.tr('created_date'),
-                          ],
-                          data:
-                              instructor?.courses
-                                  .map((course) {
-                                    return course.copyWith(
-                                      onActionPressed: () {
-                                        showAdaptiveDialog(
-                                          context: context,
-                                          builder: (context) {
-                                            return AlertDialog.adaptive(
-                                              title: Text(
-                                                context.tr('delete_course'),
-                                              ),
-                                              content: Text(
-                                                context.tr(
-                                                  'are_you_sure_delete_course',
+                        SizedBox(
+                          height: 400.h,
+                          child: CustomDataTable(
+                            headers: [
+                              context.tr('course_name'),
+                              context.tr('students_enrolled'),
+                              context.tr('rating'),
+                              context.tr('created_date'),
+                            ],
+                            data:
+                                instructor?.courses
+                                    .map((course) {
+                                      return course.copyWith(
+                                        onActionPressed: () {
+                                          showAdaptiveDialog(
+                                            context: context,
+                                            builder: (context) {
+                                              return AlertDialog.adaptive(
+                                                title: Text(
+                                                  context.tr('delete_course'),
                                                 ),
-                                              ),
-                                              actions: [
-                                                TextButton(
-                                                  onPressed: () =>
-                                                      Navigator.pop(context),
-                                                  child: Text(
-                                                    context.tr('cancel'),
+                                                content: Text(
+                                                  context.tr(
+                                                    'are_you_sure_delete_course',
                                                   ),
                                                 ),
-                                                TextButton(
-                                                  onPressed: () {},
-                                                  child: Text(
-                                                    context.tr('delete'),
-                                                    style: TextStyle(
-                                                      color: context
-                                                          .colorScheme
-                                                          .error,
+                                                actions: [
+                                                  TextButton(
+                                                    onPressed: () =>
+                                                        Navigator.pop(context),
+                                                    child: Text(
+                                                      context.tr('cancel'),
                                                     ),
                                                   ),
-                                                ),
-                                              ],
-                                            );
-                                          },
-                                        );
-                                      },
-                                      actionIconpressed: Icons.delete,
-                                      optionsIconpressed:
-                                          Icons.arrow_forward_ios_rounded,
-                                      onOptionsPressed: () {
-                                        // add navigation logic here when ready
-                                      },
-                                    );
-                                  })
-                                  .cast<CustomDataTableRowModel>()
-                                  .toList() ??
-                              [],
-                          columnFlex: const [3, 2, 2, 2],
-                          scrollController: _scrollController,
-                          isPaginationLoading: state.isPaginationLoading,
+                                                  TextButton(
+                                                    onPressed: () {},
+                                                    child: Text(
+                                                      context.tr('delete'),
+                                                      style: TextStyle(
+                                                        color: context
+                                                            .colorScheme
+                                                            .error,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              );
+                                            },
+                                          );
+                                        },
+                                        actionIconpressed: Icons.delete,
+                                        optionsIconpressed:
+                                            Icons.arrow_forward_ios_rounded,
+                                        onOptionsPressed: () {
+                                          // add navigation logic here when ready
+                                        },
+                                      );
+                                    })
+                                    .cast<CustomDataTableRowModel>()
+                                    .toList() ??
+                                [],
+                            columnFlex: const [3, 2, 2, 2],
+                            scrollController: _scrollController,
+                            isPaginationLoading: state.isPaginationLoading,
+                          ),
                         ),
-                      ),
-                    ],
-                  );
-                }
-                return const SizedBox.shrink();
-              },
-            ),
-          ],
+                      ],
+                    );
+                  }
+                  return const SizedBox.shrink();
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );

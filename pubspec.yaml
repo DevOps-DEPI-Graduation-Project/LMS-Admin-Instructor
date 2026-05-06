@@ -39,6 +39,8 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   http_parser: ^4.1.2
+  mockito: ^5.6.4
+ 
   syncfusion_flutter_pdfviewer: ^28.1.33
   url_launcher: ^6.3.2
 

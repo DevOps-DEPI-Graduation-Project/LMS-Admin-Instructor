@@ -67,7 +67,6 @@ class _AddInstructorDisktopAdminScreenState
         insetPadding: EdgeInsets.symmetric(horizontal: 40.w, vertical: 24.h),
         child: SingleChildScrollView(
           child: Container(
-            height: 600.h,
             width: 900.w,
             padding: EdgeInsets.all(32.r),
             decoration: BoxDecoration(
@@ -119,6 +118,7 @@ class _AddInstructorDisktopAdminScreenState
                                 txt: context.tr('first_name_label'),
                                 hint: context.tr('first_name_hint'),
                                 controller: firstNameController,
+                                textInputAction: TextInputAction.next,
                               ),
                               SizedBox(width: 24.w),
                               CustomTextFormField(
@@ -127,17 +127,38 @@ class _AddInstructorDisktopAdminScreenState
                                 txt: context.tr('last_name_label'),
                                 hint: context.tr('last_name_hint'),
                                 controller: lastNameController,
+                                textInputAction: TextInputAction.next,
                               ),
                             ],
                           ),
                           SizedBox(height: 24.h),
-                          CustomTextFormField(
-                            h: 60.h,
-                            w: 700.w,
-                            txt: context.tr('email_address'),
-                            hint: context.tr('email_hint'),
-                            controller: emailController,
-                            prefixIcon: Icons.email_outlined,
+                          BlocBuilder<InstructorAdminBloc, InstructorAdminState>(
+                            builder: (context, state) {
+                              final isLoading = state is AddInstructorLoading;
+                              return CustomTextFormField(
+                                h: 60.h,
+                                w: 700.w,
+                                txt: context.tr('email_address'),
+                                hint: context.tr('email_hint'),
+                                controller: emailController,
+                                prefixIcon: Icons.email_outlined,
+                                textInputAction: TextInputAction.done,
+                                onFieldSubmitted: (value) {
+                                  if (!isLoading &&
+                                      firstNameController.text.isNotEmpty &&
+                                      lastNameController.text.isNotEmpty &&
+                                      emailController.text.isNotEmpty) {
+                                    context.read<InstructorAdminBloc>().add(
+                                      AddInstructorEvent(
+                                        first_name: firstNameController.text,
+                                        last_name: lastNameController.text,
+                                        email: emailController.text,
+                                      ),
+                                    );
+                                  }
+                                },
+                              );
+                            },
                           ),
                           SizedBox(height: 24.h),
                           Container(

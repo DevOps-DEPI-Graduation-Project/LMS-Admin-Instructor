@@ -15,6 +15,7 @@ class CustomCard extends StatefulWidget {
   final Function() onTap;
   final IconData? icon;
   final String bottom_action;
+  final Function()? onDelete;
   const CustomCard({
     super.key,
     required this.title,
@@ -24,6 +25,7 @@ class CustomCard extends StatefulWidget {
     required this.onTap,
     this.icon,
     required this.bottom_action,
+    this.onDelete,
   });
 
   @override
@@ -58,7 +60,6 @@ class _CustomCardState extends State<CustomCard> {
                 height: 80,
                 borderRadius: BorderRadius.circular(12.r),
               ),
-              SizedBox(width: 16.w),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -82,6 +83,14 @@ class _CustomCardState extends State<CustomCard> {
                   ],
                 ),
               ),
+              if (widget.onDelete != null)
+                IconButton(
+                  onPressed: widget.onDelete,
+                  icon: Icon(
+                    Icons.delete_outline,
+                    color: context.colorScheme.error,
+                  ),
+                ),
             ],
           ),
           const Spacer(),

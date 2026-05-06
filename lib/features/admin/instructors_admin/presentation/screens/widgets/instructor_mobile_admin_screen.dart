@@ -94,127 +94,194 @@ class _InstructorMobileAdminScreenState
       //**************************************?? BODY??********************************************??
       body: Padding(
         padding: EdgeInsets.only(top: 22.h, left: 22.w, right: 20.w),
-        child: BlocBuilder<InstructorAdminBloc, InstructorAdminState>(
-          builder: (context, state) {
-            if (state is InstructorAdminLoading) {
-              return const Center(child: CircularProgressIndicator());
-            }
-            if (state is InstructorAdminError) {
-              return Center(child: Text(state.message));
-            }
-            if (state is InstructorAdminLoaded) {
-              final instructor = state.instructorAdminUiModel.instructors;
-              return ListView(
-                controller: _scrollController,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      //***************************************??HEADERr PAGE??********************************************??
-                      Text(
-                        context.tr('manage_instructors'),
-                        style: context.textTheme.displayMedium?.copyWith(
-                          color: context.colorScheme.onSurface,
-                        ),
-                      ),
-                      SizedBox(height: 2.h),
-                      Text(
-                        context.tr(
-                          'create_update_manage_instructor_profiles_assignments',
-                        ),
-                        style: context.textTheme.labelLarge?.copyWith(
-                          color: context.colorScheme.onSurface.withValues(
-                            alpha: 0.3,
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 24.h),
-
-                      //**************************************??TOTAL VIDEOS AND TOTAL COURSES CARDS??********************************************??
-                      Row(
-                        children: [
-                          CustomCardStatusInfoMobile(
-                            colortitle: context.colorScheme.onSurface
-                                .withValues(alpha: 0.6),
-                            colornum: context.colorScheme.surface,
-                            colorIcon: context.colorScheme.surface.withValues(
-                              alpha: 0.5,
-                            ),
-                            icon: Icons.person,
-                            title: context.tr('total_instructors'),
-                            num:
-                                "${state.instructorAdminUiModel.totalInstructors}",
-                            color1: context.colorScheme.primary,
-                            color2: const Color(0xFF117A8B),
-                            color3: context.colorScheme.primary.withValues(
-                              alpha: 0.6,
-                            ),
-                          ),
-                          SizedBox(width: 16.w),
-                          CustomCardStatusInfoMobile(
-                            colortitle: context.colorScheme.onSecondary
-                                .withValues(alpha: 0.7),
-                            colornum: context.colorScheme.primary,
-                            colorIcon: context.colorScheme.onSecondary,
-                            icon: Icons.book_outlined,
-                            title: context.tr('total_courses'),
-                            num: "48",
-                            color1: context.colorScheme.secondary,
-                            color2: context.colorScheme.secondary.withValues(
-                              alpha: 0.6,
-                            ),
-                            color3: context.colorScheme.surface,
-                          ),
-                        ],
-                      ),
-
-                      //**************************************?? INSTRUCTORS CARDS??********************************************??
-                      SizedBox(height: 16.h),
-                      SizedBox(
-                        width: 342.w,
-                        child: ListView.builder(
-                          physics: const NeverScrollableScrollPhysics(),
-                          shrinkWrap: true,
-                          itemBuilder: (context, index) {
-                            return Padding(
-                              padding: EdgeInsets.only(bottom: 10.h),
-                              child: CustomCard(
-                                onTap: () {
-                                  log(
-                                    state
-                                        .instructorAdminUiModel
-                                        .instructors[index]
-                                        .slug,
-                                  );
-                                  context.push(
-                                    AppRoutes.profileInstructorAdminScreen,
-                                    extra: instructor[index].slug,
-                                  );
-                                },
-                                bottom_action: "Manage",
-                                title:
-                                    "${instructor[index].first_name} ${instructor[index].last_name}",
-                                description: "${instructor[index].description}",
-                                image: "${instructor[index].image}",
-                                total_num: 12,
-                              ),
-                            );
-                          },
-                          itemCount: instructor.length,
-                        ),
-                      ),
-                      if (state.isPaginationLoading)
-                        Padding(
-                          padding: EdgeInsets.symmetric(vertical: 20.h),
-                          child: const Center(child: CircularProgressIndicator()),
-                        ),
-                    ],
-                  ),
-                ],
+        child: BlocListener<InstructorAdminBloc, InstructorAdminState>(
+          listener: (context, state) {
+            if (state is DeleteInstructorSuccess) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text("Instructor deleted successfully"),
+                  backgroundColor: Colors.green,
+                ),
+              );
+              context.read<InstructorAdminBloc>().add(
+                GetInstructorAdminEvent(page: 1),
               );
             }
-            return const SizedBox.shrink();
+            if (state is DeleteInstructorError) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(state.message),
+                  backgroundColor: Colors.red,
+                ),
+              );
+            }
           },
+          child: BlocBuilder<InstructorAdminBloc, InstructorAdminState>(
+            buildWhen: (previous, current) =>
+                current is InstructorAdminLoaded ||
+                current is InstructorAdminLoading ||
+                current is InstructorAdminError,
+            builder: (context, state) {
+              if (state is InstructorAdminLoading) {
+                return const Center(child: CircularProgressIndicator());
+              }
+              if (state is InstructorAdminError) {
+                return Center(child: Text(state.message));
+              }
+              if (state is InstructorAdminLoaded) {
+                final instructor = state.instructorAdminUiModel.instructors;
+                return ListView(
+                  controller: _scrollController,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        //***************************************??HEADERr PAGE??********************************************??
+                        Text(
+                          context.tr('manage_instructors'),
+                          style: context.textTheme.displayMedium?.copyWith(
+                            color: context.colorScheme.onSurface,
+                          ),
+                        ),
+                        SizedBox(height: 2.h),
+                        Text(
+                          context.tr(
+                            'create_update_manage_instructor_profiles_assignments',
+                          ),
+                          style: context.textTheme.labelLarge?.copyWith(
+                            color: context.colorScheme.onSurface.withValues(
+                              alpha: 0.3,
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 24.h),
+
+                        //**************************************??TOTAL VIDEOS AND TOTAL COURSES CARDS??********************************************??
+                        Row(
+                          children: [
+                            CustomCardStatusInfoMobile(
+                              colortitle: context.colorScheme.onSurface
+                                  .withValues(alpha: 0.6),
+                              colornum: context.colorScheme.surface,
+                              colorIcon: context.colorScheme.surface.withValues(
+                                alpha: 0.5,
+                              ),
+                              icon: Icons.person,
+                              title: context.tr('total_instructors'),
+                              num:
+                                  "${state.instructorAdminUiModel.totalInstructors}",
+                              color1: context.colorScheme.primary,
+                              color2: const Color(0xFF117A8B),
+                              color3: context.colorScheme.primary.withValues(
+                                alpha: 0.6,
+                              ),
+                            ),
+                            SizedBox(width: 16.w),
+                            CustomCardStatusInfoMobile(
+                              colortitle: context.colorScheme.onSecondary
+                                  .withValues(alpha: 0.7),
+                              colornum: context.colorScheme.primary,
+                              colorIcon: context.colorScheme.onSecondary,
+                              icon: Icons.book_outlined,
+                              title: context.tr('total_courses'),
+                              num: "48",
+                              color1: context.colorScheme.secondary,
+                              color2: context.colorScheme.secondary.withValues(
+                                alpha: 0.6,
+                              ),
+                              color3: context.colorScheme.surface,
+                            ),
+                          ],
+                        ),
+
+                        //**************************************?? INSTRUCTORS CARDS??********************************************??
+                        SizedBox(height: 16.h),
+                        SizedBox(
+                          width: 342.w,
+                          child: ListView.builder(
+                            physics: const NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            itemBuilder: (context, index) {
+                              return Padding(
+                                padding: EdgeInsets.only(bottom: 10.h),
+                                child: CustomCard(
+                                  onTap: () {
+                                    log(
+                                      state
+                                          .instructorAdminUiModel
+                                          .instructors[index]
+                                          .slug,
+                                    );
+                                    context.push(
+                                      AppRoutes.profileInstructorAdminScreen,
+                                      extra: instructor[index].slug,
+                                    );
+                                  },
+                                  onDelete: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (dialogContext) => AlertDialog(
+                                        title: const Text("Delete Instructor"),
+                                        content: const Text(
+                                          "Are you sure you want to delete this instructor?",
+                                        ),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () =>
+                                                Navigator.pop(dialogContext),
+                                            child: const Text("Cancel"),
+                                          ),
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.pop(dialogContext);
+                                              context
+                                                  .read<InstructorAdminBloc>()
+                                                  .add(
+                                                    DeleteInstructorEvent(
+                                                      slug: instructor[index]
+                                                          .slug,
+                                                    ),
+                                                  );
+                                            },
+                                            child: const Text(
+                                              "Delete",
+                                              style: TextStyle(
+                                                color: Colors.red,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                  bottom_action: "Manage",
+                                  title:
+                                      "${instructor[index].first_name} ${instructor[index].last_name}",
+                                  description:
+                                      "${instructor[index].description}",
+                                  image: "${instructor[index].image}",
+                                  total_num: 12,
+                                ),
+                              );
+                            },
+                            itemCount: instructor.length,
+                          ),
+                        ),
+                        if (state.isPaginationLoading)
+                          Padding(
+                            padding: EdgeInsets.symmetric(vertical: 20.h),
+                            child: const Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                          ),
+                      ],
+                    ),
+                  ],
+                );
+              }
+              return const SizedBox.shrink();
+            },
+          ),
         ),
       ),
     );
