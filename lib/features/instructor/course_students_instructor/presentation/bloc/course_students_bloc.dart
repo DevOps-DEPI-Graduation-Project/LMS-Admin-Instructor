@@ -8,13 +8,14 @@ import 'course_students_state.dart';
 class CourseStudentsBloc extends Bloc<CourseStudentsEvent, CourseStudentsState>
     with
         PaginatedListMixin<
-            CourseStudentsEvent,
-            CourseStudentsState,
-            CourseStudentItemUIModel,
-            CourseStudentsListUIModel,
-            CourseStudentsLoaded,
-            CourseStudentsError,
-            CourseStudentsLoading> {
+          CourseStudentsEvent,
+          CourseStudentsState,
+          CourseStudentItemUIModel,
+          CourseStudentsListUIModel,
+          CourseStudentsLoaded,
+          CourseStudentsError,
+          CourseStudentsLoading
+        > {
   final CourseStudentsRepository _repository;
 
   CourseStudentsBloc(this._repository) : super(CourseStudentsInitial()) {
@@ -30,9 +31,7 @@ class CourseStudentsBloc extends Bloc<CourseStudentsEvent, CourseStudentsState>
     if (!shouldHandlePagination(pageToFetch, state)) return;
 
     if (pageToFetch == 1) {
-      if (state is! CourseStudentsLoaded) {
-        emit(CourseStudentsLoading());
-      }
+      emit(CourseStudentsLoading());
     } else {
       emit((state as CourseStudentsLoaded).copyWith(isPaginationLoading: true));
     }
@@ -41,25 +40,38 @@ class CourseStudentsBloc extends Bloc<CourseStudentsEvent, CourseStudentsState>
       slug: event.slug,
       page: pageToFetch,
       pageSize: event.pageSize,
+      search: event.search,
     );
 
-    result.fold(
-      (failure) => emit(CourseStudentsError(failure)),
-      (responseModel) {
-        handlePaginatedResponse(
-          page: pageToFetch,
-          newEntity: responseModel.toEntity(
-            currentPage: pageToFetch,
-            pageSize: event.pageSize ?? 10,
-          ),
-          currentState: state,
-          emit: emit.call,
-          loadedStateBuilder: (model, isPaging) =>
-              CourseStudentsLoaded(studentsListUIModel: model, isPaginationLoading: isPaging),
-          errorStateBuilder: (msg) => CourseStudentsError(msg),
-          loadingStateBuilder: () => CourseStudentsLoading(),
-        );
-      },
-    );
+    result.fold((failure) => emit(CourseStudentsError(failure)), (
+      responseModel,
+    ) {
+      var entity = responseModel.toEntity(
+        currentPage: pageToFetch,
+        pageSize: event.pageSize ?? 10,
+      );
+
+      if (event.search != null && event.search!.isNotEmpty) {
+        final query = event.search!.toLowerCase();
+        final filteredStudents = entity.students.where((student) {
+          return student.name.toLowerCase().contains(query) ||
+              student.email.toLowerCase().contains(query);
+        }).toList();
+        entity = entity.copyWith(students: filteredStudents);
+      }
+
+      handlePaginatedResponse(
+        page: pageToFetch,
+        newEntity: entity,
+        currentState: state,
+        emit: emit.call,
+        loadedStateBuilder: (model, isPaging) => CourseStudentsLoaded(
+          studentsListUIModel: model,
+          isPaginationLoading: isPaging,
+        ),
+        errorStateBuilder: (msg) => CourseStudentsError(msg),
+        loadingStateBuilder: () => CourseStudentsLoading(),
+      );
+    });
   }
 }

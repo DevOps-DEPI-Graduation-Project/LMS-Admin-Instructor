@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -30,6 +31,8 @@ class CoursesInstructorDesktopScreen extends StatefulWidget {
 class _CoursesInstructorDesktopScreenState
     extends State<CoursesInstructorDesktopScreen> {
   final ScrollController _scrollController = ScrollController();
+  final TextEditingController _searchController = TextEditingController();
+  Timer? _debounce;
 
   @override
   void initState() {
@@ -65,7 +68,24 @@ class _CoursesInstructorDesktopScreenState
   @override
   void dispose() {
     _scrollController.dispose();
+    _searchController.dispose();
+    _debounce?.cancel();
     super.dispose();
+  }
+
+  void _onSearchChanged(String query) {
+    if (_debounce?.isActive ?? false) _debounce!.cancel();
+    _debounce = Timer(const Duration(milliseconds: 500), () {
+      final instructorSlug =
+          sl<CacheHelper>().getDataString(key: ApiKey.slug) ?? '';
+      context.read<CoursesInstructorBloc>().add(
+        GetCoursesInstructorEvent(
+          instructorSlug: instructorSlug,
+          page: 1,
+          search: query,
+        ),
+      );
+    });
   }
 
   @override
@@ -76,6 +96,8 @@ class _CoursesInstructorDesktopScreenState
         automaticallyImplyLeading: false,
         flexibleSpace: CustomNavBar(
           hint: context.tr('search_courses_hint'),
+          controller: _searchController,
+          onSearch: _onSearchChanged,
         ),
         toolbarHeight: 70.h,
       ),

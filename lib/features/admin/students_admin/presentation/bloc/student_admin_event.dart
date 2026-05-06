@@ -3,7 +3,8 @@ class StudentAdminEvent {}
 class GetStudentsAdminEvent extends StudentAdminEvent {
   final int? page;
   final int? pageSize;
-  GetStudentsAdminEvent({this.page, this.pageSize});
+  final String? search;
+  GetStudentsAdminEvent({this.page, this.pageSize, this.search});
 }
 
 class DeleteStudentAdminEvent extends StudentAdminEvent {

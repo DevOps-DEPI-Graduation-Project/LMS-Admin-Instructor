@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -26,6 +27,8 @@ class InstructorDesktopAdminScreen extends StatefulWidget {
 class _InstructorDesktopAdminScreenState
     extends State<InstructorDesktopAdminScreen> {
   final ScrollController _scrollController = ScrollController();
+  final TextEditingController _searchController = TextEditingController();
+  Timer? _debounce;
 
   @override
   void initState() {
@@ -52,7 +55,18 @@ class _InstructorDesktopAdminScreenState
   @override
   void dispose() {
     _scrollController.dispose();
+    _searchController.dispose();
+    _debounce?.cancel();
     super.dispose();
+  }
+
+  void _onSearchChanged(String query) {
+    if (_debounce?.isActive ?? false) _debounce!.cancel();
+    _debounce = Timer(const Duration(milliseconds: 500), () {
+      context.read<InstructorAdminBloc>().add(
+        GetInstructorAdminEvent(page: 1, search: query),
+      );
+    });
   }
 
   @override
@@ -62,7 +76,10 @@ class _InstructorDesktopAdminScreenState
       //**************************************??AppBar??********************************************??
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        flexibleSpace: const CustomNavBar(),
+        flexibleSpace: CustomNavBar(
+          controller: _searchController,
+          onSearch: _onSearchChanged,
+        ),
         toolbarHeight: 70.h,
       ),
       body: Padding(

@@ -12,6 +12,8 @@ class CustomSearchBarr extends StatefulWidget {
   final IconData? prefixIcon;
   final IconData? suffixIcon;
   final TextEditingController controller;
+  final void Function(String)? onChanged;
+  final void Function(String)? onFieldSubmitted;
   const CustomSearchBarr({
     super.key,
     required this.hint,
@@ -22,6 +24,8 @@ class CustomSearchBarr extends StatefulWidget {
     this.prefixIcon,
     this.suffixIcon,
     required this.controller,
+    this.onChanged,
+    this.onFieldSubmitted,
   });
 
   @override
@@ -75,6 +79,8 @@ class _SearchBar extends State<CustomSearchBarr> {
             color: context.colorScheme.onSurface.withValues(alpha: 0.5),
           ),
         ),
+        onChanged: widget.onChanged,
+        onFieldSubmitted: widget.onFieldSubmitted,
         cursorHeight: 24,
         cursorColor: context.colorScheme.primary,
       ),

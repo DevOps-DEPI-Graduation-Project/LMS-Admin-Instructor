@@ -11,6 +11,8 @@ class CustomSearchAppBar extends StatefulWidget {
   final double? width;
   final double? height;
   final double? radius;
+  final void Function(String)? onChanged;
+  final void Function(String)? onFieldSubmitted;
   const CustomSearchAppBar({
     super.key,
     required this.hint,
@@ -21,6 +23,8 @@ class CustomSearchAppBar extends StatefulWidget {
     this.width,
     this.height,
     this.radius,
+    this.onChanged,
+    this.onFieldSubmitted,
   });
 
   @override
@@ -84,6 +88,8 @@ class _CustomSearchAppBarState extends State<CustomSearchAppBar> {
               widget.color?.withValues(alpha: 0.05) ??
               context.colorScheme.surface,
         ),
+        onChanged: widget.onChanged,
+        onFieldSubmitted: widget.onFieldSubmitted,
         cursorHeight: 18.sp,
         cursorColor: context.colorScheme.primary,
       ),

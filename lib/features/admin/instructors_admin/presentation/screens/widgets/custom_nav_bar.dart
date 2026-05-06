@@ -9,13 +9,31 @@ import 'package:lms_admin_instructor/features/widgets/search_bar.dart';
 
 class CustomNavBar extends StatefulWidget {
   final String? hint;
-  const CustomNavBar({super.key, this.hint});
+  final void Function(String)? onSearch;
+  final TextEditingController? controller;
+  const CustomNavBar({super.key, this.hint, this.onSearch, this.controller});
 
   @override
   State<CustomNavBar> createState() => _CustomNavBarState();
 }
 
 class _CustomNavBarState extends State<CustomNavBar> {
+  late TextEditingController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = widget.controller ?? TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    if (widget.controller == null) {
+      _controller.dispose();
+    }
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -27,9 +45,11 @@ class _CustomNavBarState extends State<CustomNavBar> {
               w: 383,
               h: 40,
               hint: widget.hint ?? context.tr('search_instructors_hint'),
-              controller: TextEditingController(),
+              controller: _controller,
               prefixIcon: Icons.search,
               r: 30,
+              onChanged: widget.onSearch,
+              onFieldSubmitted: widget.onSearch,
             ),
             const Spacer(),
             IconButton(

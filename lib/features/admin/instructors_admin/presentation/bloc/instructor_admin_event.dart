@@ -3,7 +3,8 @@ class InstructorAdminEvent {}
 class GetInstructorAdminEvent extends InstructorAdminEvent {
   final int? page;
   final int? pageSize;
-  GetInstructorAdminEvent({this.page, this.pageSize});
+  final String? search;
+  GetInstructorAdminEvent({this.page, this.pageSize, this.search});
 }
 
 class AddInstructorEvent extends InstructorAdminEvent {

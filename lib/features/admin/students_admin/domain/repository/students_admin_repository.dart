@@ -5,6 +5,7 @@ abstract class StudentsAdminRepository {
   Future<Either<String, StudentsAdminResponseModel>> getStudentsAdmin({
     int? page,
     int? pageSize,
+    String? search,
   });
 
   Future<Either<String, Unit>> deleteStudent(String slug);

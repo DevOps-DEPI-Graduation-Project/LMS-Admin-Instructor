@@ -8,13 +8,14 @@ import 'package:lms_admin_instructor/features/admin/students_admin/presentation/
 class StudentAdminBloc extends Bloc<StudentAdminEvent, StudentAdminState>
     with
         PaginatedListMixin<
-            StudentAdminEvent,
-            StudentAdminState,
-            StudentItemUIModel,
-            StudentAdminUIModel,
-            StudentAdminLoaded,
-            StudentAdminError,
-            StudentAdminLoading> {
+          StudentAdminEvent,
+          StudentAdminState,
+          StudentItemUIModel,
+          StudentAdminUIModel,
+          StudentAdminLoaded,
+          StudentAdminError,
+          StudentAdminLoading
+        > {
   final StudentsAdminRepository studentsAdminRepository;
   StudentAdminBloc({required this.studentsAdminRepository})
     : super(StudentAdminInitial()) {
@@ -62,9 +63,7 @@ class StudentAdminBloc extends Bloc<StudentAdminEvent, StudentAdminState>
     if (!shouldHandlePagination(pageToFetch, state)) return;
 
     if (pageToFetch == 1) {
-      if (state is! StudentAdminLoaded) {
-        emit(StudentAdminLoading());
-      }
+      emit(StudentAdminLoading());
     } else {
       emit((state as StudentAdminLoaded).copyWith(isPaginationLoading: true));
     }
@@ -72,22 +71,36 @@ class StudentAdminBloc extends Bloc<StudentAdminEvent, StudentAdminState>
     final result = await studentsAdminRepository.getStudentsAdmin(
       page: pageToFetch,
       pageSize: event.pageSize,
+      search: event.search,
     );
 
-    result.fold(
-      (failure) => emit(StudentAdminError(message: failure)),
-      (responseModel) {
-        handlePaginatedResponse(
-          page: pageToFetch,
-          newEntity: responseModel.toEntity(),
-          currentState: state,
-          emit: emit.call,
-          loadedStateBuilder: (model, isPaging) =>
-              StudentAdminLoaded(studentAdminUIModel: model, isPaginationLoading: isPaging),
-          errorStateBuilder: (msg) => StudentAdminError(message: msg),
-          loadingStateBuilder: () => StudentAdminLoading(),
-        );
-      },
-    );
+    result.fold((failure) => emit(StudentAdminError(message: failure)), (
+      responseModel,
+    ) {
+      var entity = responseModel.toEntity();
+
+      // Local Filtering Fallback
+      if (event.search != null && event.search!.isNotEmpty) {
+        final query = event.search!.toLowerCase();
+        final filteredStudents = entity.students.where((student) {
+          return student.studentName.toLowerCase().contains(query) ||
+              student.email.toLowerCase().contains(query);
+        }).toList();
+        entity = entity.copyWith(students: filteredStudents);
+      }
+
+      handlePaginatedResponse(
+        page: pageToFetch,
+        newEntity: entity,
+        currentState: state,
+        emit: emit.call,
+        loadedStateBuilder: (model, isPaging) => StudentAdminLoaded(
+          studentAdminUIModel: model,
+          isPaginationLoading: isPaging,
+        ),
+        errorStateBuilder: (msg) => StudentAdminError(message: msg),
+        loadingStateBuilder: () => StudentAdminLoading(),
+      );
+    });
   }
 }

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -11,7 +12,7 @@ import 'package:lms_admin_instructor/features/admin/students_admin/presentation/
 import 'package:lms_admin_instructor/features/widgets/custom_card_status_info/custom_card_status_info_desktop.dart';
 import 'package:lms_admin_instructor/features/widgets/custom_data_table/custom_data_table.dart';
 import 'package:lms_admin_instructor/features/widgets/custom_data_table/custom_data_table_model.dart';
-import 'package:lms_admin_instructor/features/widgets/custom_search_app_bar.dart';
+import 'package:lms_admin_instructor/features/admin/instructors_admin/presentation/screens/widgets/custom_nav_bar.dart';
 
 class StudentAdminDesktopScreen extends StatefulWidget {
   const StudentAdminDesktopScreen({super.key});
@@ -23,6 +24,8 @@ class StudentAdminDesktopScreen extends StatefulWidget {
 
 class _StudentAdminDesktopScreenState extends State<StudentAdminDesktopScreen> {
   final ScrollController _scrollController = ScrollController();
+  final TextEditingController _searchController = TextEditingController();
+  Timer? _debounce;
 
   @override
   void initState() {
@@ -48,7 +51,18 @@ class _StudentAdminDesktopScreenState extends State<StudentAdminDesktopScreen> {
   @override
   void dispose() {
     _scrollController.dispose();
+    _searchController.dispose();
+    _debounce?.cancel();
     super.dispose();
+  }
+
+  void _onSearchChanged(String query) {
+    if (_debounce?.isActive ?? false) _debounce!.cancel();
+    _debounce = Timer(const Duration(milliseconds: 500), () {
+      context.read<StudentAdminBloc>().add(
+        GetStudentsAdminEvent(page: 1, search: query),
+      );
+    });
   }
 
   @override
@@ -57,9 +71,10 @@ class _StudentAdminDesktopScreenState extends State<StudentAdminDesktopScreen> {
       backgroundColor: context.colorScheme.primary.withValues(alpha: 0.005),
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        flexibleSpace: CustomSearchAppBar(
+        flexibleSpace: CustomNavBar(
           hint: context.tr('search_by_name'),
-          controller: TextEditingController(),
+          controller: _searchController,
+          onSearch: _onSearchChanged,
         ),
         toolbarHeight: 70.h,
       ),

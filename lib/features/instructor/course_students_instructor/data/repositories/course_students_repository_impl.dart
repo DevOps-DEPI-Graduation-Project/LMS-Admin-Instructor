@@ -15,12 +15,14 @@ class CourseStudentsRepositoryImpl implements CourseStudentsRepository {
     required String slug,
     int? page,
     int? pageSize,
+    String? search,
   }) async {
     return await apiConsumer.get<CourseStudentsResponseModel>(
       EndPoint.courseStudents(slug),
       queryParameters: ApiQueryParams.pagination(
         page: page,
         pageSize: pageSize,
+        search: search,
       ),
       fromJson: (json) => CourseStudentsResponseModel.fromJson(json['data']),
     );
