@@ -117,7 +117,7 @@ class _CustomCardState extends State<CustomCard> {
               CustomPrimaryButton(
                 text: context.tr('manage_btn'),
                 onTap: widget.onTap,
-                width: 120,
+                width: 140,
                 height: 40,
                 // borderRadius: BorderRadius.circular(12.r),
                 color: context.colorScheme.primary,

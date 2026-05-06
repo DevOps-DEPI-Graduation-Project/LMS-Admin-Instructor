@@ -178,7 +178,7 @@ class _EditCourseDialogState extends State<EditCourseDialog>
                                 ? null
                                 : _submit,
                             text: context.tr('save_changes'),
-                            width: 160.w,
+                            width: 200.w,
                             height: 48.h,
                             child: state is UpdateCourseLoading
                                 ? SizedBox(

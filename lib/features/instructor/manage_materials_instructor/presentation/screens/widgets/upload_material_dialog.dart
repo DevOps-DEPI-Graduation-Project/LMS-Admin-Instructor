@@ -177,7 +177,7 @@ class _UploadMaterialDialogState extends State<UploadMaterialDialog> {
                             : (isEditMode
                                   ? context.tr('update_material')
                                   : context.tr('upload_new_material')),
-                        width: 160.w,
+                        width: 250.w,
                         height: 48.h,
                         onTap: isLoading ? null : _handleAction,
                         child: isLoading
