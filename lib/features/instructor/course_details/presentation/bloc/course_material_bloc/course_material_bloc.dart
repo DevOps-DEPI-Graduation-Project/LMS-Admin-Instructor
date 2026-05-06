@@ -20,8 +20,6 @@ class CourseMaterialsBloc extends Bloc<CourseMaterialsEvent, CourseMaterialsStat
   CourseMaterialsBloc({required this.repository})
       : super(CourseMaterialsInitial()) {
     on<GetCourseMaterialsEvent>(_onGetCourseMaterials);
-    on<UploadMaterialEvent>(_onUploadMaterial);
-    on<DeleteMaterialEvent>(_onDeleteMaterial);
   }
 
   Future<void> _onGetCourseMaterials(
@@ -63,50 +61,5 @@ class CourseMaterialsBloc extends Bloc<CourseMaterialsEvent, CourseMaterialsStat
     );
   }
 
-  Future<void> _onUploadMaterial(
-    UploadMaterialEvent event,
-    Emitter<CourseMaterialsState> emit,
-  ) async {
-    final currentState = state;
-    emit(UploadMaterialLoading());
-
-    final response = await repository.uploadMaterial(
-      requestModel: event.requestModel,
-    );
-
-    response.fold(
-      (error) => emit(UploadMaterialError(message: error)),
-      (material) {
-        emit(UploadMaterialSuccess(
-          message: '${material.materialName} uploaded successfully',
-        ));
-        if (currentState is CourseMaterialsLoaded) {
-          emit(currentState);
-        }
-      },
-    );
-  }
-
-  Future<void> _onDeleteMaterial(
-    DeleteMaterialEvent event,
-    Emitter<CourseMaterialsState> emit,
-  ) async {
-    final currentState = state;
-    emit(DeleteMaterialLoading());
-
-    final response = await repository.deleteMaterial(
-      courseSlug: event.courseSlug,
-      materialSlug: event.materialSlug,
-    );
-
-    response.fold(
-      (error) => emit(DeleteMaterialError(message: error)),
-      (message) {
-        emit(DeleteMaterialSuccess(message: message));
-        if (currentState is CourseMaterialsLoaded) {
-          emit(currentState);
-        }
-      },
-    );
-  }
+  
 }

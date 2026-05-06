@@ -1,4 +1,3 @@
-import 'package:lms_admin_instructor/features/instructor/common/data/model/materials_model/upload_material_request_model.dart';
 
 abstract class CourseMaterialsEvent {}
 
@@ -14,18 +13,3 @@ class GetCourseMaterialsEvent extends CourseMaterialsEvent {
   });
 }
 
-class UploadMaterialEvent extends CourseMaterialsEvent {
-  final UploadMaterialRequestModel requestModel;
-
-  UploadMaterialEvent({required this.requestModel});
-}
-
-class DeleteMaterialEvent extends CourseMaterialsEvent {
-  final String courseSlug;
-  final String materialSlug;
-
-  DeleteMaterialEvent({
-    required this.courseSlug,
-    required this.materialSlug,
-  });
-}

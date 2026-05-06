@@ -4,16 +4,15 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lms_admin_instructor/core/extensions/context_extensions.dart';
 import 'package:lms_admin_instructor/core/localization/app_localizations.dart';
-import 'package:lms_admin_instructor/core/routing/app_routes.dart'
-    show AppRoutes;
+import 'package:lms_admin_instructor/core/routing/app_routes.dart';
 import 'package:lms_admin_instructor/features/instructor/course_details/domain/entity/course_materials_ui_model.dart';
 import 'package:lms_admin_instructor/features/instructor/course_details/presentation/bloc/course_details_bloc/course_details_bloc.dart';
 import 'package:lms_admin_instructor/features/instructor/course_details/presentation/bloc/course_details_bloc/course_details_event.dart';
 import 'package:lms_admin_instructor/features/instructor/course_details/presentation/bloc/course_stats_bloc/course_stats_bloc.dart';
 import 'package:lms_admin_instructor/features/instructor/course_details/presentation/bloc/course_stats_bloc/course_stats_event.dart';
-import 'package:lms_admin_instructor/features/instructor/course_details/presentation/bloc/course_material_bloc/course_material_bloc.dart';
-import 'package:lms_admin_instructor/features/instructor/course_details/presentation/bloc/course_material_bloc/course_material_event.dart';
-import 'package:lms_admin_instructor/features/instructor/course_details/presentation/bloc/course_material_bloc/course_material_state.dart';
+import 'package:lms_admin_instructor/features/instructor/manage_materials_instructor/presentation/bloc/course_material_bloc.dart';
+import 'package:lms_admin_instructor/features/instructor/manage_materials_instructor/presentation/bloc/course_material_event.dart';
+import 'package:lms_admin_instructor/features/instructor/manage_materials_instructor/presentation/bloc/course_material_state.dart';
 import 'package:lms_admin_instructor/features/instructor/course_details/presentation/screens/widgets/course_material_section/custom_course_sidebar.dart';
 import 'package:lms_admin_instructor/features/widgets/custom_button.dart';
 
@@ -173,12 +172,8 @@ class CourseMaterialSection extends StatelessWidget {
   }
 
   void _refreshData(BuildContext context) {
-    context.read<CourseDetailsBloc>().add(
-      GetCourseDetailsEvent(slug: slug),
-    );
-    context.read<CourseStatsBloc>().add(
-      GetCourseStatsEvent(slug: slug),
-    );
+    context.read<CourseDetailsBloc>().add(GetCourseDetailsEvent(slug: slug));
+    context.read<CourseStatsBloc>().add(GetCourseStatsEvent(slug: slug));
     context.read<CourseMaterialsBloc>().add(
       GetCourseMaterialsEvent(slug: slug),
     );

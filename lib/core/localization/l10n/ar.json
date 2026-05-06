@@ -216,5 +216,19 @@
   "next": "التالي",
   "max_attempts": "الحد الأقصى للمحاولات",
   "passing_percentage": "نسبة النجاح",
-  "no_materials_found": "لا توجد مواد دراسية"
+  "no_materials_found": "لا توجد مواد دراسية",
+  "edit_material": "تعديل المادة",
+  "update_material_subtitle": "تحديث تفاصيل المادة وملف المصدر",
+  "material_name": "اسم المادة",
+  "material_name_hint": "أدخل اسم المادة",
+  "please_enter_material_name": "يرجى إدخال اسم المادة",
+  "file_resource": "مصدر الملف",
+  "updating": "جاري التحديث...",
+  "uploading": "جاري الرفع...",
+  "update_material": "تحديث المادة",
+  "current_file": "الملف الحالي",
+  "please_select_file": "يرجى اختيار ملف لرفعه",
+  "pdf_files_only": "يُسمح فقط بملفات PDF",
+  "delete_material": "حذف المادة",
+  "are_you_sure_delete_material": "هل أنت متأكد من أنك تريد حذف هذه المادة؟"
 }
