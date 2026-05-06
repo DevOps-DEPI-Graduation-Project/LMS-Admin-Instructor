@@ -20,6 +20,8 @@ class CustomTextFormField extends StatefulWidget {
   final TextInputType? keyboardType;
   final List<TextInputFormatter>? inputFormatters;
   final FocusNode? focusNode;
+  final void Function(String)? onFieldSubmitted;
+  final TextInputAction? textInputAction;
 
   const CustomTextFormField({
     super.key,
@@ -39,6 +41,8 @@ class CustomTextFormField extends StatefulWidget {
     this.keyboardType,
     this.inputFormatters,
     this.focusNode,
+    this.onFieldSubmitted,
+    this.textInputAction,
   });
 
   @override
@@ -68,6 +72,8 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
           obscureText: _obscureText,
           keyboardType: widget.keyboardType,
           inputFormatters: widget.inputFormatters,
+          onFieldSubmitted: widget.onFieldSubmitted,
+          textInputAction: widget.textInputAction,
           style: context.textTheme.labelMedium?.copyWith(
             color: context.colorScheme.onSurface,
             fontSize: 16.sp,

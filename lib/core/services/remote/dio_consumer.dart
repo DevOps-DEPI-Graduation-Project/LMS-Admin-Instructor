@@ -147,15 +147,21 @@ class DioConsumer extends ApiConsumer {
     Response response,
     T Function(Map<String, dynamic>)? fromJson,
   ) {
-    log("The Response: $response");
+    log("The Response: ${response.data}");
     try {
       final responseData = response.data;
+      final int statusCode = response.statusCode ?? 0;
+
+      if (statusCode >= 200 && statusCode < 300 && responseData == null) {
+        return Right(null as T);
+      }
+
       if (responseData is Map<String, dynamic>) {
-        final bool success = responseData['success'] ?? false;
-        final int status = responseData['status'] ?? response.statusCode ?? 0;
+        final bool success = responseData['success'] ?? true; 
+        final int status = responseData['status'] ?? statusCode;
         final String message = responseData['message'] ?? 'Unknown error';
 
-        if (success && (status == 200 || status == 201)) {
+        if (success && (status >= 200 && status < 300)) {
           if (fromJson != null) {
             return Right(fromJson(responseData));
           } else {
@@ -165,6 +171,11 @@ class DioConsumer extends ApiConsumer {
           return Left(message);
         }
       }
+      
+      if (statusCode >= 200 && statusCode < 300) {
+        return Right(responseData as T);
+      }
+
       return const Left('Unexpected response format');
     } catch (e) {
       return Left('Error parsing response: ${e.toString()}');
@@ -197,5 +208,15 @@ class DioConsumer extends ApiConsumer {
     } catch (e) {
       return Left('Error parsing raw response: ${e.toString()}');
     }
+  }
+
+  @override
+  Future<dynamic> multipartFileFromPath(String path, {String? filename}) async {
+    return await MultipartFile.fromFile(path, filename: filename);
+  }
+
+  @override
+  dynamic multipartFileFromBytes(List<int> bytes, {String? filename}) {
+    return MultipartFile.fromBytes(bytes, filename: filename);
   }
 }

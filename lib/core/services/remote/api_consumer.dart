@@ -42,4 +42,7 @@ abstract class ApiConsumer {
     bool isFormData = false,
     T Function(Map<String, dynamic>)? fromJson,
   });
+
+  Future<dynamic> multipartFileFromPath(String path, {String? filename});
+  dynamic multipartFileFromBytes(List<int> bytes, {String? filename});
 }

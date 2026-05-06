@@ -12,6 +12,19 @@ class InstructorAdminBloc
     on<GetInstructorAdminEvent>(_onGetInstructorAdminEvent);
     on<AddInstructorEvent>(_onAddInstructorEvent);
     on<GetInstructorBySlugEvent>(_onGetInstructorBySlugEvent);
+    on<DeleteInstructorEvent>(_onDeleteInstructorEvent);
+  }
+
+  Future<void> _onDeleteInstructorEvent(
+    DeleteInstructorEvent event,
+    Emitter<InstructorAdminState> emit,
+  ) async {
+    emit(DeleteInstructorLoading());
+    final result = await instructorAdminRepository.deleteInstructor(event.slug);
+    result.fold(
+      (failure) => emit(DeleteInstructorError(message: failure)),
+      (success) => emit(DeleteInstructorSuccess()),
+    );
   }
 
   Future<void> _onGetInstructorAdminEvent(

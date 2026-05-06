@@ -103,4 +103,25 @@ class AuthRepositoryImpl implements AuthRepository {
       (data) => Right(data['message']?.toString() ?? 'OTP resent successfully'),
     );
   }
+
+  @override
+  Future<Either<String, String>> logout() async {
+    final result = await apiConsumer.post<Map<String, dynamic>>(
+      EndPoint.logout,
+      data: {
+        ApiKey.refreshToken: cacheHelper.getData(key: ApiKey.refreshToken),
+      },
+    );
+    return await result.fold(
+      (error) {
+        return Left(error);
+      },
+      (successResponse) async {
+        await cacheHelper.clearUserData();
+        return Right(
+          successResponse['message']?.toString() ?? 'Logout successfully',
+        );
+      },
+    );
+  }
 }

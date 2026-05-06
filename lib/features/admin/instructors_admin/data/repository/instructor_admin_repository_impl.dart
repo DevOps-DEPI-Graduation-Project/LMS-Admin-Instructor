@@ -40,8 +40,8 @@ class InstructorAdminRepositoryImpl implements InstructorAdminRepository {
   }
 
   @override
-  Future<Either<String, void>> deleteInstructor(String slug) {
-    throw UnimplementedError();
+  Future<Either<String, void>> deleteInstructor(String slug) async {
+    return await apiConsumer.delete<void>(EndPoint.deleteInstructor(slug));
   }
 
   @override

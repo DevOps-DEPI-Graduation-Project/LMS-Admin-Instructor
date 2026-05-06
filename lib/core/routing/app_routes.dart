@@ -16,4 +16,5 @@ class AppRoutes {
   static const String courseDetails = '/course_details/:slug';
   static const String courseStudents = '/course_students/:slug';
   static const String manageQuizScreen = '/manage_quiz/:slug';
+  static const String pdfViewer = '/pdf_viewer';
 }

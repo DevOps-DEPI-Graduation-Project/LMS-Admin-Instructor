@@ -22,3 +22,8 @@ class GetInstructorBySlugEvent extends InstructorAdminEvent {
   final String slug;
   GetInstructorBySlugEvent({required this.slug});
 }
+
+class DeleteInstructorEvent extends InstructorAdminEvent {
+  final String slug;
+  DeleteInstructorEvent({required this.slug});
+}

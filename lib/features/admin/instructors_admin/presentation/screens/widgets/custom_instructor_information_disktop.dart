@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lms_admin_instructor/core/extensions/context_extensions.dart';
+import 'package:lms_admin_instructor/features/admin/instructors_admin/presentation/bloc/instructor_admin_bloc.dart';
+import 'package:lms_admin_instructor/features/admin/instructors_admin/presentation/bloc/instructor_admin_event.dart';
 import 'package:lms_admin_instructor/features/widgets/custom_button.dart';
 import 'package:lms_admin_instructor/features/widgets/custom_img.dart';
 
@@ -8,11 +11,13 @@ class CustomInstructorInformationDisktop extends StatefulWidget {
   final String name;
   final String description;
   final String image;
+  final String slug;
   const CustomInstructorInformationDisktop({
     super.key,
     required this.name,
     required this.description,
     required this.image,
+    required this.slug,
   });
 
   @override
@@ -99,7 +104,40 @@ class _CustomInstructorInformationDisktopState
                       ),
                       backgroundColor: context.colorScheme.error,
                     ),
-                    onTap: () {},
+                    onTap: () {
+                      showDialog(
+                        context: context,
+                        builder: (dialogContext) => BlocProvider.value(
+                          value: context.read<InstructorAdminBloc>(),
+                          child: AlertDialog(
+                            title: const Text("Delete Account"),
+                            content: const Text(
+                              "Are you sure you want to delete this instructor account?",
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: () => Navigator.pop(dialogContext),
+                                child: const Text("Cancel"),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.pop(dialogContext);
+                                  context.read<InstructorAdminBloc>().add(
+                                    DeleteInstructorEvent(slug: widget.slug),
+                                  );
+                                },
+                                child: Text(
+                                  "Delete",
+                                  style: TextStyle(
+                                    color: context.colorScheme.error,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
                     text: "Delete Account",
                   ),
                 ),

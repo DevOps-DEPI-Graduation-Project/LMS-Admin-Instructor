@@ -128,28 +128,56 @@ class ResetPasswordScreen extends StatelessWidget {
                     prefixIcon: Icons.lock_outline_rounded,
                     isPassword: true,
                     w: 400.w,
-                    //TODO: add validation
-                    // validator: validatePassword,
+                    textInputAction: TextInputAction.next,
                   ),
                   SizedBox(height: 16.h),
 
-                  CustomTextFormField(
-                    controller: authBloc.confirmNewPasswordController,
-                    txt: context.tr('confirm_password'),
-                    hint: context.tr('confirm_password_hint'),
-                    prefixIcon: Icons.lock_outline_rounded,
-                    isPassword: true,
-                    w: 400.w,
-                    //TODO: add validation
-                    // validator: (value) {
-                    //   if (value == null || value.isEmpty) {
-                    //     return 'Please confirm your password';
-                    //   }
-                    //   if (value != authBloc.newPasswordController.text) {
-                    //     return 'Passwords do not match';
-                    //   }
-                    //   return null;
-                    // },
+                  BlocBuilder<AuthBloc, AuthState>(
+                    builder: (context, state) {
+                      final isLoading = state is AuthLoading;
+                      return CustomTextFormField(
+                        controller: authBloc.confirmNewPasswordController,
+                        txt: context.tr('confirm_password'),
+                        hint: context.tr('confirm_password_hint'),
+                        prefixIcon: Icons.lock_outline_rounded,
+                        isPassword: true,
+                        w: 400.w,
+                        textInputAction: TextInputAction.done,
+                        onFieldSubmitted: (value) {
+                          if (!isLoading) {
+                            final otpCode = authBloc.getOtpCode();
+                            if (otpCode.length < 6) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    context.tr('please_enter_full_otp'),
+                                  ),
+                                  backgroundColor: context.colorScheme.error,
+                                ),
+                              );
+                              return;
+                            }
+                            authBloc.otpController.text = otpCode;
+                            if (authBloc.resetPasswordFormKey.currentState
+                                    ?.validate() ??
+                                false) {
+                              FocusScope.of(context).unfocus();
+                              authBloc.add(
+                                ResetPasswordEvent(
+                                  requestModel: ResetPasswordRequestModel(
+                                    otp: authBloc.otpController.text.trim(),
+                                    newPassword: authBloc
+                                        .newPasswordController
+                                        .text
+                                        .trim(),
+                                  ),
+                                ),
+                              );
+                            }
+                          }
+                        },
+                      );
+                    },
                   ),
 
                   SizedBox(height: 30.h),

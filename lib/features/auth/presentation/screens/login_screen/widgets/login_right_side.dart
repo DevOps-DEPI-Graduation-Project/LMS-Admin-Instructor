@@ -80,18 +80,31 @@ class LoginRightSide extends StatelessWidget {
                     prefixIcon: Icons.alternate_email_rounded,
                     validator: validateEmail,
                     w: 400.w,
+                    textInputAction: TextInputAction.next,
                   ),
                   SizedBox(height: 16.h),
-                  CustomTextFormField(
-                    controller: authBloc.passwordController,
-                    txt: context.tr('password'),
-                    hint: context.tr('password_hint'),
-                    prefixIcon: Icons.lock_outline_rounded,
-                    isPassword: true,
+                  BlocBuilder<AuthBloc, AuthState>(
+                    builder: (context, state) {
+                      final isLoading = state is AuthLoading;
+                      return CustomTextFormField(
+                        controller: authBloc.passwordController,
+                        txt: context.tr('password'),
+                        hint: context.tr('password_hint'),
+                        prefixIcon: Icons.lock_outline_rounded,
+                        isPassword: true,
+                        textInputAction: TextInputAction.done,
+                        onFieldSubmitted: (value) {
+                          if (!isLoading) {
+                            FocusScope.of(context).unfocus();
+                            context.read<AuthBloc>().add(LoginEvent());
+                          }
+                        },
 
-                    ///TODO: Add password validation
-                    // validator: validatePassword,
-                    w: 400.w,
+                        ///TODO: Add password validation
+                        // validator: validatePassword,
+                        w: 400.w,
+                      );
+                    },
                   ),
 
                   Align(

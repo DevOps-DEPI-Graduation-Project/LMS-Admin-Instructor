@@ -13,7 +13,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lms_admin_instructor/features/instructor/course_details/presentation/bloc/course_stats_bloc/course_stats_bloc.dart';
 import 'package:lms_admin_instructor/features/instructor/course_details/presentation/bloc/course_stats_bloc/course_stats_state.dart';
-import 'package:lms_admin_instructor/features/instructor/course_details/presentation/screens/widgets/edit_course_dialog.dart';
+import 'package:lms_admin_instructor/features/instructor/course_details/presentation/screens/widgets/course_info_section/edit_course_dialog.dart';
 import 'package:image_picker/image_picker.dart';
 
 class CourseInfoCard extends StatelessWidget {

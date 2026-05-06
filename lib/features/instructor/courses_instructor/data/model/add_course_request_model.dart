@@ -21,8 +21,8 @@ class AddCourseRequestModel {
     this.image,
   });
 
-factory AddCourseRequestModel.fromJson(Map<String, dynamic> json) =>
-    _$AddCourseRequestModelFromJson(json);
+  factory AddCourseRequestModel.fromJson(Map<String, dynamic> json) =>
+      _$AddCourseRequestModelFromJson(json);
 
-Map<String, dynamic> toJson() => _$AddCourseRequestModelToJson(this);
+  Map<String, dynamic> toJson() => _$AddCourseRequestModelToJson(this);
 }

@@ -216,5 +216,6 @@
   "previous": "Previous",
   "next": "Next",
   "max_attempts": "Max Attempts",
-  "passing_percentage": "Passing Percentage"
+  "passing_percentage": "Passing Percentage",
+  "no_materials_found": "No materials found"
 }

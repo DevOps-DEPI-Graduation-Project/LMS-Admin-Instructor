@@ -28,8 +28,13 @@ import 'package:lms_admin_instructor/features/instructor/course_details/presenta
 import 'package:lms_admin_instructor/features/instructor/course_details/presentation/screens/course_details_screen.dart';
 import 'package:lms_admin_instructor/features/instructor/manage_quiz_instructor/presentation/bloc/manage_quiz_instructor_bloc.dart';
 import 'package:lms_admin_instructor/features/instructor/manage_quiz_instructor/presentation/screens/manage_quiz_instructor_screen.dart';
+import 'package:lms_admin_instructor/features/instructor/course_details/presentation/bloc/course_details_bloc/course_details_bloc.dart';
+import 'package:lms_admin_instructor/features/instructor/course_details/presentation/bloc/course_details_bloc/course_details_event.dart';
+import 'package:lms_admin_instructor/features/instructor/course_details/presentation/bloc/course_material_bloc/course_material_bloc.dart';
+import 'package:lms_admin_instructor/features/instructor/course_details/presentation/bloc/course_material_bloc/course_material_event.dart';
 import 'package:lms_admin_instructor/features/instructor/course_students_instructor/presentation/screens/course_students_instructor_screen.dart';
 import 'package:lms_admin_instructor/root/bloc/root_bloc.dart';
+import 'package:lms_admin_instructor/features/instructor/course_details/presentation/screens/pdf_viewer_screen.dart';
 import 'package:lms_admin_instructor/root/custom_view_nav_bar.dart';
 
 class RouterGenerator {
@@ -115,6 +120,7 @@ class RouterGenerator {
               BlocProvider.value(value: sl<StudentAdminBloc>()),
               BlocProvider.value(value: sl<RootBloc>()),
               BlocProvider.value(value: sl<CoursesInstructorBloc>()),
+              BlocProvider.value(value: sl<AuthBloc>()),
             ],
             child: CustomViewNavBar(role: role),
           );
@@ -162,6 +168,19 @@ class RouterGenerator {
           final slug = state.pathParameters['slug'] ?? '';
           return MultiBlocProvider(
             providers: [
+              BlocProvider(
+                create: (context) =>
+                    sl<CourseDetailsBloc>()..add(GetCourseDetailsEvent(slug: slug)),
+              ),
+              BlocProvider(
+                create: (context) =>
+                    sl<CourseStatsBloc>()..add(GetCourseStatsEvent(slug: slug)),
+              ),
+              BlocProvider(
+                create: (context) =>
+                    sl<CourseMaterialsBloc>()
+                      ..add(GetCourseMaterialsEvent(slug: slug)),
+              ),
               BlocProvider.value(value: sl<CourseQuizBloc>()),
             ],
             child: CourseDetailsScreen(slug: slug),
@@ -197,6 +216,17 @@ class RouterGenerator {
           return BlocProvider(
             create: (context) => sl<ManageQuizInstructorBloc>(),
             child: ManageQuizScreen(courseSlug: courseSlug, quizSlug: quizSlug),
+          );
+        },
+      ),
+      GoRoute(
+        path: AppRoutes.pdfViewer,
+        name: AppRoutes.pdfViewer,
+        builder: (context, state) {
+          final extra = state.extra as Map<String, dynamic>;
+          return PdfViewerScreen(
+            url: extra['url'] as String,
+            title: extra['title'] as String,
           );
         },
       ),

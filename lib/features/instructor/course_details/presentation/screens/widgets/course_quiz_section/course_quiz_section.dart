@@ -10,7 +10,7 @@ import 'package:lms_admin_instructor/features/instructor/course_details/presenta
 import 'package:lms_admin_instructor/features/instructor/course_details/presentation/bloc/course_quiz_bloc/course_quiz_state.dart';
 import 'package:lms_admin_instructor/features/widgets/error_feedback_widget.dart';
 import 'package:lms_admin_instructor/features/widgets/loading_indicator_widget.dart';
-import 'package:lms_admin_instructor/features/instructor/course_details/presentation/screens/widgets/custom_course_sidebar.dart';
+import 'package:lms_admin_instructor/features/instructor/course_details/presentation/screens/widgets/course_material_section/custom_course_sidebar.dart';
 import 'package:lms_admin_instructor/features/widgets/custom_button.dart';
 import 'package:lms_admin_instructor/features/widgets/delete_confirmation_dialog.dart';
 

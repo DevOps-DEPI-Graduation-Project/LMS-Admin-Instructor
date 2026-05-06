@@ -31,3 +31,5 @@ class ResendSuccess extends AuthState {
   final String message;
   ResendSuccess(this.message);
 }
+
+class LogoutSuccess extends AuthState {}

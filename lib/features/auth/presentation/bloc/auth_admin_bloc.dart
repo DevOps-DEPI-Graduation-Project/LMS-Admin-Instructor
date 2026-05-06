@@ -15,6 +15,16 @@ class AuthBloc extends Bloc<AuthEvent, AuthState>
     on<ForgotPasswordEvent>(_onForgotPassword);
     on<ResetPasswordEvent>(_onResetPassword);
     on<ResendOtpEvent>(_onResendOtp);
+    on<LogoutEvent>(_onLogout);
+  }
+
+  Future<void> _onLogout(LogoutEvent event, Emitter<AuthState> emit) async {
+    emit(AuthLoading());
+    final result = await authRepository.logout();
+    result.fold(
+      (error) => emit(AuthError(message: error)),
+      (success) => emit(LogoutSuccess()),
+    );
   }
 
   Future<void> _onLogin(LoginEvent event, Emitter<AuthState> emit) async {

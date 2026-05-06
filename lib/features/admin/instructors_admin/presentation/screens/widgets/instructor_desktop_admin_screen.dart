@@ -91,107 +91,159 @@ class _InstructorDesktopAdminScreenState
 
             //**************************************??show all instructors??********************************************??
             Expanded(
-              child: BlocBuilder<InstructorAdminBloc, InstructorAdminState>(
-                builder: (context, state) {
-                  if (state is InstructorAdminLoading) {
-                    return const Center(child: CircularProgressIndicator());
-                  } else if (state is InstructorAdminError) {
-                    return Center(child: Text(state.message));
-                  } else if (state is InstructorAdminLoaded) {
-                    return Column(
-                      children: [
-                        //**************************************??Details Cards??********************************************??
-                        Row(
-                          children: [
-                            CustomCardStatusInfoDesktop(
-                              title: context.tr('total_instructors'),
-                              value:
-                                  "${state.instructorAdminUiModel.totalInstructors}",
-                              icon: Icons.people_outline,
-                              color: const Color(0xff3B82F6),
-                            ),
-                            SizedBox(width: 20.w),
-                            CustomCardStatusInfoDesktop(
-                              title: context.tr('total_courses'),
-                              value: "48",
-                              icon: Icons.book_outlined,
-                              color: const Color(0xff16A34A),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 32.h),
-
-                        Expanded(
-                          child: CustomDataTable(
-                            headers: [
-                              context.tr('instructor_name_column'),
-                              context.tr('bio_column'),
-                              context.tr('join_date_column'),
-                              context.tr('email_column'),
-                            ],
-                            columnFlex: const [3, 4, 2, 2, 2],
-                            data: state.instructorAdminUiModel.instructors
-                                .map((instructor) {
-                                  return instructor.copyWith(
-                                    onActionPressed: () {
-                                      showAdaptiveDialog(
-                                        context: context,
-                                        builder: (context) {
-                                          return AlertDialog.adaptive(
-                                            title: Text(
-                                              context.tr('delete_Instructor'),
-                                            ),
-                                            content: Text(
-                                              context.tr(
-                                                'are_you_sure_delete_instructor',
-                                              ),
-                                            ),
-                                            actions: [
-                                              TextButton(
-                                                onPressed: () =>
-                                                    Navigator.pop(context),
-                                                child: Text(
-                                                  context.tr('cancel'),
-                                                ),
-                                              ),
-                                              TextButton(
-                                                onPressed: () {},
-                                                child: Text(
-                                                  context.tr('delete'),
-                                                  style: TextStyle(
-                                                    color: context
-                                                        .colorScheme
-                                                        .error,
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          );
-                                        },
-                                      );
-                                    },
-                                    onOptionsPressed: () {
-                                      context.push(
-                                        AppRoutes.profileInstructorAdminScreen,
-                                        extra: instructor.slug,
-                                      );
-                                    },
-                                    actionIconpressed: Icons.delete,
-                                    // optionsIconpressed: Icons.person,
-                                  );
-                                })
-                                .cast<CustomDataTableRowModel>()
-                                .toList(),
-                            scrollController: _scrollController,
-                            isPaginationLoading: state.isPaginationLoading,
-                          ),
-                        ),
-                      ],
+              child: BlocListener<InstructorAdminBloc, InstructorAdminState>(
+                listener: (context, state) {
+                  if (state is DeleteInstructorSuccess) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text("Instructor deleted successfully"),
+                        backgroundColor: Colors.green,
+                      ),
                     );
-                  } else {
-                    return const SizedBox.shrink();
+                    context.read<InstructorAdminBloc>().add(
+                      GetInstructorAdminEvent(page: 1),
+                    );
                   }
                 },
+                child: BlocBuilder<InstructorAdminBloc, InstructorAdminState>(
+                  buildWhen: (previous, current) =>
+                      current is InstructorAdminLoaded ||
+                      current is InstructorAdminLoading ||
+                      current is InstructorAdminError,
+                  builder: (context, state) {
+                    if (state is InstructorAdminLoading ||
+                        state is DeleteInstructorLoading) {
+                      return const Center(child: CircularProgressIndicator());
+                    } else if (state is InstructorAdminError) {
+                      return Center(child: Text(state.message));
+                    } else if (state is InstructorAdminLoaded) {
+                      return Column(
+                        children: [
+                          //**************************************??Details Cards??********************************************??
+                          Row(
+                            children: [
+                              CustomCardStatusInfoDesktop(
+                                title: context.tr('total_instructors'),
+                                value:
+                                    "${state.instructorAdminUiModel.totalInstructors}",
+                                icon: Icons.people_outline,
+                                color: const Color(0xff3B82F6),
+                              ),
+                              SizedBox(width: 20.w),
+                              CustomCardStatusInfoDesktop(
+                                title: context.tr('total_courses'),
+                                value: "48",
+                                icon: Icons.book_outlined,
+                                color: const Color(0xff16A34A),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 32.h),
+
+                          Expanded(
+                            child: CustomDataTable(
+                              headers: [
+                                context.tr('instructor_name_column'),
+                                context.tr('bio_column'),
+                                context.tr('join_date_column'),
+                                context.tr('email_column'),
+                              ],
+                              columnFlex: const [3, 4, 2, 2, 2],
+                              data: state.instructorAdminUiModel.instructors
+                                  .map((instructor) {
+                                    return instructor.copyWith(
+                                      onActionPressed: () {
+                                        showAdaptiveDialog(
+                                          context: context,
+                                          builder: (dialogContext) {
+                                            return BlocProvider.value(
+                                              value: context
+                                                  .read<InstructorAdminBloc>(),
+                                              child: AlertDialog.adaptive(
+                                                title: Text(
+                                                  context.tr(
+                                                    'delete_Instructor',
+                                                  ),
+                                                ),
+                                                content: Text(
+                                                  context.tr(
+                                                    'are_you_sure_delete_instructor',
+                                                  ),
+                                                ),
+                                                actions: [
+                                                  TextButton(
+                                                    onPressed: () =>
+                                                        Navigator.pop(
+                                                          dialogContext,
+                                                        ),
+                                                    child: Text(
+                                                      context.tr('cancel'),
+                                                    ),
+                                                  ),
+                                                  TextButton(
+                                                    onPressed: () {
+                                                      Navigator.pop(
+                                                        dialogContext,
+                                                      );
+                                                      context
+                                                          .read<
+                                                            InstructorAdminBloc
+                                                          >()
+                                                          .add(
+                                                            DeleteInstructorEvent(
+                                                              slug: instructor
+                                                                  .slug,
+                                                            ),
+                                                          );
+                                                    },
+                                                    child: Text(
+                                                      context.tr('delete'),
+                                                      style: TextStyle(
+                                                        color: context
+                                                            .colorScheme
+                                                            .error,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            );
+                                          },
+                                        );
+                                      },
+                                      onOptionsPressed: () async {
+                                        await context.push(
+                                          AppRoutes
+                                              .profileInstructorAdminScreen,
+                                          extra: instructor.slug,
+                                        );
+                                        if (context.mounted) {
+                                          context
+                                              .read<InstructorAdminBloc>()
+                                              .add(
+                                                GetInstructorAdminEvent(
+                                                  page: 1,
+                                                ),
+                                              );
+                                        }
+                                      },
+                                      actionIconpressed: Icons.delete,
+                                      // optionsIconpressed: Icons.person,
+                                    );
+                                  })
+                                  .cast<CustomDataTableRowModel>()
+                                  .toList(),
+                              scrollController: _scrollController,
+                              isPaginationLoading: state.isPaginationLoading,
+                            ),
+                          ),
+                        ],
+                      );
+                    } else {
+                      return const SizedBox.shrink();
+                    }
+                  },
+                ),
               ),
             ),
           ],

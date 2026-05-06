@@ -215,5 +215,6 @@
   "previous": "السابق",
   "next": "التالي",
   "max_attempts": "الحد الأقصى للمحاولات",
-  "passing_percentage": "نسبة النجاح"
+  "passing_percentage": "نسبة النجاح",
+  "no_materials_found": "لا توجد مواد دراسية"
 }

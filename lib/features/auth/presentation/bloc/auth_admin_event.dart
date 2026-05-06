@@ -21,3 +21,5 @@ class ResendOtpEvent extends AuthEvent {
 
   ResendOtpEvent({required this.email});
 }
+
+class LogoutEvent extends AuthEvent {}
