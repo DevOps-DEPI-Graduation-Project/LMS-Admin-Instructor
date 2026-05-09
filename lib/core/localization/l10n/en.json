@@ -217,5 +217,19 @@
   "next": "Next",
   "max_attempts": "Max Attempts",
   "passing_percentage": "Passing Percentage",
-  "no_materials_found": "No materials found"
+  "no_materials_found": "No materials found",
+  "edit_material": "Edit Material",
+  "update_material_subtitle": "Update material details and file resource",
+  "material_name": "Material Name",
+  "material_name_hint": "Enter material name",
+  "please_enter_material_name": "Please enter a material name",
+  "file_resource": "File Resource",
+  "updating": "Updating...",
+  "uploading": "Uploading...",
+  "update_material": "Update Material",
+  "current_file": "Current File",
+  "please_select_file": "Please select a file to upload",
+  "pdf_files_only": "Only PDF files are allowed",
+  "delete_material": "Delete Material",
+  "are_you_sure_delete_material": "Are you sure you want to delete this material?"
 }

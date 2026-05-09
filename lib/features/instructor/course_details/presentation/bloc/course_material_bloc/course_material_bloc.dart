@@ -20,7 +20,6 @@ class CourseMaterialsBloc extends Bloc<CourseMaterialsEvent, CourseMaterialsStat
   CourseMaterialsBloc({required this.repository})
       : super(CourseMaterialsInitial()) {
     on<GetCourseMaterialsEvent>(_onGetCourseMaterials);
-    on<UploadMaterialEvent>(_onUploadMaterial);
   }
 
   Future<void> _onGetCourseMaterials(
@@ -62,27 +61,5 @@ class CourseMaterialsBloc extends Bloc<CourseMaterialsEvent, CourseMaterialsStat
     );
   }
 
-  Future<void> _onUploadMaterial(
-    UploadMaterialEvent event,
-    Emitter<CourseMaterialsState> emit,
-  ) async {
-    final currentState = state;
-    emit(UploadMaterialLoading());
-
-    final response = await repository.uploadMaterial(
-      requestModel: event.requestModel,
-    );
-
-    response.fold(
-      (error) => emit(UploadMaterialError(message: error)),
-      (material) {
-        emit(UploadMaterialSuccess(
-          message: '${material.materialName} uploaded successfully',
-        ));
-        if (currentState is CourseMaterialsLoaded) {
-          emit(currentState);
-        }
-      },
-    );
-  }
+  
 }
