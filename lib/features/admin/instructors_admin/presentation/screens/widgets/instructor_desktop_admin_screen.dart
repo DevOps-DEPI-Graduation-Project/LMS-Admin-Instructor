@@ -14,6 +14,7 @@ import 'package:lms_admin_instructor/features/admin/instructors_admin/presentati
 import 'package:lms_admin_instructor/features/widgets/custom_data_table/custom_data_table.dart';
 import 'package:lms_admin_instructor/features/widgets/custom_data_table/custom_data_table_model.dart';
 import 'package:lms_admin_instructor/features/admin/instructors_admin/presentation/screens/widgets/add_instructor_disktop_admin_screen.dart';
+import 'package:lms_admin_instructor/features/widgets/custom_delete_dialog.dart';
 
 class InstructorDesktopAdminScreen extends StatefulWidget {
   const InstructorDesktopAdminScreen({super.key});
@@ -153,59 +154,34 @@ class _InstructorDesktopAdminScreenState
                                   .map((instructor) {
                                     return instructor.copyWith(
                                       onActionPressed: () {
-                                        showAdaptiveDialog(
+                                        showDialog(
                                           context: context,
                                           builder: (dialogContext) {
                                             return BlocProvider.value(
                                               value: context
                                                   .read<InstructorAdminBloc>(),
-                                              child: AlertDialog.adaptive(
-                                                title: Text(
-                                                  context.tr(
-                                                    'delete_Instructor',
-                                                  ),
+                                              child: CustomDeleteDialog(
+                                                title: context.tr(
+                                                  'delete_instructor_title',
                                                 ),
-                                                content: Text(
-                                                  context.tr(
-                                                    'are_you_sure_delete_instructor',
-                                                  ),
+                                                warningMessage: context.tr(
+                                                  'delete_instructor_warning_message',
                                                 ),
-                                                actions: [
-                                                  TextButton(
-                                                    onPressed: () =>
-                                                        Navigator.pop(
-                                                          dialogContext,
+                                                consequencesMessage: context.tr(
+                                                  'delete_instructor_consequences',
+                                                ),
+                                                onDelete: () {
+                                                  context
+                                                      .read<
+                                                        InstructorAdminBloc
+                                                      >()
+                                                      .add(
+                                                        DeleteInstructorEvent(
+                                                          slug: instructor
+                                                              .slug,
                                                         ),
-                                                    child: Text(
-                                                      context.tr('cancel'),
-                                                    ),
-                                                  ),
-                                                  TextButton(
-                                                    onPressed: () {
-                                                      Navigator.pop(
-                                                        dialogContext,
                                                       );
-                                                      context
-                                                          .read<
-                                                            InstructorAdminBloc
-                                                          >()
-                                                          .add(
-                                                            DeleteInstructorEvent(
-                                                              slug: instructor
-                                                                  .slug,
-                                                            ),
-                                                          );
-                                                    },
-                                                    child: Text(
-                                                      context.tr('delete'),
-                                                      style: TextStyle(
-                                                        color: context
-                                                            .colorScheme
-                                                            .error,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
+                                                },
                                               ),
                                             );
                                           },

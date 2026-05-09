@@ -156,7 +156,7 @@ class _CustomDataTableState extends State<CustomDataTable> {
                           return Material(
                             color: Colors.transparent,
                             child: InkWell(
-                              onTap: item.onAction,
+                              onTap: item.onRowTap ?? item.onAction,
                               child: Container(
                                 padding: EdgeInsets.symmetric(
                                   vertical: 12.h,

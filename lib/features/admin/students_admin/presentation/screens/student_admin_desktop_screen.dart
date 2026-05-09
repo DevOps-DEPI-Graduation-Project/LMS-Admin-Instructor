@@ -11,6 +11,7 @@ import 'package:lms_admin_instructor/features/admin/students_admin/presentation/
 import 'package:lms_admin_instructor/features/widgets/custom_card_status_info/custom_card_status_info_desktop.dart';
 import 'package:lms_admin_instructor/features/widgets/custom_data_table/custom_data_table.dart';
 import 'package:lms_admin_instructor/features/widgets/custom_data_table/custom_data_table_model.dart';
+import 'package:lms_admin_instructor/features/widgets/custom_delete_dialog.dart';
 import 'package:lms_admin_instructor/features/widgets/custom_search_app_bar.dart';
 
 class StudentAdminDesktopScreen extends StatefulWidget {
@@ -121,41 +122,24 @@ class _StudentAdminDesktopScreenState extends State<StudentAdminDesktopScreen> {
                           .map((student) {
                             return student.copyWith(
                               onActionPressed: () {
-                                showAdaptiveDialog(
+                                showDialog(
                                   context: context,
-                                  builder: (context) {
-                                    return AlertDialog.adaptive(
-                                      title: Text(context.tr('delete_student')),
-                                      content: Text(
-                                        context.tr(
-                                          'are_you_sure_delete_student',
-                                        ),
+                                  builder: (dialogContext) {
+                                    return CustomDeleteDialog(
+                                      title: context.tr('delete_student_title'),
+                                      warningMessage: context.tr(
+                                        'delete_student_warning_message',
                                       ),
-                                      actions: [
-                                        TextButton(
-                                          onPressed: () =>
-                                              Navigator.pop(context),
-                                          child: Text(context.tr('cancel')),
-                                        ),
-                                        TextButton(
-                                          onPressed: () {
-                                            context
-                                                .read<StudentAdminBloc>()
-                                                .add(
-                                                  DeleteStudentAdminEvent(
-                                                    slug: student.slug,
-                                                  ),
-                                                );
-                                            Navigator.pop(context);
-                                          },
-                                          child: Text(
-                                            context.tr('delete'),
-                                            style: TextStyle(
-                                              color: context.colorScheme.error,
-                                            ),
+                                      consequencesMessage: context.tr(
+                                        'delete_student_consequences',
+                                      ),
+                                      onDelete: () {
+                                        context.read<StudentAdminBloc>().add(
+                                          DeleteStudentAdminEvent(
+                                            slug: student.slug,
                                           ),
-                                        ),
-                                      ],
+                                        );
+                                      },
                                     );
                                   },
                                 );

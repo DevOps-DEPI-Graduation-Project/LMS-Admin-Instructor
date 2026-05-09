@@ -217,5 +217,18 @@
   "next": "Next",
   "max_attempts": "Max Attempts",
   "passing_percentage": "Passing Percentage",
-  "no_materials_found": "No materials found"
+  "no_materials_found": "No materials found",
+  "delete_instructor_title": "Delete Instructor",
+  "delete_instructor_warning_message": "Warning: This action is permanent!",
+  "delete_instructor_consequences": "Deleting this instructor will remove all their associations and data. This decision might have significant impact on their courses and students.",
+  "type_delete_to_confirm": "Please type",
+  "delete_confirm_text": "delete",
+  "to_confirm_deletion": "to confirm deletion",
+  "delete_student_title": "Delete Student",
+  "delete_student_warning_message": "Warning: Permanent Removal!",
+  "delete_student_consequences": "Deleting this student will erase their progress, enrollments, and all associated activity records. This cannot be undone.",
+  "delete_course_title": "Delete Course",
+  "delete_course_warning_message": "Warning: Permanent Removal!",
+  "delete_course_consequences": "Deleting this course will remove all associated content, student enrollments, and progress data permanently."
 }
+

@@ -216,5 +216,18 @@
   "next": "التالي",
   "max_attempts": "الحد الأقصى للمحاولات",
   "passing_percentage": "نسبة النجاح",
-  "no_materials_found": "لا توجد مواد دراسية"
+  "no_materials_found": "لا توجد مواد دراسية",
+  "delete_instructor_title": "حذف المعلم",
+  "delete_instructor_warning_message": "تحذير: هذا الإجراء دائم!",
+  "delete_instructor_consequences": "سيؤدي حذف هذا المعلم إلى إزالة جميع ارتباطاته وبياناته. قد يكون لهذا القرار تأثير كبير على دوراتهم وطلابهم.",
+  "type_delete_to_confirm": "يرجى كتابة",
+  "delete_confirm_text": "delete",
+  "to_confirm_deletion": "لتأكيد الحذف",
+  "delete_student_title": "حذف الطالب",
+  "delete_student_warning_message": "تحذير: إزالة دائمة!",
+  "delete_student_consequences": "سيؤدي حذف هذا الطالب إلى محو تقدمهم وتسجيلاتهم وجميع سجلات الأنشطة المرتبطة بهم. لا يمكن التراجع عن هذا الإجراء.",
+  "delete_course_title": "حذف الدورة التدريبية",
+  "delete_course_warning_message": "تحذير: إزالة دائمة!",
+  "delete_course_consequences": "سيؤدي حذف هذه الدورة التدريبية إلى إزالة جميع المحتويات المرتبطة بها وتسجيلات الطلاب وبيانات التقدم بشكل دائم."
 }
+

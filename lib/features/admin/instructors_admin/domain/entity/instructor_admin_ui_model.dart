@@ -45,7 +45,7 @@ class InstructorLinkUiModel {
 }
 
 // ── Instructor row entity ─────────────────────────────────────────────────────
-class InstructoritemUiModel implements CustomDataTableRowModel {
+class InstructoritemUiModel extends CustomDataTableRowModel {
   final String first_name;
   final String last_name;
   final String email;
@@ -125,6 +125,9 @@ class InstructoritemUiModel implements CustomDataTableRowModel {
     joindata ?? ' ',
     email,
   ];
+
+  @override
+  VoidCallback? get onRowTap => onOptionsPressed;
 
   @override
   IconData? get actionIcon => actionIconpressed;
