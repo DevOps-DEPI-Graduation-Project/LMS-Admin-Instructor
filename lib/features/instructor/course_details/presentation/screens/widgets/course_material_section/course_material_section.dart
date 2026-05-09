@@ -4,19 +4,26 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lms_admin_instructor/core/extensions/context_extensions.dart';
 import 'package:lms_admin_instructor/core/localization/app_localizations.dart';
-import 'package:lms_admin_instructor/core/routing/app_routes.dart'
-    show AppRoutes;
+import 'package:lms_admin_instructor/core/routing/app_routes.dart';
 import 'package:lms_admin_instructor/features/instructor/course_details/domain/entity/course_materials_ui_model.dart';
-import 'package:lms_admin_instructor/features/instructor/course_details/presentation/bloc/course_material_bloc/course_material_bloc.dart';
-import 'package:lms_admin_instructor/features/instructor/course_details/presentation/bloc/course_material_bloc/course_material_event.dart';
-import 'package:lms_admin_instructor/features/instructor/course_details/presentation/bloc/course_material_bloc/course_material_state.dart';
+import 'package:lms_admin_instructor/features/instructor/course_details/presentation/bloc/course_details_bloc/course_details_bloc.dart';
+import 'package:lms_admin_instructor/features/instructor/course_details/presentation/bloc/course_details_bloc/course_details_event.dart';
+import 'package:lms_admin_instructor/features/instructor/course_details/presentation/bloc/course_stats_bloc/course_stats_bloc.dart';
+import 'package:lms_admin_instructor/features/instructor/course_details/presentation/bloc/course_stats_bloc/course_stats_event.dart';
+import 'package:lms_admin_instructor/features/instructor/manage_materials_instructor/presentation/bloc/course_material_bloc.dart';
+import 'package:lms_admin_instructor/features/instructor/manage_materials_instructor/presentation/bloc/course_material_event.dart';
+import 'package:lms_admin_instructor/features/instructor/manage_materials_instructor/presentation/bloc/course_material_state.dart';
 import 'package:lms_admin_instructor/features/instructor/course_details/presentation/screens/widgets/course_material_section/custom_course_sidebar.dart';
 import 'package:lms_admin_instructor/features/widgets/custom_button.dart';
-import 'upload_material_dialog.dart';
 
 class CourseMaterialSection extends StatelessWidget {
   final String slug;
-  const CourseMaterialSection({super.key, required this.slug});
+  final String courseName;
+  const CourseMaterialSection({
+    super.key,
+    required this.slug,
+    required this.courseName,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +33,17 @@ class CourseMaterialSection extends StatelessWidget {
           title: context.tr('course_materials'),
           icon: Icons.folder_outlined,
           color: context.colorScheme.primary,
-          onManage: () {},
+          onManage: () async {
+            final result = await context.pushNamed<bool>(
+              AppRoutes.courseMaterials,
+              pathParameters: {'slug': slug},
+              extra: courseName,
+            );
+
+            if (result == true && context.mounted) {
+              _refreshData(context);
+            }
+          },
           children: [
             if (state is CourseMaterialsLoading)
               const Center(
@@ -49,11 +66,43 @@ class CourseMaterialSection extends StatelessWidget {
                   ),
                 )
               else
-                ...state.materialsListUIModel.materials.map(
-                  (material) => _buildMaterialItem(context, material),
-                ),
+                ...state.materialsListUIModel.materials
+                    .take(3)
+                    .map((material) => _buildMaterialItem(context, material)),
               SizedBox(height: 16.h),
-              _buildUploadButton(context, context.tr('upload_new_material')),
+              CustomPrimaryButton(
+                onTap: () async {
+                  final result = await context.pushNamed<bool>(
+                    AppRoutes.courseMaterials,
+                    pathParameters: {'slug': slug},
+                    extra: courseName,
+                  );
+
+                  if (result == true && context.mounted) {
+                    _refreshData(context);
+                  }
+                },
+                text: context.tr('show_more'),
+                width: double.infinity,
+                height: 45.h,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.transparent,
+                  shadowColor: Colors.transparent,
+                  side: BorderSide(
+                    color: context.colorScheme.onSecondary.withValues(
+                      alpha: .2,
+                    ),
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.r),
+                  ),
+                ),
+                textStyle: context.textTheme.labelLarge?.copyWith(
+                  fontSize: 12.sp,
+                  fontWeight: FontWeight.bold,
+                  color: context.colorScheme.primary,
+                ),
+              ),
             ] else
               const SizedBox(),
           ],
@@ -122,44 +171,11 @@ class CourseMaterialSection extends StatelessWidget {
     );
   }
 
-  Widget _buildUploadButton(BuildContext context, String text) {
-    return CustomPrimaryButton(
-      onTap: () async {
-        final result = await showDialog<bool>(
-          context: context,
-          builder: (dialogContext) => BlocProvider.value(
-            value: context.read<CourseMaterialsBloc>(),
-            child: UploadMaterialDialog(courseSlug: slug),
-          ),
-        );
-
-        if (result == true && context.mounted) {
-          context.read<CourseMaterialsBloc>().add(
-            GetCourseMaterialsEvent(slug: slug),
-          );
-        }
-      },
-      text: text,
-      prefixIcon: Icon(
-        Icons.upload_file,
-        size: 18.sp,
-        color: context.colorScheme.primary,
-      ),
-      width: double.infinity,
-      height: 45.h,
-      style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.transparent,
-        shadowColor: Colors.transparent,
-        side: BorderSide(
-          color: context.colorScheme.primary.withValues(alpha: 0.5),
-        ),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r)),
-      ),
-      textStyle: context.textTheme.labelLarge?.copyWith(
-        fontSize: 12.sp,
-        fontWeight: FontWeight.bold,
-        color: context.colorScheme.primary,
-      ),
+  void _refreshData(BuildContext context) {
+    context.read<CourseDetailsBloc>().add(GetCourseDetailsEvent(slug: slug));
+    context.read<CourseStatsBloc>().add(GetCourseStatsEvent(slug: slug));
+    context.read<CourseMaterialsBloc>().add(
+      GetCourseMaterialsEvent(slug: slug),
     );
   }
 }

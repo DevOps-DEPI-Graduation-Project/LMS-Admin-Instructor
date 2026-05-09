@@ -37,7 +37,7 @@ import 'package:lms_admin_instructor/features/instructor/course_details/presenta
 import 'package:lms_admin_instructor/root/bloc/root_bloc.dart';
 import 'package:lms_admin_instructor/features/instructor/common/data/repository/materials_repository_impl.dart';
 import 'package:lms_admin_instructor/features/instructor/common/domain/repository/materials_repository.dart';
-import 'package:lms_admin_instructor/features/instructor/course_details/presentation/bloc/course_material_bloc/course_material_bloc.dart';
+import 'package:lms_admin_instructor/features/instructor/manage_materials_instructor/presentation/bloc/course_material_bloc.dart';
 
 final sl = GetIt.instance;
 

@@ -123,7 +123,10 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                   flex: 1,
                   child: Column(
                     children: [
-                      CourseMaterialSection(slug: widget.slug),
+                CourseMaterialSection(
+                  slug: widget.slug,
+                  courseName: course.title,
+                ),
                       SizedBox(height: 32.h),
                       CourseQuizSection(courseSlug: widget.slug),
                     ],
@@ -136,7 +139,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
               children: [
                 CourseVideoSection(slug: widget.slug),
                 SizedBox(height: 32.h),
-                CourseMaterialSection(slug: widget.slug),
+                CourseMaterialSection(slug: widget.slug, courseName: course.title,),
                 SizedBox(height: 32.h),
                 CourseQuizSection(courseSlug: widget.slug),
               ],

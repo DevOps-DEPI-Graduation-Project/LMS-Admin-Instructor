@@ -38,14 +38,5 @@ class CourseMaterialsError extends CourseMaterialsState {
   CourseMaterialsError({required this.message});
 }
 
-class UploadMaterialLoading extends CourseMaterialsState {}
 
-class UploadMaterialSuccess extends CourseMaterialsState {
-  final String message;
-  UploadMaterialSuccess({required this.message});
-}
 
-class UploadMaterialError extends CourseMaterialsState {
-  final String message;
-  UploadMaterialError({required this.message});
-}
