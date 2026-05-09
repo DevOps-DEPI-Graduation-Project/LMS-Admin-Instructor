@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lms_admin_instructor/features/home/presentation/screens/dashboard_screen.dart';
 import 'package:lms_admin_instructor/features/home/ttt.dart';
 import 'package:lms_admin_instructor/features/admin/instructors_admin/presentation/screens/instructor_admin_screen.dart';
 import 'package:lms_admin_instructor/features/admin/students_admin/presentation/screens/student_admin_screen.dart';
@@ -22,7 +23,7 @@ final List<NavItemModel> adminNavItems = [
   const NavItemModel(
     icon: Icons.dashboard_outlined,
     label: 'dashboard',
-    screen: Ttt(),
+    screen: DashboardScreen(),
     index: 0,
   ),
   const NavItemModel(
@@ -61,7 +62,7 @@ final List<NavItemModel> instructorNavItems = [
   const NavItemModel(
     icon: Icons.dashboard_outlined,
     label: 'dashboard',
-    screen: Ttt(),
+    screen: DashboardScreen(),
     index: 0,
   ),
   const NavItemModel(
