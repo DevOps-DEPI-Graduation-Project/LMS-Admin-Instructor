@@ -22,6 +22,30 @@ class InstructorProfileUIModel {
   });
 
   String get fullName => '$firstName $lastName';
+
+  InstructorProfileUIModel copyWith({
+    String? firstName,
+    String? lastName,
+    String? email,
+    String? slug,
+    String? bio,
+    String? description,
+    String? image,
+    List<InstructorLinkUIModel>? links,
+    String? createdAt,
+  }) {
+    return InstructorProfileUIModel(
+      firstName: firstName ?? this.firstName,
+      lastName: lastName ?? this.lastName,
+      email: email ?? this.email,
+      slug: slug ?? this.slug,
+      bio: bio ?? this.bio,
+      description: description ?? this.description,
+      image: image ?? this.image,
+      links: links ?? this.links,
+      createdAt: createdAt ?? this.createdAt,
+    );
+  }
 }
 
 class InstructorLinkUIModel {

@@ -17,3 +17,13 @@ class ProfileInstructorError extends ProfileInstructorState {
 
   ProfileInstructorError({required this.message});
 }
+
+class ProfileInstructorUpdateSuccess extends ProfileInstructorState {
+  final InstructorProfileUIModel profile;
+  final String message;
+
+  ProfileInstructorUpdateSuccess({
+    required this.profile,
+    required this.message,
+  });
+}

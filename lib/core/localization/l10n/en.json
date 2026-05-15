@@ -262,5 +262,9 @@
   "joined_at": "Joined At",
   "social_media": "Social Media",
   "no_social_media_links": "No social media links added yet",
-  "edit": "Edit"
+  "edit": "Edit",
+  "edit_profile": "Edit Profile",
+  "update_profile_subtitle": "Keep your personal information up to date to help students know you better.",
+  "bio_hint": "Write a short bio about yourself...",
+  "description_hint": "Provide a detailed description of your experience and teaching style..."
 }

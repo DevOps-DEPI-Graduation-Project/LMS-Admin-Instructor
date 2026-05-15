@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:lms_admin_instructor/core/di/service_locator.dart';
 import 'package:lms_admin_instructor/core/extensions/context_extensions.dart';
 import 'package:lms_admin_instructor/core/localization/app_localizations.dart';
+import 'package:lms_admin_instructor/core/services/local/cache_helper.dart';
+import 'package:lms_admin_instructor/core/services/remote/endpoints.dart';
 import 'package:lms_admin_instructor/features/instructor/profile_instructor/domain/entity/instructor_profile_ui_model.dart';
+import 'package:lms_admin_instructor/features/instructor/profile_instructor/presentation/bloc/profile_instructor_bloc.dart';
 import 'package:lms_admin_instructor/features/widgets/custom_button.dart';
+import 'edit_profile_dialog.dart';
 
 class InstructorBioDetails extends StatelessWidget {
   final InstructorProfileUIModel instructor;
@@ -59,7 +65,19 @@ class InstructorBioDetails extends StatelessWidget {
               const Spacer(),
               CustomPrimaryButton(
                 onTap: () {
-                  // TODO: Implement edit profile logic
+                  final slug =
+                      sl<CacheHelper>().getDataString(key: ApiKey.slug) ?? '';
+                  final bloc = context.read<ProfileInstructorBloc>();
+                  showDialog(
+                    context: context,
+                    builder: (context) => BlocProvider.value(
+                      value: bloc,
+                      child: EditProfileDialog(
+                        instructor: instructor,
+                        slug: slug,
+                      ),
+                    ),
+                  );
                 },
                 prefixIcon: Icon(
                   Icons.edit_outlined,
