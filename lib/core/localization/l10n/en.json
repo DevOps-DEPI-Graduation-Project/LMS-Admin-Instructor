@@ -260,5 +260,7 @@
   "bio_and_details": "Bio & other details",
   "bio": "Bio",
   "joined_at": "Joined At",
-  "social_media": "Social Media"
+  "social_media": "Social Media",
+  "no_social_media_links": "No social media links added yet",
+  "edit": "Edit"
 }

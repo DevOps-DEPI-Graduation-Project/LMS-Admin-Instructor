@@ -1,9 +1,30 @@
 import 'package:json_annotation/json_annotation.dart';
+import '../../domain/entity/instructor_profile_ui_model.dart';
 
 part 'instructor_profile_response_model.g.dart';
 
 @JsonSerializable()
 class InstructorProfileResponseModel {
+  final bool? success;
+  final int? status;
+  final String? message;
+  final InstructorProfileDataModel? data;
+
+  InstructorProfileResponseModel({
+    this.success,
+    this.status,
+    this.message,
+    this.data,
+  });
+
+  factory InstructorProfileResponseModel.fromJson(Map<String, dynamic> json) =>
+      _$InstructorProfileResponseModelFromJson(json);
+
+  Map<String, dynamic> toJson() => _$InstructorProfileResponseModelToJson(this);
+}
+
+@JsonSerializable()
+class InstructorProfileDataModel {
   @JsonKey(name: 'first_name')
   final String? firstName;
   @JsonKey(name: 'last_name')
@@ -17,7 +38,7 @@ class InstructorProfileResponseModel {
   @JsonKey(name: 'created_at')
   final String? createdAt;
 
-  InstructorProfileResponseModel({
+  InstructorProfileDataModel({
     this.firstName,
     this.lastName,
     this.email,
@@ -29,10 +50,24 @@ class InstructorProfileResponseModel {
     this.createdAt,
   });
 
-  factory InstructorProfileResponseModel.fromJson(Map<String, dynamic> json) =>
-      _$InstructorProfileResponseModelFromJson(json);
+  factory InstructorProfileDataModel.fromJson(Map<String, dynamic> json) =>
+      _$InstructorProfileDataModelFromJson(json);
 
-  Map<String, dynamic> toJson() => _$InstructorProfileResponseModelToJson(this);
+  Map<String, dynamic> toJson() => _$InstructorProfileDataModelToJson(this);
+
+  InstructorProfileUIModel toEntity() {
+    return InstructorProfileUIModel(
+      firstName: firstName ?? '',
+      lastName: lastName ?? '',
+      email: email ?? '',
+      slug: slug ?? '',
+      bio: bio ?? '',
+      description: description ?? '',
+      image: image ?? '',
+      links: links?.map((e) => e.toEntity()).toList() ?? [],
+      createdAt: createdAt ?? '',
+    );
+  }
 }
 
 @JsonSerializable()
@@ -51,4 +86,12 @@ class InstructorLinkModel {
       _$InstructorLinkModelFromJson(json);
 
   Map<String, dynamic> toJson() => _$InstructorLinkModelToJson(this);
+
+  InstructorLinkUIModel toEntity() {
+    return InstructorLinkUIModel(
+      slug: slug ?? '',
+      platformName: platformName ?? '',
+      url: url ?? '',
+    );
+  }
 }

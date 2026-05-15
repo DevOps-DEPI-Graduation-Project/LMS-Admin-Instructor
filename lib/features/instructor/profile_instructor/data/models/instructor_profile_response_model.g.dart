@@ -9,6 +9,28 @@ part of 'instructor_profile_response_model.dart';
 InstructorProfileResponseModel _$InstructorProfileResponseModelFromJson(
   Map<String, dynamic> json,
 ) => InstructorProfileResponseModel(
+  success: json['success'] as bool?,
+  status: (json['status'] as num?)?.toInt(),
+  message: json['message'] as String?,
+  data: json['data'] == null
+      ? null
+      : InstructorProfileDataModel.fromJson(
+          json['data'] as Map<String, dynamic>,
+        ),
+);
+
+Map<String, dynamic> _$InstructorProfileResponseModelToJson(
+  InstructorProfileResponseModel instance,
+) => <String, dynamic>{
+  'success': instance.success,
+  'status': instance.status,
+  'message': instance.message,
+  'data': instance.data,
+};
+
+InstructorProfileDataModel _$InstructorProfileDataModelFromJson(
+  Map<String, dynamic> json,
+) => InstructorProfileDataModel(
   firstName: json['first_name'] as String?,
   lastName: json['last_name'] as String?,
   email: json['email'] as String?,
@@ -22,8 +44,8 @@ InstructorProfileResponseModel _$InstructorProfileResponseModelFromJson(
   createdAt: json['created_at'] as String?,
 );
 
-Map<String, dynamic> _$InstructorProfileResponseModelToJson(
-  InstructorProfileResponseModel instance,
+Map<String, dynamic> _$InstructorProfileDataModelToJson(
+  InstructorProfileDataModel instance,
 ) => <String, dynamic>{
   'first_name': instance.firstName,
   'last_name': instance.lastName,

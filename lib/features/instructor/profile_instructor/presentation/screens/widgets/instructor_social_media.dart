@@ -38,14 +38,37 @@ class InstructorSocialMedia extends StatelessWidget {
               color: context.colorScheme.onSurface,
             ),
           ),
-          SizedBox(height: 24.h),
-          Wrap(
-            spacing: 16.w,
-            runSpacing: 16.h,
-            children: links
-                .map((link) => _buildSocialIcon(context, link))
-                .toList(),
-          ),
+          if (links.isEmpty)
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 16.h),
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.info_outline,
+                    size: 18.sp,
+                    color: context.colorScheme.onSurface.withValues(alpha: 0.4),
+                  ),
+                  SizedBox(width: 8.w),
+                  Text(
+                    context.tr('no_social_media_links'),
+                    style: context.textTheme.bodyMedium?.copyWith(
+                      color: context.colorScheme.onSurface.withValues(
+                        alpha: 0.4,
+                      ),
+                      fontStyle: FontStyle.italic,
+                    ),
+                  ),
+                ],
+              ),
+            )
+          else
+            Wrap(
+              spacing: 16.w,
+              runSpacing: 16.h,
+              children: links
+                  .map((link) => _buildSocialIcon(context, link))
+                  .toList(),
+            ),
         ],
       ),
     );

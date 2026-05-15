@@ -3,10 +3,16 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lms_admin_instructor/core/extensions/context_extensions.dart';
 import 'package:lms_admin_instructor/core/localization/app_localizations.dart';
 import 'package:lms_admin_instructor/features/instructor/profile_instructor/domain/entity/instructor_profile_ui_model.dart';
+import 'package:lms_admin_instructor/features/widgets/custom_button.dart';
 
 class InstructorBioDetails extends StatelessWidget {
   final InstructorProfileUIModel instructor;
-  const InstructorBioDetails({super.key, required this.instructor});
+  final bool expand;
+  const InstructorBioDetails({
+    super.key,
+    required this.instructor,
+    this.expand = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -27,6 +33,7 @@ class InstructorBioDetails extends StatelessWidget {
         ),
       ),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
@@ -49,39 +56,62 @@ class InstructorBioDetails extends StatelessWidget {
                   letterSpacing: -0.5,
                 ),
               ),
+              const Spacer(),
+              CustomPrimaryButton(
+                onTap: () {
+                  // TODO: Implement edit profile logic
+                },
+                prefixIcon: Icon(
+                  Icons.edit_outlined,
+                  size: 18.sp,
+                  color: context.colorScheme.onPrimary,
+                ),
+                text: context.tr('edit'),
+                width: 110.w,
+                height: 40.h,
+                padding: EdgeInsets.symmetric(horizontal: 12.w),
+              ),
             ],
           ),
           SizedBox(height: 16.h),
           Divider(
             color: context.colorScheme.outlineVariant.withValues(alpha: 0.1),
           ),
-          Expanded(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                _buildDetailItem(
-                  context,
-                  Icons.person_2_outlined,
-                  context.tr('bio'),
-                  instructor.bio,
-                ),
-                _buildDetailItem(
-                  context,
-                  Icons.notes_rounded,
-                  context.tr('description'),
-                  instructor.description,
-                ),
-                _buildDetailItem(
-                  context,
-                  Icons.auto_awesome_outlined,
-                  context.tr('joined_at'),
-                  instructor.createdAt,
-                ),
-              ],
-            ),
-          ),
+          if (expand)
+            Expanded(child: _buildDetailsList(context))
+          else
+            _buildDetailsList(context),
         ],
       ),
+    );
+  }
+
+  Widget _buildDetailsList(BuildContext context) {
+    return Column(
+      mainAxisSize: expand ? MainAxisSize.max : MainAxisSize.min,
+      mainAxisAlignment: expand
+          ? MainAxisAlignment.spaceEvenly
+          : MainAxisAlignment.start,
+      children: [
+        _buildDetailItem(
+          context,
+          Icons.person_2_outlined,
+          context.tr('bio'),
+          instructor.bio,
+        ),
+        _buildDetailItem(
+          context,
+          Icons.notes_rounded,
+          context.tr('description'),
+          instructor.description,
+        ),
+        _buildDetailItem(
+          context,
+          Icons.auto_awesome_outlined,
+          context.tr('joined_at'),
+          instructor.createdAt,
+        ),
+      ],
     );
   }
 
@@ -92,37 +122,45 @@ class InstructorBioDetails extends StatelessWidget {
     String value,
   ) {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 8.h),
+      margin: EdgeInsets.symmetric(vertical: expand ? 12.h : 10.h),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(
-            icon,
-            size: 22.sp,
-            color: context.colorScheme.primary.withValues(alpha: 0.6),
+          Container(
+            padding: EdgeInsets.all(10.r),
+            decoration: BoxDecoration(
+              color: context.colorScheme.primary.withValues(alpha: 0.05),
+              borderRadius: BorderRadius.circular(12.r),
+            ),
+            child: Icon(
+              icon,
+              size: 20.sp,
+              color: context.colorScheme.primary.withValues(alpha: 0.8),
+            ),
           ),
           SizedBox(width: 16.w),
-          Expanded(
+          Flexible(
             child: Column(
+              mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   label,
                   style: context.textTheme.labelMedium?.copyWith(
-                    color: context.colorScheme.onSurfaceVariant.withValues(
-                      alpha: 0.5,
-                    ),
-                    fontWeight: FontWeight.bold,
+                    color: context.colorScheme.onSurface.withValues(alpha: 0.4),
+                    fontWeight: FontWeight.w600,
                     letterSpacing: 0.5,
+                    fontSize: 11.sp,
                   ),
                 ),
                 SizedBox(height: 4.h),
                 Text(
                   value,
                   style: context.textTheme.bodyLarge?.copyWith(
-                    color: context.colorScheme.onSurface,
-                    fontWeight: FontWeight.w500,
-                    height: 1.4,
+                    color: context.colorScheme.onSurface.withValues(alpha: 0.9),
+                    fontWeight: FontWeight.w600,
+                    height: 1.5,
+                    fontSize: 14.sp,
                   ),
                 ),
               ],
