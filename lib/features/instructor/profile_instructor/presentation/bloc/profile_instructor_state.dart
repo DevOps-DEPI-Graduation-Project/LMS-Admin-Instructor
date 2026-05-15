@@ -27,3 +27,31 @@ class ProfileInstructorUpdateSuccess extends ProfileInstructorState {
     required this.message,
   });
 }
+
+class GetInstructorLinksLoading extends ProfileInstructorState {}
+
+class GetInstructorLinksSuccess extends ProfileInstructorState {
+  final List<InstructorLinkUIModel> links;
+
+  GetInstructorLinksSuccess({required this.links});
+}
+
+class GetInstructorLinksError extends ProfileInstructorState {
+  final String message;
+
+  GetInstructorLinksError({required this.message});
+}
+
+class AddInstructorLinkLoading extends ProfileInstructorState {}
+
+class AddInstructorLinkSuccess extends ProfileInstructorState {
+  final InstructorLinkUIModel link;
+
+  AddInstructorLinkSuccess({required this.link});
+}
+
+class AddInstructorLinkError extends ProfileInstructorState {
+  final String message;
+
+  AddInstructorLinkError({required this.message});
+}

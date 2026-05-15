@@ -12,6 +12,8 @@ class ProfileInstructorBloc
     : super(ProfileInstructorInitial()) {
     on<GetProfileInstructorEvent>(_onGetProfileInstructorEvent);
     on<UpdateProfileInstructorEvent>(_onUpdateProfileInstructorEvent);
+    on<GetInstructorLinksEvent>(_onGetInstructorLinksEvent);
+    on<AddInstructorLinkEvent>(_onAddInstructorLinkEvent);
   }
 
   Future<void> _onGetProfileInstructorEvent(
@@ -85,5 +87,40 @@ class ProfileInstructorBloc
         );
       }
     });
+  }
+
+  Future<void> _onGetInstructorLinksEvent(
+    GetInstructorLinksEvent event,
+    Emitter<ProfileInstructorState> emit,
+  ) async {
+    emit(GetInstructorLinksLoading());
+
+    final response = await repository.getInstructorLinks(event.slug);
+
+    response.fold(
+      (failure) => emit(GetInstructorLinksError(message: failure)),
+      (links) => emit(
+        GetInstructorLinksSuccess(
+          links: links.map((e) => e.toEntity()).toList(),
+        ),
+      ),
+    );
+  }
+
+  Future<void> _onAddInstructorLinkEvent(
+    AddInstructorLinkEvent event,
+    Emitter<ProfileInstructorState> emit,
+  ) async {
+    emit(AddInstructorLinkLoading());
+
+    final response = await repository.addInstructorLink(
+      slug: event.slug,
+      requestModel: event.requestModel,
+    );
+
+    response.fold(
+      (failure) => emit(AddInstructorLinkError(message: failure)),
+      (link) => emit(AddInstructorLinkSuccess(link: link.toEntity())),
+    );
   }
 }

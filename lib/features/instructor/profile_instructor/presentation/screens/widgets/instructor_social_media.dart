@@ -1,13 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lms_admin_instructor/core/extensions/context_extensions.dart';
 import 'package:lms_admin_instructor/core/localization/app_localizations.dart';
 import 'package:lms_admin_instructor/features/instructor/profile_instructor/domain/entity/instructor_profile_ui_model.dart';
+import 'package:lms_admin_instructor/features/instructor/profile_instructor/presentation/bloc/profile_instructor_bloc.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import 'add_link_dialog.dart';
 
 class InstructorSocialMedia extends StatelessWidget {
   final List<InstructorLinkUIModel> links;
-  const InstructorSocialMedia({super.key, required this.links});
+  final String slug;
+  const InstructorSocialMedia({
+    super.key,
+    required this.links,
+    required this.slug,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -31,12 +40,34 @@ class InstructorSocialMedia extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            context.tr('social_media'),
-            style: context.textTheme.titleLarge?.copyWith(
-              fontWeight: FontWeight.bold,
-              color: context.colorScheme.onSurface,
-            ),
+          Row(
+            children: [
+              Text(
+                context.tr('social_media'),
+                style: context.textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: context.colorScheme.onSurface,
+                ),
+              ),
+              const Spacer(),
+              IconButton(
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (dialogContext) => BlocProvider.value(
+                      value: context.read<ProfileInstructorBloc>(),
+                      child: AddLinkDialog(slug: slug),
+                    ),
+                  );
+                },
+                icon: Icon(
+                  Icons.add_circle_outline,
+                  color: context.colorScheme.primary,
+                  size: 24.sp,
+                ),
+                tooltip: context.tr('add_link'),
+              ),
+            ],
           ),
           if (links.isEmpty)
             Padding(
@@ -99,6 +130,22 @@ class InstructorSocialMedia extends StatelessWidget {
       case 'linkedin':
         iconData = Icons.business;
         iconColor = const Color(0xFF0A66C2);
+        break;
+      case 'github':
+        iconData = Icons.code;
+        iconColor = const Color(0xFF181717);
+        break;
+      case 'tiktok':
+        iconData = Icons.music_note;
+        iconColor = Colors.black;
+        break;
+      case 'whatsapp':
+        iconData = Icons.chat;
+        iconColor = const Color(0xFF25D366);
+        break;
+      case 'website':
+        iconData = Icons.language;
+        iconColor = context.colorScheme.primary;
         break;
       default:
         iconData = Icons.link;

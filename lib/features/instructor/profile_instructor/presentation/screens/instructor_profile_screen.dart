@@ -97,7 +97,11 @@ class InstructorProfileScreen extends StatelessWidget {
                     InstructorBioDetails(instructor: instructor),
                   ],
                   SizedBox(height: 32.h),
-                  InstructorSocialMedia(links: instructor.links),
+                  InstructorSocialMedia(
+                    key: ValueKey('social_${instructor.links.length}'),
+                    links: instructor.links,
+                    slug: instructor.slug,
+                  ),
                 ],
               ),
             );
