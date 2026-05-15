@@ -255,5 +255,9 @@
   "feature_student_tracking_desc": "احصل على رؤى عميقة حول تفاعل الطلاب وتقدمهم عبر المنصة بالكامل.",
   "feature_interactive_learning_title": "تقييمات متقدمة",
   "feature_interactive_learning_desc": "قم بنشر اختبارات وآليات تتبع متطورة لضمان نتائج تعليمية عالية الجودة.",
-  "ready_to_start_journey": "جاهز لتحسين منصتك؟"
+  "ready_to_start_journey": "جاهز لتحسين منصتك؟",
+  "bio_and_details": "السيرة الذاتية والتفاصيل",
+  "bio": "السيرة الذاتية",
+  "joined_at": "تاريخ الانضمام",
+  "social_media": "وسائل التواصل الاجتماعي"
 }

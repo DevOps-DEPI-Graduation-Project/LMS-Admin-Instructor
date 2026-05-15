@@ -256,5 +256,9 @@
   "feature_student_tracking_desc": "Gain deep insights into student engagement and progress across the entire platform.",
   "feature_interactive_learning_title": "Advanced Assessments",
   "feature_interactive_learning_desc": "Deploy sophisticated quizzes and tracking mechanisms to ensure high-quality learning outcomes.",
-  "ready_to_start_journey": "Ready to optimize your platform?"
+  "ready_to_start_journey": "Ready to optimize your platform?",
+  "bio_and_details": "Bio & other details",
+  "bio": "Bio",
+  "joined_at": "Joined At",
+  "social_media": "Social Media"
 }

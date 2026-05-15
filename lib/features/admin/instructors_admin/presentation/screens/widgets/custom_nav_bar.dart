@@ -45,7 +45,7 @@ class _CustomNavBarState extends State<CustomNavBar> {
             SizedBox(width: 8.w),
             IconButton(
               icon: const Icon(Icons.person_outline),
-              onPressed: () {},
+              onPressed: () => context.pushNamed(AppRoutes.instructorProfileScreen),
             ),
             SizedBox(width: 8.w),
             IconButton(

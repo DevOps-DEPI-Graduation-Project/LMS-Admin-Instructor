@@ -37,6 +37,7 @@ import 'package:lms_admin_instructor/features/instructor/manage_materials_instru
 import 'package:lms_admin_instructor/features/instructor/course_students_instructor/presentation/screens/course_students_instructor_screen.dart';
 import 'package:lms_admin_instructor/root/bloc/root_bloc.dart';
 import 'package:lms_admin_instructor/root/custom_view_nav_bar.dart';
+import 'package:lms_admin_instructor/features/instructor/profile_instructor/presentation/screens/instructor_profile_screen.dart';
 
 class RouterGenerator {
   static GoRouter goRouter = GoRouter(
@@ -231,6 +232,11 @@ class RouterGenerator {
             child: CourseMaterialsScreen(slug: slug, courseName: courseName),
           );
         },
+      ),
+      GoRoute(
+        path: AppRoutes.instructorProfileScreen,
+        name: AppRoutes.instructorProfileScreen,
+        builder: (context, state) => const InstructorProfileScreen(),
       ),
       GoRoute(
         path: AppRoutes.pdfViewer,
