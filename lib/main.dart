@@ -41,7 +41,7 @@ class MyApp extends StatelessWidget {
             ],
             locale: const Locale('en'),
             debugShowCheckedModeBanner: false,
-            title: 'LMS Dashboard',
+            title: 'Commit Ma3ana Dashboard',
             theme: AppTheme.lightTheme,
             routerConfig: RouterGenerator.goRouter,
           );
