@@ -13,6 +13,7 @@ UpdateInstructorRequestModel _$UpdateInstructorRequestModelFromJson(
   lastName: json['last_name'] as String,
   bio: json['bio'] as String,
   description: json['description'] as String,
+  image: json['image'] as String?,
 );
 
 Map<String, dynamic> _$UpdateInstructorRequestModelToJson(
@@ -22,4 +23,5 @@ Map<String, dynamic> _$UpdateInstructorRequestModelToJson(
   'last_name': instance.lastName,
   'bio': instance.bio,
   'description': instance.description,
+  'image': instance.image,
 };

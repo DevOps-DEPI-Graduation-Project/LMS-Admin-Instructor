@@ -10,12 +10,14 @@ class UpdateInstructorRequestModel {
   final String lastName;
   final String bio;
   final String description;
+  final String? image;
 
   UpdateInstructorRequestModel({
     required this.firstName,
     required this.lastName,
     required this.bio,
     required this.description,
+    this.image,
   });
 
   factory UpdateInstructorRequestModel.fromJson(Map<String, dynamic> json) =>

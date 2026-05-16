@@ -63,10 +63,14 @@ class InstructorProfileScreen extends StatelessWidget {
             context.read<ProfileInstructorBloc>().add(
               GetProfileInstructorEvent(slug: state.instructorSlug),
             );
-          } else if (state is DeleteInstructorLinkError) {
+          } else if (state is ProfileInstructorError ||
+              state is DeleteInstructorLinkError ||
+              state is AddInstructorLinkError ||
+              state is UpdateInstructorLinkError) {
+            final message = (state as dynamic).message as String;
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text(state.message),
+                content: Text(message),
                 backgroundColor: context.colorScheme.error,
               ),
             );
@@ -76,15 +80,12 @@ class InstructorProfileScreen extends StatelessWidget {
           buildWhen: (previous, current) =>
               current is ProfileInstructorLoading ||
               current is ProfileInstructorLoaded ||
-              current is ProfileInstructorError ||
               current is ProfileInstructorUpdateSuccess,
           builder: (context, state) {
-            if (state is ProfileInstructorLoading) {
+            if (state is ProfileInstructorLoading &&
+                context.read<ProfileInstructorBloc>().state
+                    is! ProfileInstructorLoaded) {
               return const Center(child: CircularProgressIndicator());
-            }
-
-            if (state is ProfileInstructorError) {
-              return Center(child: Text(state.message));
             }
 
             InstructorProfileUIModel? instructor;

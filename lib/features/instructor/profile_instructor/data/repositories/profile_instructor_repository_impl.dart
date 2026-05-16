@@ -1,3 +1,4 @@
+import 'dart:typed_data';
 import 'package:dartz/dartz.dart';
 import 'package:lms_admin_instructor/core/services/remote/api_consumer.dart';
 import 'package:lms_admin_instructor/core/services/remote/endpoints.dart';
@@ -27,10 +28,24 @@ class ProfileInstructorRepositoryImpl implements ProfileInstructorRepository {
   updateInstructorProfile({
     required String slug,
     required UpdateInstructorRequestModel requestModel,
+    Uint8List? imageBytes,
+    String? imageName,
   }) async {
+    final Map<String, dynamic> data = requestModel.toJson();
+
+    if (imageBytes != null) {
+      data['image'] = apiConsumer.multipartFileFromBytes(
+        imageBytes,
+        filename: imageName,
+      );
+    } else {
+      data.remove('image');
+    }
+
     return await apiConsumer.patch<InstructorProfileResponseModel>(
       EndPoint.updateInstructor(slug),
-      data: requestModel.toJson(),
+      data: data,
+      isFormData: imageBytes != null,
       fromJson: (json) => InstructorProfileResponseModel.fromJson(json),
     );
   }

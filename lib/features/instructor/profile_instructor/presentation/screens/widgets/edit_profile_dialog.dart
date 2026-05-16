@@ -1,6 +1,8 @@
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:lms_admin_instructor/core/extensions/context_extensions.dart';
 import 'package:lms_admin_instructor/core/localization/app_localizations.dart';
 import 'package:lms_admin_instructor/core/utils/get_responsive_size.dart';
@@ -32,6 +34,24 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
   late TextEditingController _bioController;
   late TextEditingController _descriptionController;
   final _formKey = GlobalKey<FormState>();
+
+  Uint8List? _imageBytes;
+  String? _imageName;
+  final ImagePicker _picker = ImagePicker();
+
+  Future<void> _pickImage() async {
+    final XFile? pickedFile = await _picker.pickImage(
+      source: ImageSource.gallery,
+      imageQuality: 50,
+    );
+    if (pickedFile != null) {
+      final bytes = await pickedFile.readAsBytes();
+      setState(() {
+        _imageBytes = bytes;
+        _imageName = pickedFile.name;
+      });
+    }
+  }
 
   @override
   void initState() {
@@ -92,6 +112,68 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
                     context.tr('update_profile_subtitle'),
                     style: context.textTheme.bodyMedium?.copyWith(
                       color: context.colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                  Center(
+                    child: Stack(
+                      children: [
+                        Container(
+                          width: 100.w,
+                          height: 100.w,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: context.colorScheme.primary,
+                              width: 2,
+                            ),
+                            image: _imageBytes != null
+                                ? DecorationImage(
+                                    image: MemoryImage(_imageBytes!),
+                                    fit: BoxFit.cover,
+                                  )
+                                : widget.instructor.image.isNotEmpty
+                                ? DecorationImage(
+                                    image: NetworkImage(
+                                      widget.instructor.image,
+                                    ),
+                                    fit: BoxFit.cover,
+                                  )
+                                : null,
+                          ),
+                          child:
+                              _imageBytes == null &&
+                                  widget.instructor.image.isEmpty
+                              ? Icon(
+                                  Icons.person,
+                                  size: 50.sp,
+                                  color: context.colorScheme.primary,
+                                )
+                              : null,
+                        ),
+                        Positioned(
+                          bottom: 0,
+                          right: 0,
+                          child: GestureDetector(
+                            onTap: _pickImage,
+                            child: Container(
+                              padding: EdgeInsets.all(8.w),
+                              decoration: BoxDecoration(
+                                color: context.colorScheme.primary,
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                  color: context.colorScheme.surface,
+                                  width: 2,
+                                ),
+                              ),
+                              child: Icon(
+                                Icons.camera_alt,
+                                size: 16.sp,
+                                color: context.colorScheme.onPrimary,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                   SizedBox(height: 32.h),
@@ -174,6 +256,8 @@ class _EditProfileDialogState extends State<EditProfileDialog> {
                                       context.read<ProfileInstructorBloc>().add(
                                         UpdateProfileInstructorEvent(
                                           slug: widget.slug,
+                                          imageBytes: _imageBytes,
+                                          imageName: _imageName,
                                           requestModel:
                                               UpdateInstructorRequestModel(
                                                 firstName:

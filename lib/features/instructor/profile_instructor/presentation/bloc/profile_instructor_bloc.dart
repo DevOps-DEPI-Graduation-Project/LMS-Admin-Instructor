@@ -55,11 +55,16 @@ class ProfileInstructorBloc
     final response = await repository.updateInstructorProfile(
       slug: event.slug,
       requestModel: event.requestModel,
+      imageBytes: event.imageBytes,
+      imageName: event.imageName,
     );
 
-    response.fold((failure) => emit(ProfileInstructorError(message: failure)), (
-      profileModel,
-    ) {
+    response.fold((failure) {
+      emit(ProfileInstructorError(message: failure));
+      if (currentProfile != null) {
+        emit(ProfileInstructorLoaded(profile: currentProfile));
+      }
+    }, (profileModel) {
       if (profileModel.data != null) {
         var profile = profileModel.data!.toEntity();
 
@@ -87,6 +92,9 @@ class ProfileInstructorBloc
             message: profileModel.message ?? 'Unknown error occurred',
           ),
         );
+        if (currentProfile != null) {
+          emit(ProfileInstructorLoaded(profile: currentProfile));
+        }
       }
     });
   }

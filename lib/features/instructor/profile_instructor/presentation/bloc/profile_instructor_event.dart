@@ -1,3 +1,4 @@
+import 'dart:typed_data';
 import '../../data/models/update_instructor_request_model.dart';
 import '../../data/models/create_link_request_model.dart';
 import '../../data/models/update_link_request_model.dart';
@@ -13,10 +14,14 @@ class GetProfileInstructorEvent extends ProfileInstructorEvent {
 class UpdateProfileInstructorEvent extends ProfileInstructorEvent {
   final String slug;
   final UpdateInstructorRequestModel requestModel;
+  final Uint8List? imageBytes;
+  final String? imageName;
 
   UpdateProfileInstructorEvent({
     required this.slug,
     required this.requestModel,
+    this.imageBytes,
+    this.imageName,
   });
 }
 
