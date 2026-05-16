@@ -119,10 +119,7 @@ class _CustomDeleteDialogState extends State<CustomDeleteDialog> {
                     text: "'$expectedText'",
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  TextSpan(
-                    text:
-                        " ${context.tr('to_confirm_deletion') ?? 'to confirm deletion'}",
-                  ),
+                  TextSpan(text: " ${context.tr('to_confirm_deletion')}"),
                 ],
               ),
             ),
