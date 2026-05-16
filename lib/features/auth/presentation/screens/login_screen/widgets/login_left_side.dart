@@ -40,6 +40,12 @@ class LoginLeftSide extends StatelessWidget {
                             color: context.colorScheme.secondary,
                             borderRadius: BorderRadius.circular(8),
                           ),
+                          child: Image.asset(
+                            AppAssets.appLogo,
+                            width: 22.w,
+                            height: 22.w,
+                            fit: BoxFit.contain,
+                          ),
                         ),
                         SizedBox(width: 12.w),
                         Text(
