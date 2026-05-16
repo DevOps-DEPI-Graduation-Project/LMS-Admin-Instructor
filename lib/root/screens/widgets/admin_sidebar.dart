@@ -77,7 +77,6 @@ class AdminSidebar extends StatelessWidget {
                 ),
               ],
             ),
-            ),
           ),
           Divider(
             color: context.colorScheme.onSurface.withValues(alpha: 0.1),
