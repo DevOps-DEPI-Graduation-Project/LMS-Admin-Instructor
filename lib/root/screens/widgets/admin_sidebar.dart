@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lms_admin_instructor/core/extensions/context_extensions.dart';
 import 'package:lms_admin_instructor/core/localization/app_localizations.dart';
+import 'package:lms_admin_instructor/core/theme/app_assets.dart';
 import 'package:lms_admin_instructor/root/models/nav_items.dart';
 
 class AdminSidebar extends StatelessWidget {
@@ -33,13 +34,49 @@ class AdminSidebar extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: EdgeInsets.fromLTRB(28.w, 32.h, 28.w, 24.h),
-            child: Text(
-              context.tr('lms_admin'),
-              style: context.textTheme.displaySmall?.copyWith(
-                color: context.colorScheme.primary,
-                fontWeight: FontWeight.bold,
-              ),
+            padding: EdgeInsets.fromLTRB(20.w, 32.h, 20.w, 24.h),
+            child: Row(
+              children: [
+                Container(
+                  padding: EdgeInsets.all(8.r),
+                  decoration: BoxDecoration(
+                    color: context.colorScheme.primary.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(12.r),
+                  ),
+                  child: Image.asset(
+                    AppAssets.appLogo,
+                    width: 32.r,
+                    height: 32.r,
+                    fit: BoxFit.contain,
+                  ),
+                ),
+                SizedBox(width: 12.w),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        'Commit Ma3ana',
+                        style: context.textTheme.titleMedium?.copyWith(
+                          color: context.colorScheme.onSurface,
+                          fontWeight: FontWeight.bold,
+                          height: 1.2,
+                        ),
+                      ),
+                      Text(
+                        'Dashboard',
+                        style: context.textTheme.labelMedium?.copyWith(
+                          color: context.colorScheme.primary,
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: 1.2,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
             ),
           ),
           Divider(
