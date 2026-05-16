@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lms_admin_instructor/core/common/mixins/paginated_list_mixin.dart';
 import 'package:lms_admin_instructor/features/students/domain/entity/student_ui_model.dart';
-import 'package:lms_admin_instructor/features/students/domain/repository/students_admin_repository.dart';
+import 'package:lms_admin_instructor/features/students/domain/repository/students_repository.dart';
 import 'package:lms_admin_instructor/features/students/screens/students_list/bloc/student_event.dart';
 import 'package:lms_admin_instructor/features/students/screens/students_list/bloc/student_state.dart';
 

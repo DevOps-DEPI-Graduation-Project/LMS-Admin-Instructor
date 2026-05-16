@@ -121,7 +121,7 @@ class _CustomDeleteDialogState extends State<CustomDeleteDialog> {
                   ),
                   TextSpan(
                     text:
-                        " ${context.tr('to_confirm_deletion') ?? 'to confirm deletion'}",
+                        " ${context.tr('to_confirm_deletion')}",
                   ),
                 ],
               ),

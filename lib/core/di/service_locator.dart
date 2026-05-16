@@ -19,7 +19,7 @@ import 'package:lms_admin_instructor/features/splash/data/repositories/splash_re
 import 'package:lms_admin_instructor/features/splash/domain/splash_repository.dart';
 import 'package:lms_admin_instructor/features/splash/presentation/bloc/splash_bloc.dart';
 import 'package:lms_admin_instructor/features/students/data/repository/students_repository_impl.dart';
-import 'package:lms_admin_instructor/features/students/domain/repository/students_admin_repository.dart';
+import 'package:lms_admin_instructor/features/students/domain/repository/students_repository.dart';
 import 'package:lms_admin_instructor/features/students/screens/students_list/bloc/student_bloc.dart';
 import 'package:lms_admin_instructor/features/admin/instructors_admin/presentation/bloc/instructor_admin_bloc.dart';
 import 'package:lms_admin_instructor/features/instructor/courses_instructor/data/repository/courses_instructor_repository_impl.dart';
