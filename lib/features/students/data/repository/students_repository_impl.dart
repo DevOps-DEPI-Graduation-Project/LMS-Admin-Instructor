@@ -5,7 +5,7 @@ import 'package:lms_admin_instructor/core/services/remote/api_consumer.dart';
 import 'package:lms_admin_instructor/core/services/remote/endpoints.dart';
 import 'package:lms_admin_instructor/core/utils/api_query_params.dart';
 import 'package:lms_admin_instructor/features/students/data/model/students_response_model.dart';
-import 'package:lms_admin_instructor/features/students/domain/repository/students_admin_repository.dart';
+import 'package:lms_admin_instructor/features/students/domain/repository/students_repository.dart';
 
 class StudentsRepositoryImpl implements StudentsRepository {
   final ApiConsumer apiConsumer;
@@ -17,6 +17,7 @@ class StudentsRepositoryImpl implements StudentsRepository {
   Future<Either<String, StudentsResponseModel>> getStudents({
     int? page,
     int? pageSize,
+    String? search,
   }) async {
     final role = UserRole.fromString(cacheHelper.getDataString(key: ApiKey.role));
     final slug = cacheHelper.getDataString(key: ApiKey.slug) ?? '';
@@ -35,6 +36,7 @@ class StudentsRepositoryImpl implements StudentsRepository {
       queryParameters: ApiQueryParams.pagination(
         page: page,
         pageSize: pageSize,
+        search: search,
       ),
       fromJson: (json) => StudentsResponseModel.fromJson(json),
     );

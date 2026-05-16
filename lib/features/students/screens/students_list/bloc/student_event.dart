@@ -3,7 +3,8 @@ class StudentEvent {}
 class GetStudentsEvent extends StudentEvent {
   final int? page;
   final int? pageSize;
-  GetStudentsEvent({this.page, this.pageSize});
+  final String? search;
+  GetStudentsEvent({this.page, this.pageSize, this.search});
 }
 
 class DeleteStudentEvent extends StudentEvent {

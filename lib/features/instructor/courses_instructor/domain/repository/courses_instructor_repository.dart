@@ -7,6 +7,7 @@ abstract class CoursesInstructorRepository {
     required String instructorSlug,
     int? page,
     int? pageSize,
+    String? search,
   });
 
   Future<Either<String, String>> addCourse({

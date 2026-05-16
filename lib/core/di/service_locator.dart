@@ -19,7 +19,7 @@ import 'package:lms_admin_instructor/features/splash/data/repositories/splash_re
 import 'package:lms_admin_instructor/features/splash/domain/splash_repository.dart';
 import 'package:lms_admin_instructor/features/splash/presentation/bloc/splash_bloc.dart';
 import 'package:lms_admin_instructor/features/students/data/repository/students_repository_impl.dart';
-import 'package:lms_admin_instructor/features/students/domain/repository/students_admin_repository.dart';
+import 'package:lms_admin_instructor/features/students/domain/repository/students_repository.dart';
 import 'package:lms_admin_instructor/features/students/screens/students_list/bloc/student_bloc.dart';
 import 'package:lms_admin_instructor/features/admin/instructors_admin/presentation/bloc/instructor_admin_bloc.dart';
 import 'package:lms_admin_instructor/features/instructor/courses_instructor/data/repository/courses_instructor_repository_impl.dart';
@@ -39,6 +39,9 @@ import 'package:lms_admin_instructor/features/instructor/common/data/repository/
 import 'package:lms_admin_instructor/features/instructor/common/domain/repository/materials_repository.dart';
 import 'package:lms_admin_instructor/features/instructor/manage_materials_instructor/presentation/bloc/course_material_bloc.dart';
 import 'package:lms_admin_instructor/features/students/screens/student_details/bloc/student_details_bloc.dart';
+import 'package:lms_admin_instructor/features/admin/all_courses_admin/data/repository/all_courses_admin_repository_impl.dart';
+import 'package:lms_admin_instructor/features/admin/all_courses_admin/domain/repository/all_courses_admin_repository.dart';
+import 'package:lms_admin_instructor/features/admin/all_courses_admin/presentation/bloc/all_courses_admin_bloc.dart';
 
 final sl = GetIt.instance;
 
@@ -131,4 +134,10 @@ Future<void> setupServiceLocator() async {
     () => MaterialsRepositoryImpl(apiConsumer: sl()),
   );
   sl.registerFactory(() => CourseMaterialsBloc(repository: sl()));
+
+  // Features - All Courses Admin
+  sl.registerLazySingleton<AllCoursesAdminRepository>(
+    () => AllCoursesAdminRepositoryImpl(apiConsumer: sl()),
+  );
+  sl.registerFactory(() => AllCoursesAdminBloc(repository: sl()));
 }

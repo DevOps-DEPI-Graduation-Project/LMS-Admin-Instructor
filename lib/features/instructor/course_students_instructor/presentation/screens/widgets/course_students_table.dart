@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -9,11 +10,13 @@ import 'package:lms_admin_instructor/core/localization/app_localizations.dart';
 import 'package:lms_admin_instructor/core/utils/get_responsive_size.dart';
 import 'package:lms_admin_instructor/features/instructor/course_students_instructor/domain/entity/course_student_ui_model.dart';
 import 'package:lms_admin_instructor/features/instructor/course_students_instructor/presentation/bloc/course_students_bloc.dart';
+import 'package:lms_admin_instructor/features/instructor/course_students_instructor/presentation/bloc/course_students_event.dart';
 import 'package:lms_admin_instructor/features/instructor/course_students_instructor/presentation/bloc/course_students_state.dart';
 import 'package:lms_admin_instructor/features/widgets/custon_text_form_field.dart';
 
 class CourseStudentsTable extends StatefulWidget {
-  const CourseStudentsTable({super.key});
+  final String slug;
+  const CourseStudentsTable({super.key, required this.slug});
 
   @override
   State<CourseStudentsTable> createState() => _CourseStudentsTableState();
@@ -21,11 +24,26 @@ class CourseStudentsTable extends StatefulWidget {
 
 class _CourseStudentsTableState extends State<CourseStudentsTable> {
   final TextEditingController _searchController = TextEditingController();
+  Timer? _debounce;
 
   @override
   void dispose() {
     _searchController.dispose();
+    _debounce?.cancel();
     super.dispose();
+  }
+
+  void _onSearchChanged(String query) {
+    if (_debounce?.isActive ?? false) _debounce?.cancel();
+    _debounce = Timer(const Duration(milliseconds: 500), () {
+      context.read<CourseStudentsBloc>().add(
+            GetCourseStudentsEvent(
+              slug: widget.slug,
+              page: 1,
+              search: query,
+            ),
+          );
+    });
   }
 
   @override
@@ -85,7 +103,7 @@ class _CourseStudentsTableState extends State<CourseStudentsTable> {
                               return const Center(
                                 child: Padding(
                                   padding: EdgeInsets.symmetric(vertical: 48),
-                                  child: Text("No students enrolled yet"),
+                                  child: Text("No students found"),
                                 ),
                               );
                             }
@@ -142,10 +160,11 @@ class _CourseStudentsTableState extends State<CourseStudentsTable> {
             suffixIcon: _searchController.text.isNotEmpty ? Icons.clear : null,
             onSuffixIcon: () {
               _searchController.clear();
+              _onSearchChanged('');
               setState(() {});
-              // TODO: Trigger search refresh
             },
             onChanged: (value) {
+              _onSearchChanged(value);
               setState(() {});
             },
           ),

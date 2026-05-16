@@ -5,6 +5,8 @@ import 'package:lms_admin_instructor/features/admin/instructors_admin/presentati
 import 'package:lms_admin_instructor/features/instructor/courses_instructor/presentation/screens/courses_instructor_screen.dart';
 import 'package:lms_admin_instructor/features/students/screens/students_list/presentation/student_screen.dart';
 
+import 'package:lms_admin_instructor/features/admin/all_courses_admin/presentation/screens/all_courses_admin_screen.dart';
+
 class NavItemModel {
   final IconData icon;
   final String label;
@@ -41,7 +43,7 @@ final List<NavItemModel> adminNavItems = [
   const NavItemModel(
     icon: Icons.menu_book_outlined,
     label: 'courses',
-    screen: Ttt(),
+    screen: AllCoursesAdminScreen(),
     index: 3,
   ),
   const NavItemModel(

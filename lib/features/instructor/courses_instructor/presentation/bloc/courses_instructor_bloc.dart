@@ -32,9 +32,7 @@ class CoursesInstructorBloc extends Bloc<CoursesInstructorEvent, CoursesInstruct
     if (!shouldHandlePagination(pageToFetch, state)) return;
 
     if (pageToFetch == 1) {
-      if (state is! CoursesInstructorLoaded) {
-        emit(CoursesInstructorLoading());
-      }
+      emit(CoursesInstructorLoading());
     } else {
       emit((state as CoursesInstructorLoaded).copyWith(isPaginationLoading: true));
     }
@@ -43,14 +41,26 @@ class CoursesInstructorBloc extends Bloc<CoursesInstructorEvent, CoursesInstruct
       instructorSlug: event.instructorSlug,
       page: pageToFetch,
       pageSize: event.pageSize,
+      search: event.search,
     );
 
     response.fold(
       (error) => emit(CoursesInstructorError(message: error)),
       (responseModel) {
+        var entity = responseModel.toEntity();
+
+        // Local Filtering Fallback
+        if (event.search != null && event.search!.isNotEmpty) {
+          final query = event.search!.toLowerCase();
+          final filteredCourses = entity.courses.where((course) {
+            return course.title.toLowerCase().contains(query);
+          }).toList();
+          entity = entity.copyWith(courses: filteredCourses);
+        }
+
         handlePaginatedResponse(
           page: pageToFetch,
-          newEntity: responseModel.toEntity(),
+          newEntity: entity,
           currentState: state,
           emit: emit.call,
           loadedStateBuilder: (model, isPaging) =>

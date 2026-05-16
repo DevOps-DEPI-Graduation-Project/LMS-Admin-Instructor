@@ -9,7 +9,7 @@ class AppTheme {
   static const _secondary = Color(0xFFA8DF8E);
   static const _onSecondary = Color(0xFF0A3D2E);
   static const _backgroundLight = Color(0xFFF3F7F8);
-  static const _backgroundDark = Color(0xFF0E1416);
+  // static const _backgroundDark = Color(0xFF0E1416);
   static const _textPrimaryLight = Color(0xFF102A33);
   static const _textPrimaryDark = Color(0xFFF3F7F8);
   static const _textSecondaryLight = Color(0xFF37474F);
@@ -18,8 +18,11 @@ class AppTheme {
   static const _outline = Color(0xFFD1DDE1);
   static const _error = Color(0xFFD32F2F);
 
-  static double getResponsiveSize(double webSize, double mobileSize,
-      [double? tabletSize]) {
+  static double getResponsiveSize(
+    double webSize,
+    double mobileSize, [
+    double? tabletSize,
+  ]) {
     final width = ScreenUtil().screenWidth;
     if (width >= 1100) return webSize.sp;
     if (width >= 600) {

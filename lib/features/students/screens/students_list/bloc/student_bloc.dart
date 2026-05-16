@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lms_admin_instructor/core/common/mixins/paginated_list_mixin.dart';
 import 'package:lms_admin_instructor/features/students/domain/entity/student_ui_model.dart';
-import 'package:lms_admin_instructor/features/students/domain/repository/students_admin_repository.dart';
+import 'package:lms_admin_instructor/features/students/domain/repository/students_repository.dart';
 import 'package:lms_admin_instructor/features/students/screens/students_list/bloc/student_event.dart';
 import 'package:lms_admin_instructor/features/students/screens/students_list/bloc/student_state.dart';
 
@@ -67,9 +67,7 @@ class StudentBloc extends Bloc<StudentEvent, StudentState>
     if (!shouldHandlePagination(pageToFetch, state)) return;
 
     if (pageToFetch == 1) {
-      if (state is! StudentLoaded) {
-        emit(StudentLoading());
-      }
+      emit(StudentLoading());
     } else {
       emit((state as StudentLoaded).copyWith(isPaginationLoading: true));
     }
@@ -77,18 +75,32 @@ class StudentBloc extends Bloc<StudentEvent, StudentState>
     final result = await studentsRepository.getStudents(
       page: pageToFetch,
       pageSize: event.pageSize,
+      search: event.search,
     );
 
     result.fold((failure) => emit(StudentError(message: failure)), (
       responseModel,
     ) {
+      var entity = responseModel.toEntity();
+
+      if (event.search != null && event.search!.isNotEmpty) {
+        final query = event.search!.toLowerCase();
+        final filteredStudents = entity.students.where((student) {
+          return student.studentName.toLowerCase().contains(query) ||
+              student.email.toLowerCase().contains(query);
+        }).toList();
+        entity = entity.copyWith(students: filteredStudents);
+      }
+
       handlePaginatedResponse(
         page: pageToFetch,
-        newEntity: responseModel.toEntity(),
+        newEntity: entity,
         currentState: state,
         emit: emit.call,
-        loadedStateBuilder: (model, isPaging) =>
-            StudentLoaded(studentUIModel: model, isPaginationLoading: isPaging),
+        loadedStateBuilder: (model, isPaging) => StudentLoaded(
+          studentUIModel: model,
+          isPaginationLoading: isPaging,
+        ),
         errorStateBuilder: (msg) => StudentError(message: msg),
         loadingStateBuilder: () => StudentLoading(),
       );

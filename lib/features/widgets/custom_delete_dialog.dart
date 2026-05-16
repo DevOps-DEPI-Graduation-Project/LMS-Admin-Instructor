@@ -119,10 +119,7 @@ class _CustomDeleteDialogState extends State<CustomDeleteDialog> {
                     text: "'$expectedText'",
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  TextSpan(
-                    text:
-                        " ${context.tr('to_confirm_deletion') ?? 'to confirm deletion'}",
-                  ),
+                  TextSpan(text: " ${context.tr('to_confirm_deletion')}"),
                 ],
               ),
             ),
@@ -130,6 +127,12 @@ class _CustomDeleteDialogState extends State<CustomDeleteDialog> {
             TextFormField(
               controller: _controller,
               autofocus: true,
+              onFieldSubmitted: (value) {
+                if (_isDeleteEnabled) {
+                  widget.onDelete();
+                  Navigator.pop(context);
+                }
+              },
               decoration: InputDecoration(
                 hintText: expectedText,
                 filled: true,

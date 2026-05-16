@@ -71,7 +71,7 @@ class _CourseStudentsInstructorScreenState
             SizedBox(height: context.isMobile ? 24.h : 40.h),
             const CourseStudentsStats(),
             SizedBox(height: context.isMobile ? 24.h : 48.h),
-            const CourseStudentsTable(),
+            CourseStudentsTable(slug: widget.slug),
           ],
         ),
       ),

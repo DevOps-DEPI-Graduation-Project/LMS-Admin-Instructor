@@ -15,12 +15,14 @@ class InstructorAdminRepositoryImpl implements InstructorAdminRepository {
   Future<Either<String, InstructorAdminResponseModel>> getInstructorAdmin(
     int? page,
     int? pageSize,
+    String? search,
   ) async {
     return await apiConsumer.get<InstructorAdminResponseModel>(
       EndPoint.instructorAdmin,
       queryParameters: ApiQueryParams.pagination(
         page: page,
         pageSize: pageSize,
+        search: search,
       ),
       fromJson: (json) => InstructorAdminResponseModel.fromJson(json),
     );
@@ -56,12 +58,18 @@ class InstructorAdminRepositoryImpl implements InstructorAdminRepository {
 
   @override
   Future<Either<String, InstructorCourseAdminResponceModel>>
-  getInstructorCoursesBySslug(int? page, int? pageSize, String slug) async {
+  getInstructorCoursesBySslug(
+    int? page,
+    int? pageSize,
+    String slug,
+    String? search,
+  ) async {
     return await apiConsumer.get<InstructorCourseAdminResponceModel>(
       EndPoint.getInstructorCoursesBySslug(slug),
       queryParameters: ApiQueryParams.pagination(
         page: page,
         pageSize: pageSize,
+        search: search,
       ),
       fromJson: (json) => InstructorCourseAdminResponceModel.fromJson(json),
     );

@@ -6,5 +6,6 @@ abstract class CourseStudentsRepository {
     required String slug,
     int? page,
     int? pageSize,
+    String? search,
   });
 }
