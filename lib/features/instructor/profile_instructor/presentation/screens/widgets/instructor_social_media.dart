@@ -71,6 +71,7 @@ class InstructorSocialMedia extends StatelessWidget {
               ),
             ],
           ),
+          SizedBox(height: 24.h),
           if (links.isEmpty)
             Padding(
               padding: EdgeInsets.symmetric(vertical: 16.h),

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:lms_admin_instructor/core/di/service_locator.dart';
 import 'package:lms_admin_instructor/core/extensions/context_extensions.dart';
 import 'package:lms_admin_instructor/core/localization/app_localizations.dart';
+import 'package:lms_admin_instructor/core/services/local/cache_helper.dart';
+import 'package:lms_admin_instructor/core/services/remote/endpoints.dart';
 import 'package:lms_admin_instructor/root/models/nav_items.dart';
 
 class AdminSidebar extends StatelessWidget {
@@ -18,6 +21,9 @@ class AdminSidebar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final String role = sl<CacheHelper>().getDataString(key: ApiKey.role) ?? 'instructor';
+    final bool isAdmin = role.toLowerCase() == 'admin';
+
     return Container(
       width: 280.w,
       decoration: BoxDecoration(
@@ -33,12 +39,13 @@ class AdminSidebar extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: EdgeInsets.fromLTRB(28.w, 32.h, 28.w, 24.h),
+            padding: EdgeInsets.fromLTRB(28.w, 40.h, 28.w, 24.h),
             child: Text(
-              context.tr('lms_admin'),
-              style: context.textTheme.displaySmall?.copyWith(
+              context.tr(isAdmin ? 'lms_admin' : 'lms_instructor'),
+              style: context.textTheme.headlineSmall?.copyWith(
                 color: context.colorScheme.primary,
-                fontWeight: FontWeight.bold,
+                fontWeight: FontWeight.w900,
+                letterSpacing: -0.5,
               ),
             ),
           ),

@@ -12,6 +12,8 @@ class CustomSearchBarr extends StatefulWidget {
   final IconData? prefixIcon;
   final IconData? suffixIcon;
   final TextEditingController controller;
+  final ValueChanged<String>? onChanged;
+
   const CustomSearchBarr({
     super.key,
     required this.hint,
@@ -22,6 +24,7 @@ class CustomSearchBarr extends StatefulWidget {
     this.prefixIcon,
     this.suffixIcon,
     required this.controller,
+    this.onChanged,
   });
 
   @override
@@ -38,6 +41,7 @@ class _SearchBar extends State<CustomSearchBarr> {
       height: getResponsiveSize(context: context, webSize: 60, mobileSize: 50),
       child: TextFormField(
         controller: widget.controller,
+        onChanged: widget.onChanged,
         style: context.textTheme.labelMedium?.copyWith(
           color: context.colorScheme.primary,
           fontSize: getResponsiveSize(

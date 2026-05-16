@@ -11,7 +11,6 @@ import 'package:lms_admin_instructor/core/routing/app_routes.dart';
 import 'package:lms_admin_instructor/core/services/local/cache_helper.dart';
 import 'package:lms_admin_instructor/core/services/remote/endpoints.dart';
 import 'package:lms_admin_instructor/core/utils/get_responsive_size.dart';
-import 'package:lms_admin_instructor/features/admin/instructors_admin/presentation/screens/widgets/custom_nav_bar.dart';
 import 'package:lms_admin_instructor/features/home/presentation/screens/widgets/dashboard_feature_card.dart';
 import 'package:lms_admin_instructor/features/home/presentation/screens/widgets/dashboard_hero.dart';
 
@@ -66,11 +65,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 SizedBox(width: 8.w),
               ],
             )
-          : AppBar(
-              automaticallyImplyLeading: false,
-              flexibleSpace: const CustomNavBar(),
-              toolbarHeight: 70.h,
-            ),
+          : null,
       body: SingleChildScrollView(
         child: Column(
           children: [

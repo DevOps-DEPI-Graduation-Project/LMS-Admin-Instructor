@@ -6,6 +6,7 @@ import 'package:lms_admin_instructor/features/instructor/course_students_instruc
 import 'package:lms_admin_instructor/features/instructor/profile_instructor/data/repositories/profile_instructor_repository_impl.dart';
 import 'package:lms_admin_instructor/features/instructor/profile_instructor/domain/repositories/profile_instructor_repository.dart';
 import 'package:lms_admin_instructor/features/instructor/profile_instructor/presentation/bloc/profile_instructor_bloc.dart';
+import 'package:lms_admin_instructor/core/localization/locale_cubit.dart';
 import 'package:lms_admin_instructor/core/services/local/cache_helper.dart';
 import 'package:lms_admin_instructor/core/services/remote/api_consumer.dart';
 import 'package:lms_admin_instructor/core/services/remote/dio_consumer.dart';
@@ -139,4 +140,7 @@ Future<void> setupServiceLocator() async {
     () => ProfileInstructorRepositoryImpl(apiConsumer: sl()),
   );
   sl.registerFactory(() => ProfileInstructorBloc(repository: sl()));
+
+  // Locale
+  sl.registerLazySingleton(() => LocaleCubit());
 }
