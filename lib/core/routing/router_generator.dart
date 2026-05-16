@@ -12,6 +12,7 @@ import 'package:lms_admin_instructor/features/auth/presentation/screens/auth_lay
 import 'package:lms_admin_instructor/features/auth/presentation/screens/login_screen/login_screen.dart';
 import 'package:lms_admin_instructor/features/auth/presentation/screens/forgot_password_screen/forgot_password_screen.dart';
 import 'package:lms_admin_instructor/features/auth/presentation/screens/reset_password_screen/reset_password_screen.dart';
+import 'package:lms_admin_instructor/features/instructor/add_new_video/presentation/bloc/add_new_video_bloc.dart';
 import 'package:lms_admin_instructor/features/instructor/course_details/presentation/bloc/course_quiz_bloc/course_quiz_bloc.dart';
 import 'package:lms_admin_instructor/features/instructor/course_details/presentation/bloc/course_stats_bloc/course_stats_bloc.dart';
 import 'package:lms_admin_instructor/features/instructor/course_details/presentation/bloc/course_stats_bloc/course_stats_event.dart';
@@ -192,6 +193,7 @@ class RouterGenerator {
                     sl<CourseMaterialsBloc>()
                       ..add(GetCourseMaterialsEvent(slug: slug)),
               ),
+              BlocProvider.value(value: sl<AddNewVideoBloc>()),
               BlocProvider.value(value: sl<CourseQuizBloc>()),
             ],
             child: CourseDetailsScreen(slug: slug),

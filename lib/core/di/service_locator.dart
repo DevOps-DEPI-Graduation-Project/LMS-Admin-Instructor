@@ -40,7 +40,6 @@ import 'package:lms_admin_instructor/features/instructor/common/domain/repositor
 import 'package:lms_admin_instructor/features/instructor/manage_materials_instructor/presentation/bloc/course_material_bloc.dart';
 import 'package:lms_admin_instructor/features/students/screens/student_details/bloc/student_details_bloc.dart';
 
-
 final sl = GetIt.instance;
 
 Future<void> setupServiceLocator() async {
@@ -70,11 +69,9 @@ Future<void> setupServiceLocator() async {
 
   // Features - Students Admin
   sl.registerLazySingleton<StudentsRepository>(
-    () => StudentsRepositoryImpl(apiConsumer: sl(),cacheHelper: sl()),
+    () => StudentsRepositoryImpl(apiConsumer: sl(), cacheHelper: sl()),
   );
-  sl.registerLazySingleton(
-    () => StudentBloc(studentsRepository: sl()),
-  );
+  sl.registerLazySingleton(() => StudentBloc(studentsRepository: sl()));
 
   // Features - Instructor Admin
   sl.registerFactory<InstructorAdminRepository>(
@@ -110,7 +107,7 @@ Future<void> setupServiceLocator() async {
     () => VideoRepositoryImpl(apiConsumer: sl()),
   );
   sl.registerFactory(() => CourseVideoBloc(videoRepository: sl()));
-  sl.registerFactory(() => AddNewVideoBloc(videoRepository: sl()));
+  sl.registerLazySingleton(() => AddNewVideoBloc(videoRepository: sl()));
 
   // Features - Instructor Admin Details
 
@@ -118,10 +115,7 @@ Future<void> setupServiceLocator() async {
     () => InstructorDetailsBloc(instructorAdminRepository: sl()),
   );
 
-  sl.registerFactory(
-    () => StudentDetailsBloc(studentsRepository: sl()),
-  );
-
+  sl.registerFactory(() => StudentDetailsBloc(studentsRepository: sl()));
 
   // Root
   sl.registerLazySingleton(() => RootBloc());

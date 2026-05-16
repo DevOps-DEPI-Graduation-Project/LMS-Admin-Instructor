@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -5,6 +7,8 @@ import 'package:lms_admin_instructor/core/di/service_locator.dart';
 import 'package:lms_admin_instructor/core/extensions/context_extensions.dart';
 import 'package:lms_admin_instructor/core/localization/app_localizations.dart';
 import 'package:lms_admin_instructor/core/utils/get_responsive_size.dart';
+import 'package:lms_admin_instructor/features/instructor/add_new_video/presentation/bloc/add_new_video_bloc.dart';
+import 'package:lms_admin_instructor/features/instructor/add_new_video/presentation/bloc/add_new_video_state.dart';
 import 'package:lms_admin_instructor/features/instructor/common/data/model/video_model/course_video_model.dart';
 import 'package:lms_admin_instructor/features/instructor/course_details/presentation/bloc/course_video_bloc/course_video_bloc.dart';
 import 'package:lms_admin_instructor/features/instructor/course_details/presentation/bloc/course_video_bloc/course_video_event.dart';
@@ -13,6 +17,8 @@ import 'package:lms_admin_instructor/features/widgets/custom_button.dart';
 import 'package:lms_admin_instructor/features/instructor/add_new_video/presentation/screens/add_new_video_screen.dart';
 import 'package:lms_admin_instructor/features/widgets/error_feedback_widget.dart';
 import 'package:lms_admin_instructor/features/widgets/loading_indicator_widget.dart';
+import 'package:lms_admin_instructor/features/widgets/custom_delete_dialog.dart';
+import 'package:lms_admin_instructor/features/widgets/snack_bar_widget.dart';
 
 class CourseVideoSection extends StatelessWidget {
   final String slug;
@@ -20,54 +26,127 @@ class CourseVideoSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('CourseVideoSection: Passing slug to Bloc -> $slug');
+    log('CourseVideoSection: Passing slug to Bloc -> $slug');
     return BlocProvider(
       create: (context) =>
           sl<CourseVideoBloc>()..add(GetCourseVideosEvent(courseSlug: slug)),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Builder(builder: (context) => _buildHeader(context)),
-          SizedBox(height: 16.h),
-          Builder(
-            builder: (context) => Container(
-              width: double.infinity,
-              decoration: BoxDecoration(
-                color: context.colorScheme.surface,
-                borderRadius: BorderRadius.circular(12.r),
-                border: Border.all(
-                  color: context.colorScheme.outline.withValues(alpha: 0.5),
-                ),
-              ),
-              child: BlocBuilder<CourseVideoBloc, CourseVideoState>(
-                builder: (context, state) {
-                  if (state is CourseVideoLoading) {
-                    return Padding(
-                      padding: EdgeInsets.all(32.r),
-                      child: const Center(child: LoadingIndicatorWidget()),
+      child: MultiBlocListener(
+        listeners: [
+          BlocListener<AddNewVideoBloc, AddNewVideoState>(
+            listener: (context, state) {
+              if (state is AddNewVideoSuccess) {
+                context.read<CourseVideoBloc>().add(
+                      GetCourseVideosEvent(courseSlug: slug),
                     );
-                  } else if (state is CourseVideoError) {
-                    return _buildEmptyOrError(context, state.message);
-                  } else if (state is CourseVideoLoaded) {
-                    if (state.videos.isEmpty) {
-                      return _buildEmptyOrError(context, 'No videos found');
-                    }
-                    return _buildLoadedVideos(context, state.videos);
-                  }
-                  return const SizedBox.shrink();
-                },
-              ),
-            ),
+              }
+            },
           ),
-          SizedBox(height: 16.h),
-          Builder(
-            builder: (context) => _buildAddNewButton(
-              context,
-              context.tr('add_new_video'),
-              Icons.add_circle_outline,
-            ),
+          BlocListener<CourseVideoBloc, CourseVideoState>(
+            listener: (context, state) {
+              if (state is DeleteVideoSuccess) {
+                showCustomSnackBar(
+                  context,
+                  message: state.message,
+                  backgroundColor: Colors.green,
+                  icon: Icons.check_circle,
+                );
+              } else if (state is DeleteVideoError) {
+                showCustomSnackBar(
+                  context,
+                  message: state.message,
+                  backgroundColor: context.colorScheme.error,
+                  icon: Icons.error,
+                );
+              }
+            },
           ),
         ],
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            BlocBuilder<AddNewVideoBloc, AddNewVideoState>(
+              builder: (context, state) {
+                if ((state is AddNewVideoLoading ||
+                        state is AddNewVideoProgress) &&
+                    state is! AddNewVideoInitial) {
+                  return Container(
+                    width: double.infinity,
+                    margin: EdgeInsets.only(bottom: 16.h),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 16.w,
+                      vertical: 12.h,
+                    ),
+                    decoration: BoxDecoration(
+                      color: context.colorScheme.primaryContainer,
+                      borderRadius: BorderRadius.circular(12.r),
+                    ),
+                    child: Row(
+                      children: [
+                        SizedBox(
+                          width: 16.r,
+                          height: 16.r,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: context.colorScheme.primary,
+                          ),
+                        ),
+                        SizedBox(width: 12.w),
+                        Text(
+                          context.tr('adding_video'),
+                          style: context.textTheme.labelMedium?.copyWith(
+                            color: context.colorScheme.onPrimaryContainer,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                }
+                return const SizedBox.shrink();
+              },
+            ),
+            Builder(builder: (context) => _buildHeader(context)),
+            SizedBox(height: 16.h),
+            Builder(
+              builder: (context) => Container(
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: context.colorScheme.surface,
+                  borderRadius: BorderRadius.circular(12.r),
+                  border: Border.all(
+                    color: context.colorScheme.outline.withValues(alpha: 0.5),
+                  ),
+                ),
+                child: BlocBuilder<CourseVideoBloc, CourseVideoState>(
+                  builder: (context, state) {
+                    if (state is CourseVideoLoading) {
+                      return Padding(
+                        padding: EdgeInsets.all(32.r),
+                        child: const Center(child: LoadingIndicatorWidget()),
+                      );
+                    } else if (state is CourseVideoError) {
+                      return _buildEmptyOrError(context, state.message);
+                    } else if (state is CourseVideoLoaded) {
+                      if (state.videos.isEmpty) {
+                        return _buildEmptyOrError(context, context.tr('no_videos_found'));
+                      }
+                      return _buildLoadedVideos(context, state.videos);
+                    }
+                    return const SizedBox.shrink();
+                  },
+                ),
+              ),
+            ),
+            SizedBox(height: 16.h),
+            Builder(
+              builder: (context) => _buildAddNewButton(
+                context,
+                context.tr('add_new_video'),
+                Icons.add_circle_outline,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -133,9 +212,7 @@ class CourseVideoSection extends StatelessWidget {
         ...videos.map((video) {
           return _buildSubsectionItem(
             context,
-            video.order.toString(),
-            video.title,
-            "${context.tr('video_placeholder')} • ${video.duration ?? '00:00'}",
+            video,
           );
         }),
       ],
@@ -230,9 +307,7 @@ class CourseVideoSection extends StatelessWidget {
 
   Widget _buildSubsectionItem(
     BuildContext context,
-    String number,
-    String title,
-    String subtitle,
+    CourseVideoModel video,
   ) {
     return Container(
       padding: EdgeInsets.symmetric(
@@ -255,7 +330,7 @@ class CourseVideoSection extends StatelessWidget {
               shape: BoxShape.circle,
             ),
             child: Text(
-              number,
+              video.order.toString(),
               style: TextStyle(
                 color: context.colorScheme.primary,
                 fontSize: 12.sp,
@@ -268,7 +343,7 @@ class CourseVideoSection extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  title,
+                  video.title,
                   style: context.textTheme.bodyMedium?.copyWith(
                     fontWeight: FontWeight.w500,
                   ),
@@ -281,10 +356,38 @@ class CourseVideoSection extends StatelessWidget {
                       color: context.colorScheme.outline,
                     ),
                     SizedBox(width: 4.w),
-                    Text(subtitle, style: context.textTheme.labelSmall),
+                    Text(
+                      "${context.tr('video_placeholder')} • ${video.duration ?? '00:00'}",
+                      style: context.textTheme.labelSmall,
+                    ),
                   ],
                 ),
               ],
+            ),
+          ),
+          IconButton(
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (dialogContext) => CustomDeleteDialog(
+                  title: context.tr('delete_video'),
+                  warningMessage: context.tr('delete_video_warning'),
+                  consequencesMessage: context.tr('delete_video_consequences'),
+                  onDelete: () {
+                    context.read<CourseVideoBloc>().add(
+                          DeleteVideoEvent(
+                            videoSlug: video.slug,
+                            courseSlug: slug,
+                          ),
+                        );
+                  },
+                ),
+              );
+            },
+            icon: Icon(
+              Icons.delete_outline,
+              color: context.colorScheme.error,
+              size: 20.sp,
             ),
           ),
         ],
@@ -295,9 +398,13 @@ class CourseVideoSection extends StatelessWidget {
   Widget _buildAddNewButton(BuildContext context, String text, IconData icon) {
     return CustomPrimaryButton(
       onTap: () async {
+        final addNewVideoBloc = context.read<AddNewVideoBloc>();
         final result = await showDialog<bool>(
           context: context,
-          builder: (context) => AddNewVideoScreen(courseSlug: slug),
+          builder: (context) => BlocProvider.value(
+            value: addNewVideoBloc,
+            child: AddNewVideoScreen(courseSlug: slug),
+          ),
         );
         if (result == true && context.mounted) {
           context.read<CourseVideoBloc>().add(

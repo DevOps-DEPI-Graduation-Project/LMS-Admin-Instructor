@@ -4,7 +4,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:lms_admin_instructor/core/di/service_locator.dart';
 import 'package:lms_admin_instructor/core/extensions/context_extensions.dart';
 import 'package:lms_admin_instructor/core/utils/get_responsive_size.dart';
 import 'package:lms_admin_instructor/features/widgets/custom_button.dart';
@@ -12,6 +11,8 @@ import 'package:lms_admin_instructor/features/widgets/custon_text_form_field.dar
 import 'package:lms_admin_instructor/features/instructor/add_new_video/presentation/bloc/add_new_video_bloc.dart';
 import 'package:lms_admin_instructor/features/instructor/add_new_video/presentation/bloc/add_new_video_event.dart';
 import 'package:lms_admin_instructor/features/instructor/add_new_video/presentation/bloc/add_new_video_state.dart';
+import 'package:lms_admin_instructor/core/localization/app_localizations.dart';
+import 'package:lms_admin_instructor/features/widgets/error_feedback_widget.dart';
 import 'widgets/dashed_rect_painter.dart';
 
 class AddNewVideoScreen extends StatefulWidget {
@@ -27,6 +28,7 @@ class _AddNewVideoScreenState extends State<AddNewVideoScreen> {
   final _urlController = TextEditingController();
   final _durationController = TextEditingController();
   PlatformFile? _selectedFile;
+  String? _errorMessage;
 
   @override
   void dispose() {
@@ -47,187 +49,230 @@ class _AddNewVideoScreenState extends State<AddNewVideoScreen> {
       if (!mounted) return;
 
       if (result != null && result.files.isNotEmpty) {
+        final file = result.files.first;
+        const maxSize = 250 * 1024 * 1024;
+        if (file.size > maxSize) {
+          setState(() {
+            _errorMessage = context.tr('file_size_exceeds_limit');
+            _selectedFile = null;
+          });
+          return;
+        }
+
         setState(() {
-          _selectedFile = result.files.first;
+          _selectedFile = file;
+          _errorMessage = null;
         });
       }
     } catch (e) {
       if (mounted) {
-        _showErrorSnackBar('error in video file: $e');
+        setState(() {
+          _errorMessage = '${context.tr('error_in_video_file')}$e';
+        });
       }
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => sl<AddNewVideoBloc>(),
-      child: BlocConsumer<AddNewVideoBloc, AddNewVideoState>(
-        listener: (context, state) {
-          if (state is AddNewVideoSuccess) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Video added successfully!')),
-            );
-            context.pop(true);
-          } else if (state is AddNewVideoError) {
-            ScaffoldMessenger.of(
-              context,
-            ).showSnackBar(SnackBar(content: Text(state.message)));
-          }
-        },
-        builder: (context, state) {
-          return Dialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16.r),
-            ),
-            backgroundColor: context.colorScheme.surface,
-            child: Container(
-              width: context.isDesktop ? 600.w : 400.w,
-              padding: EdgeInsets.all(24.r),
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Add New Video',
-                      style: context.textTheme.headlineSmall?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: context.colorScheme.onSurface,
-                      ),
-                    ),
-                    SizedBox(height: 8.h),
-                    Text(
-                      'Fill out the details below to add a new video resource to your curriculum.',
-                      style: context.textTheme.bodyMedium?.copyWith(
-                        color: context.colorScheme.onSurfaceVariant,
-                      ),
-                    ),
-                    SizedBox(height: 24.h),
-                    _buildLabel(context, 'Video Title'),
-                    CustomTextFormField(
-                      txt: 'Enter video title',
-                      hint: 'Enter video title',
-                      controller: _titleController,
-                    ),
-                    SizedBox(height: 16.h),
-                    _buildLabel(context, 'YouTube Video URL'),
-                    CustomTextFormField(
-                      txt: 'https://youtube.com/shorts/...',
-                      hint: 'https://youtube.com/shorts/...',
-                      controller: _urlController,
-                      prefixIcon: Icons.link,
-                      onChanged: (val) {
-                        if (val.isNotEmpty) {
-                          setState(() {
-                            _selectedFile = null;
-                          });
-                        }
-                      },
-                    ),
-                    SizedBox(height: 16.h),
-                    _buildLabel(context, 'Duration'),
-                    CustomTextFormField(
-                      txt: 'e.g. 10:30',
-                      hint: 'e.g. 10:30',
-                      controller: _durationController,
-                      prefixIcon: Icons.timer_outlined,
-                    ),
-                    SizedBox(height: 24.h),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Divider(
-                            color: context.colorScheme.outline.withValues(
-                              alpha: 0.3,
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 16.w),
-                          child: Text(
-                            'OR',
-                            style: context.textTheme.labelSmall?.copyWith(
-                              color: context.colorScheme.onSurfaceVariant,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          child: Divider(
-                            color: context.colorScheme.outline.withValues(
-                              alpha: 0.3,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 24.h),
-                    _buildLabel(context, 'Upload Video from Device'),
-                    GestureDetector(
-                      onTap: _pickVideo,
-                      child: _buildUploadBox(context),
-                    ),
-                    SizedBox(height: 32.h),
-                    CustomPrimaryButton(
-                      text: state is AddNewVideoLoading
-                          ? 'Adding...'
-                          : 'Add Video',
-                      prefixIcon: state is AddNewVideoLoading
-                          ? const SizedBox(
-                              width: 20,
-                              height: 20,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                                color: Colors.white,
-                              ),
-                            )
-                          : Icon(
-                              Icons.file_upload_outlined,
-                              color: context.colorScheme.onPrimary,
-                              size: 20.sp,
-                            ),
-                      width: double.infinity,
-                      onTap: state is AddNewVideoLoading
-                          ? null
-                          : () {
-                              if (_titleController.text.isEmpty) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text('Please enter a title'),
-                                  ),
-                                );
-                                return;
-                              }
-                              if (_selectedFile == null && _urlController.text.isEmpty) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text('Please either provide a video URL or upload a video from your device.'),
-                                  ),
-                                );
-                                return;
-                              }
-                              context.read<AddNewVideoBloc>().add(
-                                AddVideoEvent(
-                                  courseSlug: widget.courseSlug,
-                                  title: _titleController.text,
-                                  course: widget.courseSlug,
-                                  duration: _durationController.text,
-                                  videoUrl: _urlController.text.isNotEmpty
-                                      ? _urlController.text
-                                      : null,
-                                  videoFile: _selectedFile,
-                                ),
-                              );
-                            },
-                    ),
-                  ],
-                ),
-              ),
+    return BlocConsumer<AddNewVideoBloc, AddNewVideoState>(
+      listener: (context, state) {
+        if (state is AddNewVideoSuccess) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(context.tr('video_added_successfully'))),
+          );
+          context.pop(true);
+        } else if (state is AddNewVideoError) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(state.message),
+              backgroundColor: context.colorScheme.error,
             ),
           );
-        },
-      ),
+          setState(() {
+            _errorMessage = state.message;
+          });
+        }
+      },
+      builder: (context, state) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16.r),
+          ),
+          backgroundColor: context.colorScheme.surface,
+          child: Container(
+            width: context.isDesktop ? 600.w : 400.w,
+            padding: EdgeInsets.all(24.r),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    context.tr('add_new_video'),
+                    style: context.textTheme.headlineSmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: context.colorScheme.onSurface,
+                    ),
+                  ),
+                  SizedBox(height: 8.h),
+                  Text(
+                    context.tr('add_new_video_desc'),
+                    style: context.textTheme.bodyMedium?.copyWith(
+                      color: context.colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                  if (_errorMessage != null) ...[
+                    SizedBox(height: 16.h),
+                    ErrorFeedbackWidget(
+                      errorMessage: _errorMessage!,
+                      height: 120.h,
+                    ),
+                  ],
+                  SizedBox(height: 24.h),
+                  _buildLabel(context, context.tr('video_title')),
+                  CustomTextFormField(
+                    txt: context.tr('enter_video_title'),
+                    hint: context.tr('enter_video_title'),
+                    controller: _titleController,
+                  ),
+                  SizedBox(height: 16.h),
+                  _buildLabel(context, context.tr('youtube_video_url')),
+                  CustomTextFormField(
+                    txt: context.tr('youtube_url_hint'),
+                    hint: context.tr('youtube_url_hint'),
+                    controller: _urlController,
+                    prefixIcon: Icons.link,
+                    onChanged: (val) {
+                      if (val.isNotEmpty) {
+                        setState(() {
+                          _selectedFile = null;
+                        });
+                      }
+                    },
+                  ),
+                  SizedBox(height: 16.h),
+                  _buildLabel(context, context.tr('duration_label')),
+                  CustomTextFormField(
+                    txt: context.tr('duration_hint'),
+                    hint: context.tr('duration_hint'),
+                    controller: _durationController,
+                    prefixIcon: Icons.timer_outlined,
+                  ),
+                  SizedBox(height: 24.h),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Divider(
+                          color: context.colorScheme.outline.withValues(
+                            alpha: 0.3,
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 16.w),
+                        child: Text(
+                          context.tr('or'),
+                          style: context.textTheme.labelSmall?.copyWith(
+                            color: context.colorScheme.onSurfaceVariant,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: Divider(
+                          color: context.colorScheme.outline.withValues(
+                            alpha: 0.3,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 24.h),
+                  _buildLabel(
+                    context,
+                    context.tr('upload_video_from_device'),
+                  ),
+                  GestureDetector(
+                    onTap: _pickVideo,
+                    child: _buildUploadBox(context),
+                  ),
+                  if (state is AddNewVideoProgress) ...[
+                    _buildProgressIndicator(context, state),
+                    SizedBox(height: 16.h),
+                  ],
+                  CustomPrimaryButton(
+                    text:
+                        (state is AddNewVideoLoading ||
+                            state is AddNewVideoProgress)
+                        ? context.tr('adding')
+                        : context.tr('add_video'),
+                    prefixIcon:
+                        (state is AddNewVideoLoading ||
+                            state is AddNewVideoProgress)
+                        ? const SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: Colors.white,
+                            ),
+                          )
+                        : Icon(
+                            Icons.file_upload_outlined,
+                            color: context.colorScheme.onPrimary,
+                            size: 20.sp,
+                          ),
+                    width: double.infinity,
+                    onTap:
+                        (state is AddNewVideoLoading ||
+                            state is AddNewVideoProgress)
+                        ? null
+                        : () {
+                            if (_titleController.text.isEmpty) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    context.tr('please_enter_title'),
+                                  ),
+                                ),
+                              );
+                              return;
+                            }
+                            if (_selectedFile == null &&
+                                _urlController.text.isEmpty) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    context.tr('please_provide_video'),
+                                  ),
+                                ),
+                              );
+                              return;
+                            }
+                            setState(() {
+                              _errorMessage = null;
+                            });
+                            context.read<AddNewVideoBloc>().add(
+                              AddVideoEvent(
+                                courseSlug: widget.courseSlug,
+                                title: _titleController.text,
+                                course: widget.courseSlug,
+                                duration: _durationController.text,
+                                videoUrl: _urlController.text.isNotEmpty
+                                    ? _urlController.text
+                                    : null,
+                                videoFile: _selectedFile,
+                              ),
+                            );
+                          },
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -279,7 +324,7 @@ class _AddNewVideoScreenState extends State<AddNewVideoScreen> {
             Text(
               _selectedFile != null
                   ? _selectedFile!.name
-                  : 'Click or drag video to upload',
+                  : context.tr('click_or_drag_video_to_upload'),
               style: context.textTheme.titleSmall?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
@@ -289,7 +334,7 @@ class _AddNewVideoScreenState extends State<AddNewVideoScreen> {
             Text(
               _selectedFile != null
                   ? '${(_selectedFile!.size / 1024 / 1024).toStringAsFixed(2)} MB'
-                  : 'MP4, MOV or AVI up to 2GB',
+                  : context.tr('video_constraints'),
               style: context.textTheme.labelSmall?.copyWith(
                 color: context.colorScheme.onSurfaceVariant,
               ),
@@ -300,13 +345,48 @@ class _AddNewVideoScreenState extends State<AddNewVideoScreen> {
     );
   }
 
-    void _showErrorSnackBar(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: Colors.red,
-      ),
+  Widget _buildProgressIndicator(
+    BuildContext context,
+    AddNewVideoProgress state,
+  ) {
+    final sentMb = (state.sent / (1024 * 1024)).toStringAsFixed(1);
+    final totalMb = (state.total / (1024 * 1024)).toStringAsFixed(1);
+    final percent = (state.progress * 100).toInt();
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              '$sentMb MB / $totalMb MB',
+              style: context.textTheme.bodySmall?.copyWith(
+                color: context.colorScheme.onSurfaceVariant,
+              ),
+            ),
+            Text(
+              '$percent%',
+              style: context.textTheme.bodySmall?.copyWith(
+                color: context.colorScheme.primary,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
+        SizedBox(height: 8.h),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(4.r),
+          child: LinearProgressIndicator(
+            value: state.progress,
+            minHeight: 8.h,
+            backgroundColor: context.colorScheme.primary.withValues(alpha: 0.1),
+            valueColor: AlwaysStoppedAnimation<Color>(
+              context.colorScheme.primary,
+            ),
+          ),
+        ),
+      ],
     );
   }
-
 }

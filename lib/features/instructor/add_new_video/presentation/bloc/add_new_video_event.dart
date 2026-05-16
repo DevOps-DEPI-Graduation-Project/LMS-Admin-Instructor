@@ -19,3 +19,4 @@ class AddVideoEvent extends AddNewVideoEvent {
     required this.duration,
   });
 }
+class ResetAddVideoEvent extends AddNewVideoEvent {}
