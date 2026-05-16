@@ -1,8 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lms_admin_instructor/features/instructor/profile_instructor/domain/entity/instructor_profile_ui_model.dart';
 import '../../domain/repositories/profile_instructor_repository.dart';
-import 'profile_instructor_event.dart';
-import 'profile_instructor_state.dart';
+import 'package:lms_admin_instructor/features/instructor/profile_instructor/presentation/bloc/profile_instructor_event.dart';
+import 'package:lms_admin_instructor/features/instructor/profile_instructor/presentation/bloc/profile_instructor_state.dart';
 
 class ProfileInstructorBloc
     extends Bloc<ProfileInstructorEvent, ProfileInstructorState> {
@@ -14,6 +14,8 @@ class ProfileInstructorBloc
     on<UpdateProfileInstructorEvent>(_onUpdateProfileInstructorEvent);
     on<GetInstructorLinksEvent>(_onGetInstructorLinksEvent);
     on<AddInstructorLinkEvent>(_onAddInstructorLinkEvent);
+    on<DeleteInstructorLinkEvent>(_onDeleteInstructorLinkEvent);
+    on<UpdateInstructorLinkEvent>(_onUpdateInstructorLinkEvent);
   }
 
   Future<void> _onGetProfileInstructorEvent(
@@ -121,6 +123,42 @@ class ProfileInstructorBloc
     response.fold(
       (failure) => emit(AddInstructorLinkError(message: failure)),
       (link) => emit(AddInstructorLinkSuccess(link: link.toEntity())),
+    );
+  }
+
+  Future<void> _onDeleteInstructorLinkEvent(
+    DeleteInstructorLinkEvent event,
+    Emitter<ProfileInstructorState> emit,
+  ) async {
+    emit(DeleteInstructorLinkLoading());
+
+    final response = await repository.deleteInstructorLink(event.linkSlug);
+
+    response.fold(
+      (failure) => emit(DeleteInstructorLinkError(message: failure)),
+      (message) => emit(
+        DeleteInstructorLinkSuccess(
+          message: message,
+          instructorSlug: event.instructorSlug,
+        ),
+      ),
+    );
+  }
+
+  Future<void> _onUpdateInstructorLinkEvent(
+    UpdateInstructorLinkEvent event,
+    Emitter<ProfileInstructorState> emit,
+  ) async {
+    emit(UpdateInstructorLinkLoading());
+
+    final response = await repository.updateInstructorLink(
+      linkSlug: event.linkSlug,
+      requestModel: event.requestModel,
+    );
+
+    response.fold(
+      (failure) => emit(UpdateInstructorLinkError(message: failure)),
+      (link) => emit(UpdateInstructorLinkSuccess(link: link.toEntity())),
     );
   }
 }

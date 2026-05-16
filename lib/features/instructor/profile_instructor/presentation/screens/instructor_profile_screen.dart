@@ -5,7 +5,9 @@ import 'package:go_router/go_router.dart';
 import 'package:lms_admin_instructor/core/extensions/context_extensions.dart';
 import 'package:lms_admin_instructor/core/localization/app_localizations.dart';
 import 'package:lms_admin_instructor/core/utils/get_responsive_size.dart';
+import 'package:lms_admin_instructor/features/instructor/profile_instructor/domain/entity/instructor_profile_ui_model.dart';
 import 'package:lms_admin_instructor/features/instructor/profile_instructor/presentation/bloc/profile_instructor_bloc.dart';
+import 'package:lms_admin_instructor/features/instructor/profile_instructor/presentation/bloc/profile_instructor_event.dart';
 import 'package:lms_admin_instructor/features/instructor/profile_instructor/presentation/bloc/profile_instructor_state.dart';
 import 'package:lms_admin_instructor/features/instructor/profile_instructor/presentation/screens/widgets/instructor_bio_details.dart';
 import 'package:lms_admin_instructor/features/instructor/profile_instructor/presentation/screens/widgets/instructor_profile_header.dart';
@@ -48,67 +50,101 @@ class InstructorProfileScreen extends StatelessWidget {
         ),
         toolbarHeight: context.isDesktop ? 80.h : 60.h,
       ),
-      body: BlocBuilder<ProfileInstructorBloc, ProfileInstructorState>(
-        builder: (context, state) {
-          if (state is ProfileInstructorLoading) {
-            return const Center(child: CircularProgressIndicator());
-          }
-
-          if (state is ProfileInstructorError) {
-            return Center(child: Text(state.message));
-          }
-
-          if (state is ProfileInstructorLoaded) {
-            final instructor = state.profile;
-            return SingleChildScrollView(
-              padding: EdgeInsets.symmetric(
-                horizontal: context.isDesktop ? 80.w : 20.w,
-                vertical: 40.h,
+      body: BlocListener<ProfileInstructorBloc, ProfileInstructorState>(
+        listener: (context, state) {
+          if (state is DeleteInstructorLinkSuccess) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(state.message),
+                backgroundColor: context.colorScheme.secondary,
               ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  if (context.isDesktop)
-                    IntrinsicHeight(
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          Expanded(
-                            flex: 1,
-                            child: InstructorProfileHeader(
-                              instructor: instructor,
-                            ),
-                          ),
-                          SizedBox(width: 32.w),
-                          Expanded(
-                            flex: 2,
-                            child: InstructorBioDetails(
-                              instructor: instructor,
-                              expand: true,
-                            ),
-                          ),
-                        ],
-                      ),
-                    )
-                  else ...[
-                    InstructorProfileHeader(instructor: instructor),
-                    SizedBox(height: 32.h),
-                    InstructorBioDetails(instructor: instructor),
-                  ],
-                  SizedBox(height: 32.h),
-                  InstructorSocialMedia(
-                    key: ValueKey('social_${instructor.links.length}'),
-                    links: instructor.links,
-                    slug: instructor.slug,
-                  ),
-                ],
+            );
+
+            context.read<ProfileInstructorBloc>().add(
+              GetProfileInstructorEvent(slug: state.instructorSlug),
+            );
+          } else if (state is DeleteInstructorLinkError) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(state.message),
+                backgroundColor: context.colorScheme.error,
               ),
             );
           }
-
-          return const SizedBox.shrink();
         },
+        child: BlocBuilder<ProfileInstructorBloc, ProfileInstructorState>(
+          buildWhen: (previous, current) =>
+              current is ProfileInstructorLoading ||
+              current is ProfileInstructorLoaded ||
+              current is ProfileInstructorError ||
+              current is ProfileInstructorUpdateSuccess,
+          builder: (context, state) {
+            if (state is ProfileInstructorLoading) {
+              return const Center(child: CircularProgressIndicator());
+            }
+
+            if (state is ProfileInstructorError) {
+              return Center(child: Text(state.message));
+            }
+
+            InstructorProfileUIModel? instructor;
+            if (state is ProfileInstructorLoaded) {
+              instructor = state.profile;
+            } else if (state is ProfileInstructorUpdateSuccess) {
+              instructor = state.profile;
+            }
+
+            if (instructor != null) {
+              return SingleChildScrollView(
+                padding: EdgeInsets.symmetric(
+                  horizontal: context.isDesktop ? 80.w : 20.w,
+                  vertical: 40.h,
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (context.isDesktop)
+                      IntrinsicHeight(
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            Expanded(
+                              flex: 1,
+                              child: InstructorProfileHeader(
+                                instructor: instructor,
+                              ),
+                            ),
+                            SizedBox(width: 32.w),
+                            Expanded(
+                              flex: 2,
+                              child: InstructorBioDetails(
+                                instructor: instructor,
+                                expand: true,
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    else ...[
+                      InstructorProfileHeader(instructor: instructor),
+                      SizedBox(height: 32.h),
+                      InstructorBioDetails(instructor: instructor),
+                    ],
+                    SizedBox(height: 32.h),
+                    InstructorSocialMedia(
+                      key: ValueKey('social_${instructor.links.length}'),
+                      links: instructor.links,
+                      slug: instructor.slug,
+                    ),
+                  ],
+                ),
+              );
+            }
+
+            return const SizedBox.shrink();
+          },
+        ),
       ),
     );
   }

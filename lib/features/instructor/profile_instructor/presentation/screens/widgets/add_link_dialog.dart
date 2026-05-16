@@ -11,11 +11,14 @@ import 'package:lms_admin_instructor/features/instructor/profile_instructor/pres
 import 'package:lms_admin_instructor/features/instructor/profile_instructor/presentation/bloc/profile_instructor_state.dart';
 import 'package:lms_admin_instructor/features/widgets/custon_text_form_field.dart';
 import 'package:lms_admin_instructor/features/widgets/custom_button.dart';
+import 'package:lms_admin_instructor/features/instructor/profile_instructor/domain/entity/instructor_profile_ui_model.dart';
+import 'package:lms_admin_instructor/features/instructor/profile_instructor/data/models/update_link_request_model.dart';
 
 class AddLinkDialog extends StatefulWidget {
   final String slug;
+  final InstructorLinkUIModel? existingLink;
 
-  const AddLinkDialog({super.key, required this.slug});
+  const AddLinkDialog({super.key, required this.slug, this.existingLink});
 
   @override
   State<AddLinkDialog> createState() => _AddLinkDialogState();
@@ -39,6 +42,21 @@ class _AddLinkDialogState extends State<AddLinkDialog> {
     'website',
     'other',
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.existingLink != null) {
+      _urlController.text = widget.existingLink!.url;
+      final platform = widget.existingLink!.platformName.toLowerCase();
+      if (_platforms.contains(platform)) {
+        _selectedPlatform = platform;
+      } else {
+        _selectedPlatform = 'other';
+        _otherPlatformController.text = widget.existingLink!.platformName;
+      }
+    }
+  }
 
   IconData _getPlatformIcon(String platform) {
     switch (platform) {
@@ -101,21 +119,31 @@ class _AddLinkDialogState extends State<AddLinkDialog> {
   Widget build(BuildContext context) {
     return BlocListener<ProfileInstructorBloc, ProfileInstructorState>(
       listener: (context, state) {
-        if (state is AddInstructorLinkSuccess) {
+        if (state is AddInstructorLinkSuccess ||
+            state is UpdateInstructorLinkSuccess) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text(context.tr('link_added_success')),
+              content: Text(
+                state is UpdateInstructorLinkSuccess
+                    ? context.tr('link_updated_success')
+                    : context.tr('link_added_success'),
+              ),
               backgroundColor: context.colorScheme.secondary,
             ),
           );
           context.read<ProfileInstructorBloc>().add(
-            GetInstructorLinksEvent(slug: widget.slug),
+            GetProfileInstructorEvent(slug: widget.slug),
           );
           context.pop();
-        } else if (state is AddInstructorLinkError) {
+        } else if (state is AddInstructorLinkError ||
+            state is UpdateInstructorLinkError) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text(state.message),
+              content: Text(
+                state is UpdateInstructorLinkError
+                    ? state.message
+                    : (state as AddInstructorLinkError).message,
+              ),
               backgroundColor: context.colorScheme.error,
             ),
           );
@@ -146,14 +174,16 @@ class _AddLinkDialogState extends State<AddLinkDialog> {
                           borderRadius: BorderRadius.circular(16.r),
                         ),
                         child: Icon(
-                          Icons.add_link_rounded,
+                          widget.existingLink != null ? Icons.edit : Icons.link,
                           color: context.colorScheme.primary,
                           size: 24.sp,
                         ),
                       ),
                       SizedBox(width: 16.w),
                       Text(
-                        context.tr('add_link'),
+                        widget.existingLink != null
+                            ? context.tr('update_link')
+                            : context.tr('add_link'),
                         style: context.textTheme.titleLarge?.copyWith(
                           fontWeight: FontWeight.w900,
                         ),
@@ -243,7 +273,7 @@ class _AddLinkDialogState extends State<AddLinkDialog> {
                         return context.tr('required_field');
                       }
                       if (!value.startsWith('http')) {
-                        return 'URL must start with http:// or https://';
+                        return context.tr('url_error_http');
                       }
                       return null;
                     },
@@ -273,10 +303,15 @@ class _AddLinkDialogState extends State<AddLinkDialog> {
                               ProfileInstructorState
                             >(
                               builder: (context, state) {
+                                final isLoading =
+                                    state is AddInstructorLinkLoading ||
+                                    state is UpdateInstructorLinkLoading;
                                 return CustomPrimaryButton(
-                                  text: context.tr('submit'),
+                                  text: widget.existingLink != null
+                                      ? context.tr('update')
+                                      : context.tr('submit'),
                                   height: 48.h,
-                                  onTap: state is AddInstructorLinkLoading
+                                  onTap: isLoading
                                       ? null
                                       : () {
                                           if (_formKey.currentState!
@@ -284,22 +319,44 @@ class _AddLinkDialogState extends State<AddLinkDialog> {
                                             final platformName =
                                                 _selectedPlatform == 'other'
                                                 ? _otherPlatformController.text
-                                                : context.tr(_selectedPlatform);
+                                                : _selectedPlatform;
 
-                                            context
-                                                .read<ProfileInstructorBloc>()
-                                                .add(
-                                                  AddInstructorLinkEvent(
-                                                    slug: widget.slug,
-                                                    requestModel:
-                                                        CreateLinkRequestModel(
-                                                          platformName:
-                                                              platformName,
-                                                          url: _urlController
-                                                              .text,
-                                                        ),
-                                                  ),
-                                                );
+                                            if (widget.existingLink != null) {
+                                              context
+                                                  .read<ProfileInstructorBloc>()
+                                                  .add(
+                                                    UpdateInstructorLinkEvent(
+                                                      linkSlug: widget
+                                                          .existingLink!
+                                                          .slug,
+                                                      requestModel:
+                                                          UpdateLinkRequestModel(
+                                                            slug: widget
+                                                                .existingLink!
+                                                                .slug,
+                                                            platformName:
+                                                                platformName,
+                                                            url: _urlController
+                                                                .text,
+                                                          ),
+                                                    ),
+                                                  );
+                                            } else {
+                                              context
+                                                  .read<ProfileInstructorBloc>()
+                                                  .add(
+                                                    AddInstructorLinkEvent(
+                                                      slug: widget.slug,
+                                                      requestModel:
+                                                          CreateLinkRequestModel(
+                                                            platformName:
+                                                                platformName,
+                                                            url: _urlController
+                                                                .text,
+                                                          ),
+                                                    ),
+                                                  );
+                                            }
                                           }
                                         },
                                 );

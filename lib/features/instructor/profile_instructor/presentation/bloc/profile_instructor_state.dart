@@ -55,3 +55,35 @@ class AddInstructorLinkError extends ProfileInstructorState {
 
   AddInstructorLinkError({required this.message});
 }
+
+class DeleteInstructorLinkLoading extends ProfileInstructorState {}
+
+class DeleteInstructorLinkSuccess extends ProfileInstructorState {
+  final String message;
+  final String instructorSlug;
+
+  DeleteInstructorLinkSuccess({
+    required this.message,
+    required this.instructorSlug,
+  });
+}
+
+class DeleteInstructorLinkError extends ProfileInstructorState {
+  final String message;
+
+  DeleteInstructorLinkError({required this.message});
+}
+
+class UpdateInstructorLinkLoading extends ProfileInstructorState {}
+
+class UpdateInstructorLinkSuccess extends ProfileInstructorState {
+  final InstructorLinkUIModel link;
+
+  UpdateInstructorLinkSuccess({required this.link});
+}
+
+class UpdateInstructorLinkError extends ProfileInstructorState {
+  final String message;
+
+  UpdateInstructorLinkError({required this.message});
+}

@@ -281,5 +281,10 @@
   "whatsapp": "واتساب",
   "website": "موقع إلكتروني",
   "other": "أخرى",
-  "link_added_success": "تم إضافة الرابط بنجاح"
+  "link_added_success": "تم إضافة الرابط بنجاح",
+  "link_updated_success": "تم تحديث الرابط بنجاح",
+  "delete_link": "حذف الرابط",
+  "delete_link_confirmation": "هل أنت متأكد من أنك تريد حذف هذا الرابط؟",
+  "update_link": "تحديث الرابط",
+  "url_error_http": "يجب أن يبدأ الرابط بـ http:// أو https://"
 }

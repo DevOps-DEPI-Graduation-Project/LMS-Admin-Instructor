@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:lms_admin_instructor/core/extensions/context_extensions.dart';
 import 'package:lms_admin_instructor/core/localization/app_localizations.dart';
 import 'package:lms_admin_instructor/features/instructor/profile_instructor/domain/entity/instructor_profile_ui_model.dart';
 import 'package:lms_admin_instructor/features/instructor/profile_instructor/presentation/bloc/profile_instructor_bloc.dart';
+import 'package:lms_admin_instructor/features/instructor/profile_instructor/presentation/bloc/profile_instructor_event.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'add_link_dialog.dart';
@@ -105,11 +107,46 @@ class InstructorSocialMedia extends StatelessWidget {
     );
   }
 
+  void _showDeleteConfirmation(
+    BuildContext context,
+    InstructorLinkUIModel link,
+  ) {
+    showDialog(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Text(context.tr('delete_link')),
+        content: Text(context.tr('delete_link_confirmation')),
+        actions: [
+          TextButton(
+            onPressed: () => context.pop(),
+            child: Text(context.tr('cancel')),
+          ),
+          TextButton(
+            onPressed: () {
+              context.read<ProfileInstructorBloc>().add(
+                DeleteInstructorLinkEvent(
+                  linkSlug: link.slug,
+                  instructorSlug: slug,
+                ),
+              );
+              context.pop();
+            },
+            child: Text(
+              context.tr('delete'),
+              style: TextStyle(color: context.colorScheme.error),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildSocialIcon(BuildContext context, InstructorLinkUIModel link) {
     IconData iconData;
     Color iconColor;
+    final platformKey = link.platformName.toLowerCase();
 
-    switch (link.platformName.toLowerCase()) {
+    switch (platformKey) {
       case 'facebook':
         iconData = Icons.facebook;
         iconColor = const Color(0xFF1877F2);
@@ -152,35 +189,114 @@ class InstructorSocialMedia extends StatelessWidget {
         iconColor = context.colorScheme.primary;
     }
 
-    return InkWell(
-      onTap: () async {
-        final url = Uri.parse(link.url);
-        if (await canLaunchUrl(url)) {
-          await launchUrl(url);
-        }
-      },
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            width: 54.w,
-            height: 54.w,
-            decoration: BoxDecoration(
-              color: iconColor.withValues(alpha: 0.1),
-              shape: BoxShape.circle,
+    final List<String> predefined = [
+      'facebook',
+      'linkedin',
+      'twitter',
+      'instagram',
+      'youtube',
+      'github',
+      'tiktok',
+      'whatsapp',
+      'website',
+    ];
+    final String displayName = predefined.contains(platformKey)
+        ? context.tr(platformKey)
+        : link.platformName;
+
+    return Stack(
+      clipBehavior: Clip.none,
+      children: [
+        InkWell(
+          onTap: () async {
+            final url = Uri.parse(link.url);
+            if (await canLaunchUrl(url)) {
+              await launchUrl(url);
+            }
+          },
+          child: SizedBox(
+            width: 80.w,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 54.w,
+                  height: 54.w,
+                  decoration: BoxDecoration(
+                    color: iconColor.withValues(alpha: 0.1),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(iconData, color: iconColor, size: 26.sp),
+                ),
+                SizedBox(height: 8.h),
+                Text(
+                  displayName,
+                  textAlign: TextAlign.center,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: context.textTheme.labelSmall?.copyWith(
+                    color: context.colorScheme.onSurface.withValues(alpha: 0.6),
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
             ),
-            child: Icon(iconData, color: iconColor, size: 26.sp),
           ),
-          SizedBox(height: 8.h),
-          Text(
-            link.platformName,
-            style: context.textTheme.labelSmall?.copyWith(
-              color: context.colorScheme.onSurface.withValues(alpha: 0.6),
-              fontWeight: FontWeight.w600,
+        ),
+        Positioned(
+          top: -10,
+          right: -10,
+          child: PopupMenuButton<String>(
+            icon: Icon(
+              Icons.more_vert,
+              size: 18.sp,
+              color: context.colorScheme.onSurface.withValues(alpha: 0.4),
             ),
+            onSelected: (value) {
+              if (value == 'edit') {
+                showDialog(
+                  context: context,
+                  builder: (dialogContext) => BlocProvider.value(
+                    value: context.read<ProfileInstructorBloc>(),
+                    child: AddLinkDialog(slug: slug, existingLink: link),
+                  ),
+                );
+              } else if (value == 'delete') {
+                _showDeleteConfirmation(context, link);
+              }
+            },
+            itemBuilder: (context) => [
+              PopupMenuItem(
+                value: 'edit',
+                child: Row(
+                  children: [
+                    Icon(Icons.edit, size: 16.sp),
+                    SizedBox(width: 8.w),
+                    Text(context.tr('edit')),
+                  ],
+                ),
+              ),
+              PopupMenuItem(
+                value: 'delete',
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.delete,
+                      size: 16.sp,
+                      color: context.colorScheme.error,
+                    ),
+                    SizedBox(width: 8.w),
+                    Text(
+                      context.tr('delete'),
+                      style: TextStyle(color: context.colorScheme.error),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

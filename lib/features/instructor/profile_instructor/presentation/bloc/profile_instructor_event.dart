@@ -1,5 +1,6 @@
 import '../../data/models/update_instructor_request_model.dart';
 import '../../data/models/create_link_request_model.dart';
+import '../../data/models/update_link_request_model.dart';
 
 abstract class ProfileInstructorEvent {}
 
@@ -32,5 +33,25 @@ class AddInstructorLinkEvent extends ProfileInstructorEvent {
   AddInstructorLinkEvent({
     required this.slug,
     required this.requestModel,
+  });
+}
+
+class UpdateInstructorLinkEvent extends ProfileInstructorEvent {
+  final String linkSlug;
+  final UpdateLinkRequestModel requestModel;
+
+  UpdateInstructorLinkEvent({
+    required this.linkSlug,
+    required this.requestModel,
+  });
+}
+
+class DeleteInstructorLinkEvent extends ProfileInstructorEvent {
+  final String linkSlug;
+  final String instructorSlug;
+
+  DeleteInstructorLinkEvent({
+    required this.linkSlug,
+    required this.instructorSlug,
   });
 }

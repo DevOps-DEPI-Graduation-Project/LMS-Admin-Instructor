@@ -153,11 +153,14 @@ class DioConsumer extends ApiConsumer {
       final int statusCode = response.statusCode ?? 0;
 
       if (statusCode >= 200 && statusCode < 300 && responseData == null) {
+        if (fromJson != null) {
+          return Right(fromJson({}));
+        }
         return Right(null as T);
       }
 
       if (responseData is Map<String, dynamic>) {
-        final bool success = responseData['success'] ?? true; 
+        final bool success = responseData['success'] ?? true;
         final int status = responseData['status'] ?? statusCode;
         final String message = responseData['message'] ?? 'Unknown error';
 
@@ -171,7 +174,7 @@ class DioConsumer extends ApiConsumer {
           return Left(message);
         }
       }
-      
+
       if (statusCode >= 200 && statusCode < 300) {
         return Right(responseData as T);
       }

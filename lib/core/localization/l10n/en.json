@@ -280,7 +280,12 @@
   "website": "Website",
   "other": "Other",
   "link_added_success": "Social link added successfully",
+  "link_updated_success": "Social link updated successfully",
   "update_profile_subtitle": "Keep your personal information up to date to help students know you better.",
   "bio_hint": "Write a short bio about yourself...",
-  "description_hint": "Provide a detailed description of your experience and teaching style..."
+  "description_hint": "Provide a detailed description of your experience and teaching style...",
+  "delete_link": "Delete Link",
+  "delete_link_confirmation": "Are you sure you want to delete this link?",
+  "update_link": "Update Link",
+  "url_error_http": "URL must start with http:// or https://"
 }

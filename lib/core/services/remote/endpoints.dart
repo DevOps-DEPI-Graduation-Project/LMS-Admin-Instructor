@@ -42,6 +42,10 @@ class EndPoint {
   static String getInstructorLinks(String slug) => "/instructors/$slug/links/";
   static String addInstructorLink(String slug) =>
       "/instructors/$slug/links/create/";
+  static String deleteInstructorLink(String slug) =>
+      "/instructors/links/$slug/delete/";
+  static String updateInstructorLink(String slug) =>
+      "/instructors/links/$slug/update/";
   static String getInstructorCoursesBySslug(String slug) =>
       "/instructor/$slug/courses/";
 
