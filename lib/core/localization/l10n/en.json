@@ -68,6 +68,7 @@
   "create_update_manage_student_profiles_assignments": "Create, update and manage student profiles and assignments.",
   "manage_students": "Manage Students",
   "total_students": "Total Students",
+  "total_enrollments": "Total Enrollments",
   "manage_instructors": "Manage Instructors",
   "create_update_manage_instructor_profiles_assignments": "Create, update and manage instructor profiles and assignments.",
   "add_instructor": "Add Instructor",

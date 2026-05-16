@@ -67,6 +67,7 @@
   "create_update_manage_student_profiles_assignments": "إنشاء وتحديث وإدارة ملفات الطلاب والواجبات.",
   "manage_students": "إدارة الطلاب",
   "total_students": "إجمالي الطلاب",
+  "total_enrollments": "إجمالي تسجيل المواد",
   "manage_instructors": "إدارة المعلمين",
   "create_update_manage_instructor_profiles_assignments": "إنشاء وتحديث وإدارة ملفات المعلمين والواجبات.",
   "add_instructor": "إضافة معلم",

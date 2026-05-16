@@ -1,3 +1,5 @@
+import 'package:lms_admin_instructor/core/common/user_role_enum.dart';
+
 class CheckAuthResponseModel {
   final bool? success;
   final int? status;
@@ -35,7 +37,7 @@ class CheckAuthResponseModel {
 class CheckAuthDataModel {
   final bool? isActive;
   final bool? isVerified;
-  final String? role;
+  final UserRole? role;
   final String? message;  
 
   const CheckAuthDataModel({
@@ -49,7 +51,7 @@ class CheckAuthDataModel {
     return CheckAuthDataModel(
       isActive: json['is_active'] as bool?,
       isVerified: json['is_verified'] as bool?,
-      role: json['role'] as String?,
+      role: UserRole.fromString(json['role'] as String?),
       message: json['message'] as String?,
     );
   }
@@ -58,7 +60,7 @@ class CheckAuthDataModel {
     return {
       'is_active': isActive,
       'is_verified': isVerified,
-      'role': role,
+      'role': role?.name,
       'message': message,
     };
   }

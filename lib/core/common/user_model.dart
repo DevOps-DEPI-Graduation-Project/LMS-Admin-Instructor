@@ -1,11 +1,12 @@
 
+import 'package:lms_admin_instructor/core/common/user_role_enum.dart';
 import 'package:lms_admin_instructor/core/services/remote/endpoints.dart';
 
 class UserModel {
   final String firstName;
   final String lastName;
   final String email;
-  final String? role;
+  final UserRole? role;
   final String slug;
   final bool? isActive;
   final bool? isVerified;
@@ -27,7 +28,7 @@ class UserModel {
       ApiKey.firstName: firstName,
       ApiKey.lastName: lastName,
       ApiKey.email: email,
-      ApiKey.role: role,
+      ApiKey.role: role?.name,
       ApiKey.slug: slug,
       ApiKey.isActive: isActive,
       ApiKey.isVerified: isVerified,
@@ -40,7 +41,7 @@ class UserModel {
       firstName: json[ApiKey.firstName] ?? '',
       lastName: json[ApiKey.lastName] ?? '',
       email: json[ApiKey.email] ?? '',
-      role: json[ApiKey.role],
+      role: UserRole.fromString(json[ApiKey.role]),
       slug: json[ApiKey.slug] ?? '',
       isActive: json[ApiKey.isActive],
       isVerified: json[ApiKey.isVerified],

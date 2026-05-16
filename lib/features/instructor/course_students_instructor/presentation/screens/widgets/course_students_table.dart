@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
+import 'package:lms_admin_instructor/core/routing/app_routes.dart';
 import 'package:lms_admin_instructor/core/extensions/context_extensions.dart';
+
 import 'package:lms_admin_instructor/core/localization/app_localizations.dart';
 import 'package:lms_admin_instructor/core/utils/get_responsive_size.dart';
 import 'package:lms_admin_instructor/features/instructor/course_students_instructor/domain/entity/course_student_ui_model.dart';
@@ -292,7 +295,12 @@ class _CourseStudentsTableState extends State<CourseStudentsTable> {
             flex: 1,
             child: Center(
               child: IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  context.pushNamed(
+                    AppRoutes.studentDetails,
+                    extra: student.slug,
+                  );
+                },
                 icon: Icon(
                   Icons.visibility_outlined,
                   color: context.colorScheme.primary,
@@ -301,6 +309,7 @@ class _CourseStudentsTableState extends State<CourseStudentsTable> {
                 tooltip: context.tr('view_profile'),
               ),
             ),
+
           ),
         ],
       ),

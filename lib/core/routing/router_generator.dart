@@ -4,9 +4,9 @@ import 'package:go_router/go_router.dart';
 import 'package:lms_admin_instructor/core/di/service_locator.dart';
 import 'package:lms_admin_instructor/core/routing/app_routes.dart';
 import 'package:lms_admin_instructor/core/services/local/cache_helper.dart';
+import 'package:lms_admin_instructor/core/common/user_role_enum.dart';
 import 'package:lms_admin_instructor/core/services/remote/endpoints.dart';
 import 'package:lms_admin_instructor/features/admin/instructors_admin/presentation/bloc/instructor_details_bloc.dart';
-import 'package:lms_admin_instructor/features/admin/students_admin/presentation/screens/student_details_screen.dart';
 import 'package:lms_admin_instructor/features/auth/presentation/bloc/auth_admin_bloc.dart';
 import 'package:lms_admin_instructor/features/auth/presentation/screens/auth_layout.dart';
 import 'package:lms_admin_instructor/features/auth/presentation/screens/login_screen/login_screen.dart';
@@ -22,8 +22,10 @@ import 'package:lms_admin_instructor/features/splash/presentation/screens/splash
 import 'package:lms_admin_instructor/features/admin/instructors_admin/presentation/bloc/instructor_admin_bloc.dart';
 import 'package:lms_admin_instructor/features/admin/instructors_admin/presentation/screens/add_instructor_admin_screen.dart';
 import 'package:lms_admin_instructor/features/admin/instructors_admin/presentation/screens/instructor_details_admin_screen.dart';
-import 'package:lms_admin_instructor/features/admin/students_admin/presentation/bloc/student_admin_bloc.dart';
-import 'package:lms_admin_instructor/features/admin/students_admin/presentation/screens/add_student_screen/add_student_admin_screen.dart';
+import 'package:lms_admin_instructor/features/students/screens/student_details/bloc/student_details_bloc.dart';
+import 'package:lms_admin_instructor/features/students/screens/student_details/screens/student_details_screen.dart';
+
+import 'package:lms_admin_instructor/features/students/screens/add_student_screen/add_student_admin_screen.dart';
 import 'package:lms_admin_instructor/features/instructor/courses_instructor/presentation/bloc/courses_instructor_bloc.dart';
 import 'package:lms_admin_instructor/features/instructor/course_details/presentation/screens/course_details_screen.dart';
 import 'package:lms_admin_instructor/features/instructor/manage_quiz_instructor/presentation/bloc/manage_quiz_instructor_bloc.dart';
@@ -35,6 +37,7 @@ import 'package:lms_admin_instructor/features/instructor/course_details/presenta
 import 'package:lms_admin_instructor/features/instructor/manage_materials_instructor/presentation/bloc/course_material_bloc.dart';
 import 'package:lms_admin_instructor/features/instructor/manage_materials_instructor/presentation/bloc/course_material_event.dart';
 import 'package:lms_admin_instructor/features/instructor/course_students_instructor/presentation/screens/course_students_instructor_screen.dart';
+import 'package:lms_admin_instructor/features/students/screens/students_list/bloc/student_bloc.dart';
 import 'package:lms_admin_instructor/root/bloc/root_bloc.dart';
 import 'package:lms_admin_instructor/root/custom_view_nav_bar.dart';
 
@@ -108,14 +111,17 @@ class RouterGenerator {
         name: AppRoutes.navBar,
         builder: (context, state) {
           final extra = state.extra as Map<String, dynamic>?;
-          final role =
-              extra?['role'] as String? ??
-              sl<CacheHelper>().getDataString(key: ApiKey.role) ??
-              '';
+          final roleStr =
+              extra?['role'] is UserRole
+                  ? (extra?['role'] as UserRole).name
+                  : extra?['role'] as String? ??
+                  sl<CacheHelper>().getDataString(key: ApiKey.role) ??
+                  '';
+          final role = UserRole.fromString(roleStr);
           return MultiBlocProvider(
             providers: [
               BlocProvider(create: (context) => sl<InstructorAdminBloc>()),
-              BlocProvider.value(value: sl<StudentAdminBloc>()),
+              BlocProvider.value(value: sl<StudentBloc>()),
               BlocProvider.value(value: sl<RootBloc>()),
               BlocProvider.value(value: sl<CoursesInstructorBloc>()),
               BlocProvider.value(value: sl<AuthBloc>()),
@@ -153,11 +159,18 @@ class RouterGenerator {
       GoRoute(
         path: AppRoutes.studentDetails,
         name: AppRoutes.studentDetails,
-        builder: (context, state) {
-          final slug = state.pathParameters['slug'] ?? '';
-          return StudentDetailsScreen(slug: slug);
-        },
+        builder: (context, state) => MultiBlocProvider(
+          providers: [
+            BlocProvider.value(value: sl<StudentBloc>()),
+            BlocProvider(create: (context) => sl<StudentDetailsBloc>()),
+          ],
+          child: StudentDetailsScreen(
+            slug: state.extra as String? ?? '',
+          ),
+        ),
       ),
+
+
       GoRoute(
         path: AppRoutes.courseDetails,
         name: AppRoutes.courseDetails,
