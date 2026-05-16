@@ -51,6 +51,7 @@ class MaterialsRepositoryImpl implements MaterialsRepository {
       EndPoint.courseMaterials(requestModel.courseSlug),
       data: data,
       isFormData: true,
+      sendTimeout: const Duration(minutes: 30),
       fromJson: (json) => CourseMaterialModel.fromJson(json['data']),
     );
   }
@@ -79,6 +80,7 @@ class MaterialsRepositoryImpl implements MaterialsRepository {
       EndPoint.courseMaterials(requestModel.courseSlug),
       data: data,
       isFormData: true,
+      sendTimeout: const Duration(minutes: 30),
       fromJson: (json) => CourseMaterialModel.fromJson(json['data']),
     );
   }

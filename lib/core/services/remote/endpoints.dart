@@ -23,8 +23,10 @@ class EndPoint {
 
   //? Students
   static String studentsAdmin = "/admin/students/";
-  static String deleteStudentAdmin(String slug) =>
-      "/admin/students/$slug/delete/";
+  static String deleteStudentAdmin(String slug) => "/admin/students/$slug/delete/";
+  static String studentsInstructor(String instructorSlug) => "/instructor/$instructorSlug/students/";
+  static String studentsDetailsInstructor(String studentSlug, String instructorSlug) => "/instructor/$instructorSlug/students/$studentSlug/summary/";
+  static String studentsDetailsAdmin(String studentSlug) => "/admin/students/$studentSlug/details/";
 
   //?***********************************************************************?
   //? Courses' Instructor
@@ -47,6 +49,7 @@ class EndPoint {
   static String courseStudents(String slug) => "/courses/$slug/students/";
   static String courseVideos(String slug) => "/courses/$slug/videos/";
   static String videosBySlug(String slug) => "/videos/$slug/";
+  static String deleteVideo(String slug) => "/videos/$slug/delete/";
   static String createVideo = "/videos/create/";
   static String courseMaterials(String slug) => "/courses/$slug/materials/";
   static String courseQuizzes(String slug) => "/courses/$slug/quizzes/";

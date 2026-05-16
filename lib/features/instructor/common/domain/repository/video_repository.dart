@@ -7,6 +7,8 @@ abstract class VideoRepository {
   );
   Future<Either<String, CourseVideoModel>> addVideo(
     String courseSlug,
-    Map<String, dynamic> data,
-  );
+    Map<String, dynamic> data, {
+    void Function(int sent, int total)? onSendProgress,
+  });
+  Future<Either<String, String>> deleteVideo(String videoSlug);
 }

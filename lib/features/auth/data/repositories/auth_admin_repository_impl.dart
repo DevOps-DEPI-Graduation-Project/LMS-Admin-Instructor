@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:lms_admin_instructor/core/common/user_role_enum.dart';
 
 import 'package:dartz/dartz.dart';
 import 'package:lms_admin_instructor/core/services/local/cache_helper.dart';
@@ -30,8 +31,8 @@ class AuthRepositoryImpl implements AuthRepository {
         return Left(error);
       },
       (loginResponse) async {
-        if (loginResponse.user.role != 'admin' &&
-            loginResponse.user.role != 'instructor') {
+        if (loginResponse.user.role != UserRole.admin &&
+            loginResponse.user.role != UserRole.instructor) {
           return const Left('You are not authorized to login to dashboard');
         }
 
@@ -57,7 +58,7 @@ class AuthRepositoryImpl implements AuthRepository {
 
         await cacheHelper.saveData(
           key: ApiKey.role,
-          value: loginResponse.user.role,
+          value: loginResponse.user.role?.name,
         );
 
         return Right(loginResponse);
