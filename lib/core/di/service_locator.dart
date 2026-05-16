@@ -37,7 +37,10 @@ import 'package:lms_admin_instructor/features/instructor/course_details/presenta
 import 'package:lms_admin_instructor/root/bloc/root_bloc.dart';
 import 'package:lms_admin_instructor/features/instructor/common/data/repository/materials_repository_impl.dart';
 import 'package:lms_admin_instructor/features/instructor/common/domain/repository/materials_repository.dart';
-import 'package:lms_admin_instructor/features/instructor/course_details/presentation/bloc/course_material_bloc/course_material_bloc.dart';
+import 'package:lms_admin_instructor/features/instructor/manage_materials_instructor/presentation/bloc/course_material_bloc.dart';
+import 'package:lms_admin_instructor/features/admin/all_courses_admin/data/repository/all_courses_admin_repository_impl.dart';
+import 'package:lms_admin_instructor/features/admin/all_courses_admin/domain/repository/all_courses_admin_repository.dart';
+import 'package:lms_admin_instructor/features/admin/all_courses_admin/presentation/bloc/all_courses_admin_bloc.dart';
 
 final sl = GetIt.instance;
 
@@ -130,4 +133,10 @@ Future<void> setupServiceLocator() async {
     () => MaterialsRepositoryImpl(apiConsumer: sl()),
   );
   sl.registerFactory(() => CourseMaterialsBloc(repository: sl()));
+
+  // Features - All Courses Admin
+  sl.registerLazySingleton<AllCoursesAdminRepository>(
+    () => AllCoursesAdminRepositoryImpl(apiConsumer: sl()),
+  );
+  sl.registerFactory(() => AllCoursesAdminBloc(repository: sl()));
 }

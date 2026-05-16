@@ -49,7 +49,7 @@ class CourseInstructorListUIModel
   }
 }
 
-class CourseInstructorItemUIModel implements CustomDataTableRowModel {
+class CourseInstructorItemUIModel extends CustomDataTableRowModel {
   final String slug;
   final String title;
   final String? createdAt;
@@ -117,6 +117,9 @@ class CourseInstructorItemUIModel implements CustomDataTableRowModel {
 
   @override
   IconData? get actionIcon => actionIconpressed ?? Icons.arrow_forward_ios_rounded;
+
+  @override
+  VoidCallback? get onRowTap => onOptionsPressed;
 
   @override
   VoidCallback? get onOptions => onOptionsPressed;

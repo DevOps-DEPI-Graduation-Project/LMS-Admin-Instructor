@@ -36,9 +36,7 @@ class _SearchBar extends State<CustomSearchBarr> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width:
-          widget.w ??
-          getResponsiveSize(context: context, webSize: 550, mobileSize: 250),
+      width: widget.w,
       height: getResponsiveSize(context: context, webSize: 60, mobileSize: 50),
       child: TextFormField(
         controller: widget.controller,

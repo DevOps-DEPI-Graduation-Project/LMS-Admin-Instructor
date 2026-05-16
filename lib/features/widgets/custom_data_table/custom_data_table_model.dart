@@ -10,4 +10,6 @@ abstract class CustomDataTableRowModel {
 
   VoidCallback? get onOptions;
   IconData? get optionsIcon;
+
+  VoidCallback? get onRowTap => null;
 }

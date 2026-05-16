@@ -94,11 +94,7 @@ class _CoursesInstructorDesktopScreenState
       backgroundColor: context.colorScheme.primary.withValues(alpha: 0.005),
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        flexibleSpace: CustomNavBar(
-          hint: context.tr('search_courses_hint'),
-          controller: _searchController,
-          onSearch: _onSearchChanged,
-        ),
+        flexibleSpace: CustomNavBar(hint: context.tr('search_courses_hint')),
         toolbarHeight: 70.h,
       ),
       body: BlocListener<CoursesInstructorBloc, CoursesInstructorState>(
@@ -159,7 +155,7 @@ class _CoursesInstructorDesktopScreenState
                     text: context.tr('create_new_course'),
                     width: getResponsiveSize(
                       mobileSize: 100,
-                      webSize: 220,
+                      webSize: 250,
                       tabletSize: 180,
                       context: context,
                     ),

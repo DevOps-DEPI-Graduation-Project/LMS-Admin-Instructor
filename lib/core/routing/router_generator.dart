@@ -12,6 +12,7 @@ import 'package:lms_admin_instructor/features/auth/presentation/screens/auth_lay
 import 'package:lms_admin_instructor/features/auth/presentation/screens/login_screen/login_screen.dart';
 import 'package:lms_admin_instructor/features/auth/presentation/screens/forgot_password_screen/forgot_password_screen.dart';
 import 'package:lms_admin_instructor/features/auth/presentation/screens/reset_password_screen/reset_password_screen.dart';
+import 'package:lms_admin_instructor/features/instructor/course_details/presentation/bloc/course_quiz_bloc/course_quiz_bloc.dart';
 import 'package:lms_admin_instructor/features/instructor/course_details/presentation/bloc/course_stats_bloc/course_stats_bloc.dart';
 import 'package:lms_admin_instructor/features/instructor/course_details/presentation/bloc/course_stats_bloc/course_stats_event.dart';
 import 'package:lms_admin_instructor/features/instructor/course_students_instructor/presentation/bloc/course_students_bloc.dart';
@@ -24,17 +25,17 @@ import 'package:lms_admin_instructor/features/admin/instructors_admin/presentati
 import 'package:lms_admin_instructor/features/admin/students_admin/presentation/bloc/student_admin_bloc.dart';
 import 'package:lms_admin_instructor/features/admin/students_admin/presentation/screens/add_student_screen/add_student_admin_screen.dart';
 import 'package:lms_admin_instructor/features/instructor/courses_instructor/presentation/bloc/courses_instructor_bloc.dart';
-import 'package:lms_admin_instructor/features/instructor/course_details/presentation/bloc/course_quiz_bloc/course_quiz_bloc.dart';
 import 'package:lms_admin_instructor/features/instructor/course_details/presentation/screens/course_details_screen.dart';
 import 'package:lms_admin_instructor/features/instructor/manage_quiz_instructor/presentation/bloc/manage_quiz_instructor_bloc.dart';
 import 'package:lms_admin_instructor/features/instructor/manage_quiz_instructor/presentation/screens/manage_quiz_instructor_screen.dart';
 import 'package:lms_admin_instructor/features/instructor/course_details/presentation/bloc/course_details_bloc/course_details_bloc.dart';
 import 'package:lms_admin_instructor/features/instructor/course_details/presentation/bloc/course_details_bloc/course_details_event.dart';
-import 'package:lms_admin_instructor/features/instructor/course_details/presentation/bloc/course_material_bloc/course_material_bloc.dart';
-import 'package:lms_admin_instructor/features/instructor/course_details/presentation/bloc/course_material_bloc/course_material_event.dart';
+import 'package:lms_admin_instructor/features/instructor/manage_materials_instructor/presentation/screens/course_materials_screen.dart';
+import 'package:lms_admin_instructor/features/instructor/course_details/presentation/screens/pdf_viewer_screen.dart';
+import 'package:lms_admin_instructor/features/instructor/manage_materials_instructor/presentation/bloc/course_material_bloc.dart';
+import 'package:lms_admin_instructor/features/instructor/manage_materials_instructor/presentation/bloc/course_material_event.dart';
 import 'package:lms_admin_instructor/features/instructor/course_students_instructor/presentation/screens/course_students_instructor_screen.dart';
 import 'package:lms_admin_instructor/root/bloc/root_bloc.dart';
-import 'package:lms_admin_instructor/features/instructor/course_details/presentation/screens/pdf_viewer_screen.dart';
 import 'package:lms_admin_instructor/root/custom_view_nav_bar.dart';
 
 class RouterGenerator {
@@ -51,7 +52,6 @@ class RouterGenerator {
           );
         },
       ),
-
       ShellRoute(
         builder: (context, state, child) {
           return BlocProvider.value(
@@ -84,7 +84,6 @@ class RouterGenerator {
                   },
             ),
           ),
-
           GoRoute(
             path: AppRoutes.resetPasswordScreen,
             name: AppRoutes.resetPasswordScreen,
@@ -99,7 +98,6 @@ class RouterGenerator {
           ),
         ],
       ),
-
       GoRoute(
         path: AppRoutes.homeScreen,
         name: AppRoutes.homeScreen,
@@ -126,7 +124,6 @@ class RouterGenerator {
           );
         },
       ),
-    
       GoRoute(
         path: AppRoutes.addInstructorAdminScreen,
         name: AppRoutes.addInstructorAdminScreen,
@@ -170,7 +167,8 @@ class RouterGenerator {
             providers: [
               BlocProvider(
                 create: (context) =>
-                    sl<CourseDetailsBloc>()..add(GetCourseDetailsEvent(slug: slug)),
+                    sl<CourseDetailsBloc>()
+                      ..add(GetCourseDetailsEvent(slug: slug)),
               ),
               BlocProvider(
                 create: (context) =>
@@ -195,12 +193,13 @@ class RouterGenerator {
           return MultiBlocProvider(
             providers: [
               BlocProvider(
-                create: (context) => sl<CourseStatsBloc>()
-                  ..add(GetCourseStatsEvent(slug: slug)),
+                create: (context) =>
+                    sl<CourseStatsBloc>()..add(GetCourseStatsEvent(slug: slug)),
               ),
               BlocProvider(
-                create: (context) => sl<CourseStudentsBloc>()
-                  ..add(GetCourseStudentsEvent(slug: slug, page: 1)),
+                create: (context) =>
+                    sl<CourseStudentsBloc>()
+                      ..add(GetCourseStudentsEvent(slug: slug, page: 1)),
               ),
             ],
             child: CourseStudentsInstructorScreen(slug: slug),
@@ -220,13 +219,27 @@ class RouterGenerator {
         },
       ),
       GoRoute(
+        path: AppRoutes.courseMaterials,
+        name: AppRoutes.courseMaterials,
+        builder: (context, state) {
+          final slug = state.pathParameters['slug'] ?? '';
+          final courseName = state.extra as String? ?? '';
+          return BlocProvider(
+            create: (context) =>
+                sl<CourseMaterialsBloc>()
+                  ..add(GetCourseMaterialsEvent(slug: slug, page: 1)),
+            child: CourseMaterialsScreen(slug: slug, courseName: courseName),
+          );
+        },
+      ),
+      GoRoute(
         path: AppRoutes.pdfViewer,
         name: AppRoutes.pdfViewer,
         builder: (context, state) {
-          final extra = state.extra as Map<String, dynamic>;
+          final extra = state.extra as Map<String, dynamic>?;
           return PdfViewerScreen(
-            url: extra['url'] as String,
-            title: extra['title'] as String,
+            url: extra?['url'] as String? ?? '',
+            title: extra?['title'] as String? ?? 'PDF Viewer',
           );
         },
       ),

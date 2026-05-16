@@ -15,10 +15,11 @@ import 'package:lms_admin_instructor/features/admin/instructors_admin/presentati
 import 'package:lms_admin_instructor/features/admin/instructors_admin/presentation/bloc/instructor_details_event.dart';
 import 'package:lms_admin_instructor/features/admin/instructors_admin/presentation/bloc/instructor_details_state.dart';
 import 'package:lms_admin_instructor/features/admin/instructors_admin/presentation/screens/widgets/custom_instructor_information_disktop.dart';
-import 'package:lms_admin_instructor/features/admin/instructors_admin/presentation/screens/widgets/stats_card_widget%20.dart';
+import 'package:lms_admin_instructor/features/admin/instructors_admin/presentation/screens/widgets/stats_card_widget .dart';
 import 'package:lms_admin_instructor/features/widgets/custom_data_table/custom_data_table.dart';
 import 'package:lms_admin_instructor/features/widgets/custom_data_table/custom_data_table_model.dart';
 import 'package:lms_admin_instructor/features/widgets/search_bar.dart';
+import 'package:lms_admin_instructor/features/widgets/custom_delete_dialog.dart';
 
 class InstructorDetailsDisktopAdminScreen extends StatefulWidget {
   final String slug;
@@ -70,12 +71,8 @@ class _InstructorDetailsDisktopAdminScreenState
     if (_debounce?.isActive ?? false) _debounce?.cancel();
     _debounce = Timer(const Duration(milliseconds: 500), () {
       context.read<InstructorDetailsBloc>().add(
-            GetInstructorCoursesEvent(
-              slug: widget.slug,
-              page: 1,
-              search: query,
-            ),
-          );
+        GetInstructorCoursesEvent(slug: widget.slug, page: 1, search: query),
+      );
     });
   }
 
@@ -93,9 +90,9 @@ class _InstructorDetailsDisktopAdminScreenState
       listener: (context, state) {
         if (state is DeleteInstructorSuccess) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
+            SnackBar(
               content: Text("Instructor deleted successfully"),
-              backgroundColor: Colors.green,
+              backgroundColor: context.colorScheme.secondary,
             ),
           );
           context.pop();
@@ -222,38 +219,32 @@ class _InstructorDetailsDisktopAdminScreenState
                                     .map((course) {
                                       return course.copyWith(
                                         onActionPressed: () {
-                                          showAdaptiveDialog(
+                                          showDialog(
                                             context: context,
-                                            builder: (context) {
-                                              return AlertDialog.adaptive(
-                                                title: Text(
-                                                  context.tr('delete_course'),
+                                            builder: (dialogContext) {
+                                              return CustomDeleteDialog(
+                                                title: context.tr(
+                                                  'delete_course_title',
                                                 ),
-                                                content: Text(
-                                                  context.tr(
-                                                    'are_you_sure_delete_course',
-                                                  ),
+                                                warningMessage: context.tr(
+                                                  'delete_course_warning_message',
                                                 ),
-                                                actions: [
-                                                  TextButton(
-                                                    onPressed: () =>
-                                                        Navigator.pop(context),
-                                                    child: Text(
-                                                      context.tr('cancel'),
-                                                    ),
-                                                  ),
-                                                  TextButton(
-                                                    onPressed: () {},
-                                                    child: Text(
-                                                      context.tr('delete'),
-                                                      style: TextStyle(
-                                                        color: context
-                                                            .colorScheme
-                                                            .error,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
+                                                consequencesMessage: context.tr(
+                                                  'delete_course_consequences',
+                                                ),
+                                                onDelete: () {
+                                                  // TODO delete course
+                                                  // context
+                                                  //     .read<
+                                                  //       InstructorDetailsBloc
+                                                  //     >()
+                                                  //     .add(
+                                                  //       DeleteInstructorCourseEvent(
+                                                  //         courseSlug:
+                                                  //             course.slug,
+                                                  //       ),
+                                                  //     );
+                                                },
                                               );
                                             },
                                           );
@@ -262,7 +253,12 @@ class _InstructorDetailsDisktopAdminScreenState
                                         optionsIconpressed:
                                             Icons.arrow_forward_ios_rounded,
                                         onOptionsPressed: () {
-                                          // add navigation logic here when ready
+                                          context.pushNamed(
+                                            AppRoutes.courseDetails,
+                                            pathParameters: {
+                                              'slug': course.slug,
+                                            },
+                                          );
                                         },
                                       );
                                     })

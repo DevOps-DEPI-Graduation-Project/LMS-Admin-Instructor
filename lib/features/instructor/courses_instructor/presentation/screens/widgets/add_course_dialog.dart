@@ -66,9 +66,9 @@ class _AddCourseDialogState extends State<AddCourseDialog> {
             listener: (context, state) {
               if (state is AddCourseSuccess) {
                 context.pop();
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text(state.message)),
-                );
+                ScaffoldMessenger.of(
+                  context,
+                ).showSnackBar(SnackBar(content: Text(state.message)));
               } else if (state is AddCourseError) {
                 ScaffoldMessenger.of(
                   context,
@@ -290,7 +290,8 @@ class _AddCourseDialogState extends State<AddCourseDialog> {
                               children: [
                                 ClipRRect(
                                   borderRadius: BorderRadius.circular(12.r),
-                                  child: kIsWeb // TODO: check this
+                                  child:
+                                      kIsWeb // TODO: check this
                                       ? Image.network(
                                           _selectedImage!.path,
                                           width: double.infinity,
@@ -315,7 +316,8 @@ class _AddCourseDialogState extends State<AddCourseDialog> {
                                       color: context.colorScheme.onSurface,
                                     ),
                                     style: IconButton.styleFrom(
-                                      backgroundColor: context.colorScheme.surface,
+                                      backgroundColor:
+                                          context.colorScheme.surface,
                                     ),
                                   ),
                                 ),
@@ -345,7 +347,7 @@ class _AddCourseDialogState extends State<AddCourseDialog> {
                           return CustomPrimaryButton(
                             onTap: state is AddCourseLoading ? () {} : _submit,
                             text: context.tr('create_course'),
-                            width: 160.w,
+                            width: 250.w,
                             height: 48.h,
                             child: state is AddCourseLoading
                                 ? SizedBox(

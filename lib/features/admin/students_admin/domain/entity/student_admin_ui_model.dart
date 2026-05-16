@@ -47,7 +47,7 @@ class StudentAdminUIModel extends PaginatedUIModel<StudentItemUIModel> {
   }
 }
 
-class StudentItemUIModel implements CustomDataTableRowModel {
+class StudentItemUIModel extends CustomDataTableRowModel {
   final String slug;
   final String studentName;
   final String email;
@@ -110,6 +110,9 @@ class StudentItemUIModel implements CustomDataTableRowModel {
 
   @override
   IconData? get actionIcon => null;
+
+  @override
+  VoidCallback? get onRowTap => onOptionsPressed;
 
   @override
   VoidCallback? get onOptions => onOptionsPressed;

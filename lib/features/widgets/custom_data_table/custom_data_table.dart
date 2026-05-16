@@ -156,7 +156,7 @@ class _CustomDataTableState extends State<CustomDataTable> {
                           return Material(
                             color: Colors.transparent,
                             child: InkWell(
-                              onTap: item.onAction,
+                              onTap: item.onRowTap ?? item.onAction,
                               child: Container(
                                 padding: EdgeInsets.symmetric(
                                   vertical: 12.h,
@@ -165,7 +165,9 @@ class _CustomDataTableState extends State<CustomDataTable> {
                                 decoration: BoxDecoration(
                                   color: isEven
                                       ? context.colorScheme.surface
-                                      : context.colorScheme.surfaceContainerHighest
+                                      : context
+                                            .colorScheme
+                                            .surfaceContainerHighest
                                             .withValues(alpha: 0.5),
                                   border: Border(
                                     bottom: BorderSide(
@@ -237,7 +239,7 @@ class _CustomDataTableState extends State<CustomDataTable> {
                                                       color: context
                                                           .colorScheme
                                                           .primary,
-                                                      size: 20.r,
+                                                      size: 24.r,
                                                     ),
                                                     onPressed: item.onAction,
                                                     splashRadius: 20.r,
@@ -251,6 +253,7 @@ class _CustomDataTableState extends State<CustomDataTable> {
                                                       color: context
                                                           .colorScheme
                                                           .error,
+                                                      size: 24.r,
                                                     ),
                                                     onPressed: item.onAction,
                                                     splashRadius: 20.r,

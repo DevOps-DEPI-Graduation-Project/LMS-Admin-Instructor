@@ -132,7 +132,10 @@ class _AddInstructorDisktopAdminScreenState
                             ],
                           ),
                           SizedBox(height: 24.h),
-                          BlocBuilder<InstructorAdminBloc, InstructorAdminState>(
+                          BlocBuilder<
+                            InstructorAdminBloc,
+                            InstructorAdminState
+                          >(
                             builder: (context, state) {
                               final isLoading = state is AddInstructorLoading;
                               return CustomTextFormField(
