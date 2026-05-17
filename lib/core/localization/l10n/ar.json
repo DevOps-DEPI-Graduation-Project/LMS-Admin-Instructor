@@ -323,5 +323,12 @@
   "retry": "إعادة المحاولة",
   "delete_video": "حذف الفيديو",
   "delete_video_warning": "تحذير: هذا الإجراء دائم!",
-  "delete_video_consequences": "سيؤدي حذف هذا الفيديو إلى إزالته من الدورة ولن يتمكن الطلاب من مشاهدته بعد الآن."
+  "delete_video_consequences": "سيؤدي حذف هذا الفيديو إلى إزالته من الدورة ولن يتمكن الطلاب من مشاهدته بعد الآن.",
+  "student_details": "تفاصيل الطالب",
+  "average_score": "متوسط الدرجات",
+  "courses_enrolled": "الدورات المسجلة",
+  "no_courses_enrolled": "لا توجد دورات مسجلة",
+  "not_started": "لم يبدأ",
+  "in_progress": "قيد التنفيذ",
+  "completed": "مكتمل"
 }

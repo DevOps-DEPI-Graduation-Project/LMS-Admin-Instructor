@@ -326,5 +326,12 @@
   "retry": "Retry",
   "delete_video": "Delete Video",
   "delete_video_warning": "Warning: This action is permanent!",
-  "delete_video_consequences": "Deleting this video will remove it from the course and students will no longer be able to watch it."
+  "delete_video_consequences": "Deleting this video will remove it from the course and students will no longer be able to watch it.",
+  "student_details": "Student Details",
+  "average_score": "Average Score",
+  "courses_enrolled": "Courses Enrolled",
+  "no_courses_enrolled": "No courses enrolled",
+  "not_started": "Not Started",
+  "in_progress": "In Progress",
+  "completed": "Completed"
 }
