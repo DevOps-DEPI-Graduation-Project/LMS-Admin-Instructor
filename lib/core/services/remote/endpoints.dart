@@ -15,9 +15,6 @@ class EndPoint {
   static String checkToken = "/auth/check-token/";
   static String resendOtp = "/auth/resend-otp/";
 
-  static String getUserDataEndPoint(id) {
-    return "/user/get-user/$id";
-  }
 
   //?***********************************************************************?
 
@@ -25,7 +22,7 @@ class EndPoint {
   static String studentsAdmin = "/admin/students/";
   static String deleteStudentAdmin(String slug) => "/admin/students/$slug/delete/";
   static String studentsInstructor(String instructorSlug) => "/instructor/$instructorSlug/students/";
-  static String studentsDetailsInstructor(String studentSlug, String instructorSlug) => "/instructor/$instructorSlug/students/$studentSlug/summary/";
+  static String studentsDetailsInstructor(String studentSlug) => "/instructor/students/$studentSlug/summary/";
   static String studentsDetailsAdmin(String studentSlug) => "/admin/students/$studentSlug/details/";
 
   //?***********************************************************************?

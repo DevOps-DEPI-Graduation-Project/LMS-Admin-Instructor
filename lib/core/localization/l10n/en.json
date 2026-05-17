@@ -242,9 +242,6 @@
   "delete_student_title": "Delete Student",
   "delete_student_warning_message": "Warning: Permanent Removal!",
   "delete_student_consequences": "Deleting this student will erase their progress, enrollments, and all associated activity records. This cannot be undone.",
-  "delete_course_title": "Delete Course",
-  "delete_course_warning_message": "Warning: Permanent Removal!",
-  "delete_course_consequences": "Deleting this course will remove all associated content, student enrollments, and progress data permanently.",
   "dashboard_welcome_title": "LMS Administrative Portal",
   "dashboard_welcome_subtitle": "Comprehensive control over your educational ecosystem.",
   "about_app_title": "Why Commit Ma3ana is Different",
@@ -281,5 +278,12 @@
   "retry": "Retry",
   "delete_video": "Delete Video",
   "delete_video_warning": "Warning: This action is permanent!",
-  "delete_video_consequences": "Deleting this video will remove it from the course and students will no longer be able to watch it."
+  "delete_video_consequences": "Deleting this video will remove it from the course and students will no longer be able to watch it.",
+  "student_details": "Student Details",
+  "average_score": "Average Score",
+  "courses_enrolled": "Courses Enrolled",
+  "no_courses_enrolled": "No courses enrolled",
+  "not_started": "Not Started",
+  "in_progress": "In Progress",
+  "completed": "Completed"
 }

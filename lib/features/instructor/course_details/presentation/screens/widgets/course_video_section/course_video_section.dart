@@ -209,10 +209,13 @@ class CourseVideoSection extends StatelessWidget {
           categoryName,
           '${videos.length} ${context.tr('video_placeholder')}',
         ),
-        ...videos.map((video) {
+        ...videos.asMap().entries.map((entry) {
+          final index = entry.key;
+          final video = entry.value;
           return _buildSubsectionItem(
             context,
             video,
+            index: index,
           );
         }),
       ],
@@ -307,8 +310,9 @@ class CourseVideoSection extends StatelessWidget {
 
   Widget _buildSubsectionItem(
     BuildContext context,
-    CourseVideoModel video,
-  ) {
+    CourseVideoModel video, {
+    required int index,
+  }) {
     return Container(
       padding: EdgeInsets.symmetric(
         horizontal: context.isDesktop ? 48.w : 24.w,
@@ -330,7 +334,7 @@ class CourseVideoSection extends StatelessWidget {
               shape: BoxShape.circle,
             ),
             child: Text(
-              video.order.toString(),
+              (index + 1).toString(),
               style: TextStyle(
                 color: context.colorScheme.primary,
                 fontSize: 12.sp,
