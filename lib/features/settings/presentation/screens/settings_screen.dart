@@ -12,6 +12,7 @@ import 'package:lms_admin_instructor/features/settings/presentation/screens/widg
 import 'package:lms_admin_instructor/features/settings/presentation/screens/widgets/settings_tile.dart';
 import 'package:lms_admin_instructor/features/settings/presentation/screens/widgets/language_dialog.dart';
 import 'package:lms_admin_instructor/features/settings/presentation/screens/widgets/logout_dialog.dart';
+import 'package:lms_admin_instructor/core/theme/theme_cubit.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -88,7 +89,7 @@ class SettingsScreen extends StatelessWidget {
                     trailing: Switch(
                       value: Theme.of(context).brightness == Brightness.dark,
                       onChanged: (value) {
-                        // Theme toggle logic
+                        context.read<ThemeCubit>().toggleTheme();
                       },
                     ),
                     iconColor: context.colorScheme.onSecondary,
