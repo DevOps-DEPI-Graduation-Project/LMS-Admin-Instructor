@@ -23,6 +23,7 @@ class AllCoursesAdminDesktopScreen extends StatefulWidget {
 class _AllCoursesAdminDesktopScreenState
     extends State<AllCoursesAdminDesktopScreen> {
   final ScrollController _scrollController = ScrollController();
+  final TextEditingController _searchController = TextEditingController();
   Timer? _debounce;
 
   @override
@@ -41,6 +42,7 @@ class _AllCoursesAdminDesktopScreenState
           context.read<AllCoursesAdminBloc>().add(
             GetAllCoursesAdminEvent(
               page: state.courseListUIModel.currentPage + 1,
+              search: _searchController.text,
             ),
           );
         }
@@ -60,6 +62,7 @@ class _AllCoursesAdminDesktopScreenState
   @override
   void dispose() {
     _scrollController.dispose();
+    _searchController.dispose();
     _debounce?.cancel();
     super.dispose();
   }
@@ -73,6 +76,7 @@ class _AllCoursesAdminDesktopScreenState
         flexibleSpace: CustomNavBar(
           hint: context.tr('search_courses_hint'),
           onSearch: _onSearchChanged,
+          controller: _searchController,
         ),
         toolbarHeight: 70.h,
       ),
@@ -86,7 +90,10 @@ class _AllCoursesAdminDesktopScreenState
               ),
             );
             context.read<AllCoursesAdminBloc>().add(
-              const GetAllCoursesAdminEvent(page: 1),
+              GetAllCoursesAdminEvent(
+                page: 1,
+                search: _searchController.text,
+              ),
             );
           } else if (state is DeleteCourseAdminError) {
             ScaffoldMessenger.of(context).showSnackBar(

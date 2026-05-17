@@ -57,7 +57,17 @@ class AllCoursesAdminBloc extends Bloc<AllCoursesAdminEvent, AllCoursesAdminStat
     response.fold(
       (error) => emit(AllCoursesAdminError(message: error)),
       (responseModel) {
-        final entity = responseModel.toEntity();
+        var entity = responseModel.toEntity();
+
+        // Local Filtering Fallback
+        if (event.search != null && event.search!.isNotEmpty) {
+          final query = event.search!.toLowerCase();
+          final filteredCourses = entity.courses.where((course) {
+            return course.title.toLowerCase().contains(query) ||
+                course.instructorName.toLowerCase().contains(query);
+          }).toList();
+          entity = entity.copyWith(courses: filteredCourses);
+        }
 
         handlePaginatedResponse(
           page: pageToFetch,
