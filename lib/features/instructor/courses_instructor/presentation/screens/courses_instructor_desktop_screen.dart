@@ -32,6 +32,7 @@ class _CoursesInstructorDesktopScreenState
     extends State<CoursesInstructorDesktopScreen> {
   final ScrollController _scrollController = ScrollController();
   final TextEditingController _searchController = TextEditingController();
+  String _searchQuery = '';
   Timer? _debounce;
 
   @override
@@ -94,7 +95,16 @@ class _CoursesInstructorDesktopScreenState
       backgroundColor: context.colorScheme.primary.withValues(alpha: 0.005),
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        flexibleSpace: CustomNavBar(hint: context.tr('search_courses_hint')),
+        flexibleSpace: CustomNavBar(
+          hint: context.tr('search_courses_hint'),
+          controller: _searchController,
+          onSearch: (value) {
+            _onSearchChanged(value);
+            setState(() {
+              _searchQuery = value;
+            });
+          },
+        ),
         toolbarHeight: 70.h,
       ),
       body: BlocListener<CoursesInstructorBloc, CoursesInstructorState>(
@@ -201,6 +211,16 @@ class _CoursesInstructorDesktopScreenState
                         } else if (state is CoursesInstructorError) {
                           return Center(child: Text(state.message));
                         } else if (state is CoursesInstructorLoaded) {
+                          final filteredCourses = _searchQuery.isEmpty
+                              ? state.courseListUIModel.courses
+                              : state.courseListUIModel.courses
+                                    .where(
+                                      (course) => course.title
+                                          .toLowerCase()
+                                          .contains(_searchQuery.toLowerCase()),
+                                    )
+                                    .toList();
+
                           return CustomDataTable(
                             headers: [
                               context.tr('course_name'),
@@ -210,7 +230,7 @@ class _CoursesInstructorDesktopScreenState
                             ],
                             columnFlex: const [4, 2, 2, 2],
                             centeredColumns: const [1, 2],
-                            data: state.courseListUIModel.courses.map((course) {
+                            data: filteredCourses.map((course) {
                               return course.copyWith(
                                 onActionPressed: () async {
                                   final result = await context.pushNamed(

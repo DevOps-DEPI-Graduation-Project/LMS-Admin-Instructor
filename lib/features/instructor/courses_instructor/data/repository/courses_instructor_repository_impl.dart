@@ -40,6 +40,7 @@ class CoursesInstructorRepositoryImpl implements CoursesInstructorRepository {
       ApiKey.category: requestModel.category,
       ApiKey.level: requestModel.level,
       ApiKey.image: requestModel.image,
+      ApiKey.isActive: requestModel.isActive,
     };
 
     return await apiConsumer.post<String>(

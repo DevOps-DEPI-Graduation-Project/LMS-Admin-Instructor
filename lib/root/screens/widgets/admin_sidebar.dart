@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:lms_admin_instructor/core/di/service_locator.dart';
 import 'package:lms_admin_instructor/core/extensions/context_extensions.dart';
 import 'package:lms_admin_instructor/core/localization/app_localizations.dart';
+import 'package:lms_admin_instructor/core/services/local/cache_helper.dart';
+import 'package:lms_admin_instructor/core/services/remote/endpoints.dart';
 import 'package:lms_admin_instructor/core/theme/app_assets.dart';
 import 'package:lms_admin_instructor/root/models/nav_items.dart';
 
@@ -19,6 +22,10 @@ class AdminSidebar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final String role =
+        sl<CacheHelper>().getDataString(key: ApiKey.role) ?? 'instructor';
+    final bool isAdmin = role.toLowerCase() == 'admin';
+
     return Container(
       width: 280.w,
       decoration: BoxDecoration(
@@ -63,14 +70,18 @@ class AdminSidebar extends StatelessWidget {
                           fontWeight: FontWeight.bold,
                           height: 1.2,
                         ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
                       Text(
-                        'Dashboard',
+                        context.tr(isAdmin ? 'lms_admin' : 'lms_instructor'),
                         style: context.textTheme.labelMedium?.copyWith(
                           color: context.colorScheme.primary,
                           fontWeight: FontWeight.w600,
                           letterSpacing: 1.2,
                         ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ],
                   ),
@@ -84,24 +95,25 @@ class AdminSidebar extends StatelessWidget {
             thickness: 1,
           ),
           SizedBox(height: 24.h),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.w),
-            child: Column(
-              children: navItems.take(5).map((item) {
-                return Padding(
-                  padding: EdgeInsets.only(bottom: 8.h),
-                  child: ResponsiveNavItem(
-                    icon: item.icon,
-                    label: item.label,
-                    index: item.index,
-                    isSelected: selectedIndex == item.index,
-                    onTap: () => onItemTap(item.index),
-                  ),
-                );
-              }).toList(),
+          Expanded(
+            child: SingleChildScrollView(
+              padding: EdgeInsets.symmetric(horizontal: 16.w),
+              child: Column(
+                children: navItems.take(5).map((item) {
+                  return Padding(
+                    padding: EdgeInsets.only(bottom: 8.h),
+                    child: ResponsiveNavItem(
+                      icon: item.icon,
+                      label: item.label,
+                      index: item.index,
+                      isSelected: selectedIndex == item.index,
+                      onTap: () => onItemTap(item.index),
+                    ),
+                  );
+                }).toList(),
+              ),
             ),
           ),
-          const Spacer(),
           Divider(
             color: context.colorScheme.onSurface.withValues(alpha: 0.1),
             height: 1,

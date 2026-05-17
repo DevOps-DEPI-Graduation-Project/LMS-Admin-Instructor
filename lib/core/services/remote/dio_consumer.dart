@@ -173,6 +173,9 @@ class DioConsumer extends ApiConsumer {
       final int statusCode = response.statusCode ?? 0;
 
       if (statusCode >= 200 && statusCode < 300 && responseData == null) {
+        if (fromJson != null) {
+          return Right(fromJson({}));
+        }
         return Right(null as T);
       }
 

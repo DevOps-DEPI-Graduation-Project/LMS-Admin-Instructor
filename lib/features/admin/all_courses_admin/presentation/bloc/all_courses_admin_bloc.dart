@@ -5,19 +5,22 @@ import 'package:lms_admin_instructor/features/admin/all_courses_admin/domain/rep
 import 'package:lms_admin_instructor/features/admin/all_courses_admin/presentation/bloc/all_courses_admin_event.dart';
 import 'package:lms_admin_instructor/features/admin/all_courses_admin/presentation/bloc/all_courses_admin_state.dart';
 
-class AllCoursesAdminBloc extends Bloc<AllCoursesAdminEvent, AllCoursesAdminState>
+class AllCoursesAdminBloc
+    extends Bloc<AllCoursesAdminEvent, AllCoursesAdminState>
     with
         PaginatedListMixin<
-            AllCoursesAdminEvent,
-            AllCoursesAdminState,
-            CourseAdminItemUIModel,
-            CourseAdminListUIModel,
-            AllCoursesAdminLoaded,
-            AllCoursesAdminError,
-            AllCoursesAdminLoading> {
+          AllCoursesAdminEvent,
+          AllCoursesAdminState,
+          CourseAdminItemUIModel,
+          CourseAdminListUIModel,
+          AllCoursesAdminLoaded,
+          AllCoursesAdminError,
+          AllCoursesAdminLoading
+        > {
   final AllCoursesAdminRepository repository;
 
-  AllCoursesAdminBloc({required this.repository}) : super(AllCoursesAdminInitial()) {
+  AllCoursesAdminBloc({required this.repository})
+    : super(AllCoursesAdminInitial()) {
     on<GetAllCoursesAdminEvent>(_onGetAllCourses);
     on<DeleteCourseAdminEvent>(_onDeleteCourse);
   }
@@ -45,7 +48,9 @@ class AllCoursesAdminBloc extends Bloc<AllCoursesAdminEvent, AllCoursesAdminStat
     if (pageToFetch == 1) {
       emit(AllCoursesAdminLoading());
     } else {
-      emit((state as AllCoursesAdminLoaded).copyWith(isPaginationLoading: true));
+      emit(
+        (state as AllCoursesAdminLoaded).copyWith(isPaginationLoading: true),
+      );
     }
 
     final response = await repository.getAllCourses(
@@ -54,32 +59,31 @@ class AllCoursesAdminBloc extends Bloc<AllCoursesAdminEvent, AllCoursesAdminStat
       search: event.search,
     );
 
-    response.fold(
-      (error) => emit(AllCoursesAdminError(message: error)),
-      (responseModel) {
-        var entity = responseModel.toEntity();
+    response.fold((error) => emit(AllCoursesAdminError(message: error)), (
+      responseModel,
+    ) {
+      var entity = responseModel.toEntity();
 
-        // Local Filtering Fallback
-        if (event.search != null && event.search!.isNotEmpty) {
-          final query = event.search!.toLowerCase();
-          final filteredCourses = entity.courses.where((course) {
-            return course.title.toLowerCase().contains(query) ||
-                course.instructorName.toLowerCase().contains(query);
-          }).toList();
-          entity = entity.copyWith(courses: filteredCourses);
-        }
+      if (event.search != null && event.search!.isNotEmpty) {
+        final query = event.search!.toLowerCase();
+        final filteredCourses = entity.courses.where((course) {
+          return course.title.toLowerCase().contains(query);
+        }).toList();
+        entity = entity.copyWith(courses: filteredCourses);
+      }
 
-        handlePaginatedResponse(
-          page: pageToFetch,
-          newEntity: entity,
-          currentState: state,
-          emit: emit.call,
-          loadedStateBuilder: (model, isPaging) =>
-              AllCoursesAdminLoaded(courseListUIModel: model, isPaginationLoading: isPaging),
-          errorStateBuilder: (msg) => AllCoursesAdminError(message: msg),
-          loadingStateBuilder: () => AllCoursesAdminLoading(),
-        );
-      },
-    );
+      handlePaginatedResponse(
+        page: pageToFetch,
+        newEntity: entity,
+        currentState: state,
+        emit: emit.call,
+        loadedStateBuilder: (model, isPaging) => AllCoursesAdminLoaded(
+          courseListUIModel: model,
+          isPaginationLoading: isPaging,
+        ),
+        errorStateBuilder: (msg) => AllCoursesAdminError(message: msg),
+        loadingStateBuilder: () => AllCoursesAdminLoading(),
+      );
+    });
   }
 }
