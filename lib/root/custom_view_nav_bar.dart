@@ -19,6 +19,7 @@ class _CustomViewNavBarState extends State<CustomViewNavBar> {
     log("Role is: ${widget.role}");
     return RootScreen(
       navItems: widget.role == UserRole.admin ? adminNavItems : instructorNavItems,
+      isAdmin: widget.role == UserRole.admin,
     );
   }
 }

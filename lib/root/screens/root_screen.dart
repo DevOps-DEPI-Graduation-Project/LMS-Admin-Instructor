@@ -8,7 +8,8 @@ import 'package:lms_admin_instructor/root/screens/widgets/admin_sidebar.dart';
 
 class RootScreen extends StatefulWidget {
   final List<NavItemModel> navItems;
-  const RootScreen({super.key, required this.navItems});
+  final bool isAdmin;
+  const RootScreen({super.key, required this.navItems, required this.isAdmin});
 
   @override
   State<RootScreen> createState() => _RootScreenState();
@@ -69,6 +70,7 @@ class _RootScreenState extends State<RootScreen> {
                   AdminSidebar(
                     navItems: widget.navItems,
                     selectedIndex: currentIndex,
+                    isAdmin: widget.isAdmin,
                     onItemTap: _onNavigationChanged,
                   ),
                 Expanded(
