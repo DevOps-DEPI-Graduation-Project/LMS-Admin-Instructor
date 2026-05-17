@@ -13,6 +13,11 @@ import 'package:lms_admin_instructor/features/settings/presentation/screens/widg
 import 'package:lms_admin_instructor/features/settings/presentation/screens/widgets/language_dialog.dart';
 import 'package:lms_admin_instructor/features/settings/presentation/screens/widgets/logout_dialog.dart';
 import 'package:lms_admin_instructor/core/theme/theme_cubit.dart';
+import 'package:lms_admin_instructor/core/di/service_locator.dart';
+import 'package:lms_admin_instructor/core/services/local/cache_helper.dart';
+import 'package:lms_admin_instructor/core/services/remote/endpoints.dart';
+import 'package:lms_admin_instructor/core/common/user_role_enum.dart';
+import 'package:lms_admin_instructor/root/bloc/root_bloc.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -41,6 +46,7 @@ class SettingsScreen extends StatelessWidget {
       body: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state is LogoutSuccess) {
+            context.read<RootBloc>().add(ChangeIndexRootEvent(index: 0));
             context.go(AppRoutes.loginScreen);
           }
           if (state is AuthError) {
@@ -73,8 +79,17 @@ class SettingsScreen extends StatelessWidget {
                     icon: Icons.person_outline,
                     title: context.tr('profile'),
                     subtitle: context.tr('manage_profile_desc'),
-                    onTap: () =>
-                        context.pushNamed(AppRoutes.instructorProfileScreen),
+                    onTap: () {
+                      final roleStr =
+                          sl<CacheHelper>().getDataString(key: ApiKey.role) ??
+                          '';
+                      final role = UserRole.fromString(roleStr);
+                      if (role == UserRole.admin) {
+                        context.pushNamed(AppRoutes.adminProfileScreen);
+                      } else {
+                        context.pushNamed(AppRoutes.instructorProfileScreen);
+                      }
+                    },
                   ),
                 ],
               ),
