@@ -2,6 +2,10 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'student_details_model.g.dart';
 
+Object? _readAverageScore(Map json, String key) {
+  return json['avg_score'] ?? json['average_score'] ?? 0.0;
+}
+
 @JsonSerializable()
 class StudentDetailsModel {
   final bool success;
@@ -31,7 +35,7 @@ class StudentDetailsDataModel {
   final bool isActive;
   @JsonKey(name: 'total_enrollments')
   final int totalEnrollments;
-  @JsonKey(name: 'average_score')
+  @JsonKey(readValue: _readAverageScore)
   final double averageScore;
   final List<StudentDetailsCourseModel> courses;
 

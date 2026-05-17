@@ -34,7 +34,7 @@ StudentDetailsDataModel _$StudentDetailsDataModelFromJson(
   image: json['image'] as String?,
   isActive: json['is_active'] as bool,
   totalEnrollments: (json['total_enrollments'] as num).toInt(),
-  averageScore: (json['average_score'] as num).toDouble(),
+  averageScore: (_readAverageScore(json, 'averageScore') as num).toDouble(),
   courses: (json['courses'] as List<dynamic>)
       .map((e) => StudentDetailsCourseModel.fromJson(e as Map<String, dynamic>))
       .toList(),
@@ -49,7 +49,7 @@ Map<String, dynamic> _$StudentDetailsDataModelToJson(
   'image': instance.image,
   'is_active': instance.isActive,
   'total_enrollments': instance.totalEnrollments,
-  'average_score': instance.averageScore,
+  'averageScore': instance.averageScore,
   'courses': instance.courses,
 };
 
