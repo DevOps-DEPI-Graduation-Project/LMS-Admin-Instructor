@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:lms_admin_instructor/core/common/user_role_enum.dart';
 
 class SplashState extends Equatable {
   const SplashState();
@@ -12,7 +13,7 @@ class SplashInitial extends SplashState {}
 class SplashLoading extends SplashState {}
 
 class SplashLoaded extends SplashState {
-  final String role;
+  final UserRole role;
   const SplashLoaded({required this.role});
 }
 

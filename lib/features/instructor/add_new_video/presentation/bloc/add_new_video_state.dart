@@ -17,3 +17,15 @@ class AddNewVideoError extends AddNewVideoState {
 
   AddNewVideoError({required this.message});
 }
+
+class AddNewVideoProgress extends AddNewVideoState {
+  final int sent;
+  final int total;
+  final double progress;
+
+  AddNewVideoProgress({
+    required this.sent,
+    required this.total,
+    required this.progress,
+  });
+}

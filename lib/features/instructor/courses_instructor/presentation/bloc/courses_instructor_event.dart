@@ -6,10 +6,12 @@ class GetCoursesInstructorEvent extends CoursesInstructorEvent {
   final String instructorSlug;
   final int? page;
   final int? pageSize;
+  final String? search;
   GetCoursesInstructorEvent({
     required this.instructorSlug,
     this.page,
     this.pageSize,
+    this.search,
   });
 }
 

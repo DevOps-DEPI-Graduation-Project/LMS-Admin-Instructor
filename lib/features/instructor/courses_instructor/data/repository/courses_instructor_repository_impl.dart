@@ -16,12 +16,14 @@ class CoursesInstructorRepositoryImpl implements CoursesInstructorRepository {
     required String instructorSlug,
     int? page,
     int? pageSize,
+    String? search,
   }) async {
     return await apiConsumer.get<CourseInstructorResponseModel>(
       EndPoint.coursesInstructor(instructorSlug),
       queryParameters: ApiQueryParams.pagination(
         page: page,
         pageSize: pageSize,
+        search: search,
       ),
       fromJson: (json) => CourseInstructorResponseModel.fromJson(json),
     );

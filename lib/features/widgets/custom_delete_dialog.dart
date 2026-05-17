@@ -32,9 +32,12 @@ class _CustomDeleteDialogState extends State<CustomDeleteDialog> {
   void initState() {
     super.initState();
     _controller.addListener(() {
-      final expectedText = (widget.confirmText ?? context.tr('delete_confirm_text')).toLowerCase();
+      final expectedText =
+          (widget.confirmText ?? context.tr('delete_confirm_text'))
+              .toLowerCase();
       setState(() {
-        _isDeleteEnabled = _controller.text.trim().toLowerCase() == expectedText;
+        _isDeleteEnabled =
+            _controller.text.trim().toLowerCase() == expectedText;
       });
     });
   }
@@ -47,13 +50,18 @@ class _CustomDeleteDialogState extends State<CustomDeleteDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final expectedText = widget.confirmText ?? context.tr('delete_confirm_text');
-    
+    final expectedText =
+        widget.confirmText ?? context.tr('delete_confirm_text');
+
     return AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.r)),
       title: Row(
         children: [
-          Icon(Icons.warning_amber_rounded, color: context.colorScheme.error, size: 28.sp),
+          Icon(
+            Icons.warning_amber_rounded,
+            color: context.colorScheme.error,
+            size: 28.sp,
+          ),
           SizedBox(width: 12.w),
           Text(
             widget.title,
@@ -76,7 +84,9 @@ class _CustomDeleteDialogState extends State<CustomDeleteDialog> {
               decoration: BoxDecoration(
                 color: context.colorScheme.error.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8.r),
-                border: Border.all(color: context.colorScheme.error.withValues(alpha: 0.2)),
+                border: Border.all(
+                  color: context.colorScheme.error.withValues(alpha: 0.2),
+                ),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -117,17 +127,29 @@ class _CustomDeleteDialogState extends State<CustomDeleteDialog> {
             TextFormField(
               controller: _controller,
               autofocus: true,
+              onFieldSubmitted: (value) {
+                if (_isDeleteEnabled) {
+                  widget.onDelete();
+                  Navigator.pop(context);
+                }
+              },
               decoration: InputDecoration(
                 hintText: expectedText,
                 filled: true,
-                fillColor: context.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+                fillColor: context.colorScheme.surfaceContainerHighest
+                    .withValues(alpha: 0.3),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8.r),
-                  borderSide: BorderSide(color: context.colorScheme.outline.withValues(alpha: 0.2)),
+                  borderSide: BorderSide(
+                    color: context.colorScheme.outline.withValues(alpha: 0.2),
+                  ),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8.r),
-                  borderSide: BorderSide(color: context.colorScheme.error, width: 2),
+                  borderSide: BorderSide(
+                    color: context.colorScheme.error,
+                    width: 2,
+                  ),
                 ),
               ),
             ),
@@ -139,7 +161,9 @@ class _CustomDeleteDialogState extends State<CustomDeleteDialog> {
           onPressed: () => Navigator.pop(context),
           child: Text(
             context.tr('cancel'),
-            style: TextStyle(color: context.colorScheme.onSurface.withValues(alpha: 0.6)),
+            style: TextStyle(
+              color: context.colorScheme.onSurface.withValues(alpha: 0.6),
+            ),
           ),
         ),
         SizedBox(
@@ -155,7 +179,9 @@ class _CustomDeleteDialogState extends State<CustomDeleteDialog> {
             style: ElevatedButton.styleFrom(
               backgroundColor: context.colorScheme.error,
               foregroundColor: context.colorScheme.onError,
-              disabledBackgroundColor: context.colorScheme.error.withValues(alpha: 0.3),
+              disabledBackgroundColor: context.colorScheme.error.withValues(
+                alpha: 0.3,
+              ),
             ),
           ),
         ),

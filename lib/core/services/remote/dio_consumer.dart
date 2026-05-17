@@ -12,6 +12,8 @@ class DioConsumer extends ApiConsumer {
 
   DioConsumer({required this.dio}) {
     dio.options.baseUrl = EndPoint.baseUrl;
+    dio.options.connectTimeout = const Duration(seconds: 30);
+    dio.options.receiveTimeout = const Duration(minutes: 1);
     dio.interceptors.add(ApiInterceptor());
     dio.interceptors.add(
       LogInterceptor(
@@ -31,6 +33,8 @@ class DioConsumer extends ApiConsumer {
     dynamic data,
     Map<String, dynamic>? queryParameters,
     bool isFormData = false,
+    Duration? sendTimeout,
+    Duration? receiveTimeout,
     T Function(Map<String, dynamic>)? fromJson,
   }) async {
     try {
@@ -38,6 +42,7 @@ class DioConsumer extends ApiConsumer {
         path,
         data: isFormData ? FormData.fromMap(data) : data,
         queryParameters: queryParameters,
+        options: Options(sendTimeout: sendTimeout, receiveTimeout: receiveTimeout),
       );
       return _handleResponse(response, fromJson);
     } on DioException catch (e) {
@@ -89,6 +94,9 @@ class DioConsumer extends ApiConsumer {
     dynamic data,
     Map<String, dynamic>? queryParameters,
     bool isFormData = false,
+    Duration? sendTimeout,
+    Duration? receiveTimeout,
+    void Function(int sent, int total)? onSendProgress,
     T Function(Map<String, dynamic>)? fromJson,
   }) async {
     try {
@@ -96,6 +104,8 @@ class DioConsumer extends ApiConsumer {
         path,
         data: isFormData ? FormData.fromMap(data) : data,
         queryParameters: queryParameters,
+        onSendProgress: onSendProgress,
+        options: Options(sendTimeout: sendTimeout, receiveTimeout: receiveTimeout),
       );
       return _handleResponse(response, fromJson);
     } on DioException catch (e) {
@@ -109,6 +119,9 @@ class DioConsumer extends ApiConsumer {
     dynamic data,
     Map<String, dynamic>? queryParameters,
     bool isFormData = false,
+    Duration? sendTimeout,
+    Duration? receiveTimeout,
+    void Function(int sent, int total)? onSendProgress,
     T Function(Map<String, dynamic>)? fromJson,
   }) async {
     try {
@@ -116,6 +129,8 @@ class DioConsumer extends ApiConsumer {
         path,
         data: isFormData ? FormData.fromMap(data) : data,
         queryParameters: queryParameters,
+        onSendProgress: onSendProgress,
+        options: Options(sendTimeout: sendTimeout, receiveTimeout: receiveTimeout),
       );
       return _handleResponse(response, fromJson);
     } on DioException catch (e) {
@@ -129,6 +144,9 @@ class DioConsumer extends ApiConsumer {
     dynamic data,
     Map<String, dynamic>? queryParameters,
     bool isFormData = false,
+    Duration? sendTimeout,
+    Duration? receiveTimeout,
+    void Function(int sent, int total)? onSendProgress,
     T Function(Map<String, dynamic>)? fromJson,
   }) async {
     try {
@@ -136,6 +154,8 @@ class DioConsumer extends ApiConsumer {
         path,
         data: isFormData ? FormData.fromMap(data) : data,
         queryParameters: queryParameters,
+        onSendProgress: onSendProgress,
+        options: Options(sendTimeout: sendTimeout, receiveTimeout: receiveTimeout),
       );
       return _handleResponse(response, fromJson);
     } on DioException catch (e) {

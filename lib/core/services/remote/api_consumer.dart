@@ -19,6 +19,9 @@ abstract class ApiConsumer {
     Object? data,
     Map<String, dynamic>? queryParameters,
     bool isFormData = false,
+    Duration? sendTimeout,
+    Duration? receiveTimeout,
+    void Function(int sent, int total)? onSendProgress,
     T Function(Map<String, dynamic>)? fromJson,
   });
   Future<Either<String, T>> post<T>(
@@ -26,6 +29,9 @@ abstract class ApiConsumer {
     Object? data,
     Map<String, dynamic>? queryParameters,
     bool isFormData = false,
+    Duration? sendTimeout,
+    Duration? receiveTimeout,
+    void Function(int sent, int total)? onSendProgress,
     T Function(Map<String, dynamic>)? fromJson,
   });
   Future<Either<String, T>> patch<T>(
@@ -33,6 +39,9 @@ abstract class ApiConsumer {
     Object? data,
     Map<String, dynamic>? queryParameters,
     bool isFormData = false,
+    Duration? sendTimeout,
+    Duration? receiveTimeout,
+    void Function(int sent, int total)? onSendProgress,
     T Function(Map<String, dynamic>)? fromJson,
   });
   Future<Either<String, T>> delete<T>(
@@ -40,6 +49,8 @@ abstract class ApiConsumer {
     Object? data,
     Map<String, dynamic>? queryParameters,
     bool isFormData = false,
+    Duration? sendTimeout,
+    Duration? receiveTimeout,
     T Function(Map<String, dynamic>)? fromJson,
   });
 

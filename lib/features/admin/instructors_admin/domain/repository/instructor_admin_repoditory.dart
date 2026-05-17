@@ -8,6 +8,7 @@ abstract class InstructorAdminRepository {
   Future<Either<String, InstructorAdminResponseModel>> getInstructorAdmin(
     int? page,
     int? pageSize,
+    String? search,
   );
   Future<Either<String, InstructorDetailsResponseModel>> getInstructorBySlug(
     String slug,
@@ -19,5 +20,10 @@ abstract class InstructorAdminRepository {
   );
   Future<Either<String, void>> deleteInstructor(String slug);
   Future<Either<String, InstructorCourseAdminResponceModel>>
-  getInstructorCoursesBySslug(int? page, int? pageSize, String slug);
+  getInstructorCoursesBySslug(
+    int? page,
+    int? pageSize,
+    String slug,
+    String? search,
+  );
 }

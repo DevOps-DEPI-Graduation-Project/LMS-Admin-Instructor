@@ -176,21 +176,21 @@ class _InstructorMobileAdminScreenState
                                 alpha: 0.6,
                               ),
                             ),
-                            SizedBox(width: 16.w),
-                            CustomCardStatusInfoMobile(
-                              colortitle: context.colorScheme.onSecondary
-                                  .withValues(alpha: 0.7),
-                              colornum: context.colorScheme.primary,
-                              colorIcon: context.colorScheme.onSecondary,
-                              icon: Icons.book_outlined,
-                              title: context.tr('total_courses'),
-                              num: "48",
-                              color1: context.colorScheme.secondary,
-                              color2: context.colorScheme.secondary.withValues(
-                                alpha: 0.6,
-                              ),
-                              color3: context.colorScheme.surface,
-                            ),
+                            // SizedBox(width: 16.w),
+                            // CustomCardStatusInfoMobile(
+                            //   colortitle: context.colorScheme.onSecondary
+                            //       .withValues(alpha: 0.7),
+                            //   colornum: context.colorScheme.primary,
+                            //   colorIcon: context.colorScheme.onSecondary,
+                            //   icon: Icons.book_outlined,
+                            //   title: context.tr('total_courses'),
+                            //   num: "48",
+                            //   color1: context.colorScheme.secondary,
+                            //   color2: context.colorScheme.secondary.withValues(
+                            //     alpha: 0.6,
+                            //   ),
+                            //   color3: context.colorScheme.surface,
+                            // ),
                           ],
                         ),
 

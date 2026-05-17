@@ -60,13 +60,11 @@ class _CustomViewerState extends State<CustomViewer> {
             webSize: 1104,
             mobileSize: 650,
           ),
-          // 1104.w,
           height: getResponsiveSize(
             context: context,
             webSize: 949,
             mobileSize: 550,
           ),
-          // 949.h,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16.r),
             border: Border.all(width: 1, color: const Color(0xff94A3B8)),

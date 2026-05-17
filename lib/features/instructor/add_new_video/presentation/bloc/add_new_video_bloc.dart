@@ -17,17 +17,34 @@ class AddNewVideoBloc extends Bloc<AddNewVideoEvent, AddNewVideoState> {
         course: event.course,
         duration: event.duration,
         videoUrl: event.videoUrl,
-        videoFile: event.videoFile
+        videoFile: event.videoFile,
       );
 
       final data = await requestModel.toFormDataMap();
 
-      final result = await videoRepository.addVideo(event.courseSlug, data);
+      final result = await videoRepository.addVideo(
+        event.courseSlug,
+        data,
+        onSendProgress: (sent, total) {
+          if (total > 0) {
+            emit(
+              AddNewVideoProgress(
+                sent: sent,
+                total: total,
+                progress: sent / total,
+              ),
+            );
+          }
+        },
+      );
 
       result.fold(
         (error) => emit(AddNewVideoError(message: error)),
         (video) => emit(AddNewVideoSuccess(video: video)),
       );
+    });
+    on<ResetAddVideoEvent>((event, emit) {
+      emit(AddNewVideoInitial());
     });
   }
 }

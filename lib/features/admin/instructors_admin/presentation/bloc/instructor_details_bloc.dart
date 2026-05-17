@@ -20,15 +20,14 @@ class InstructorDetailsBloc
     final int pageToFetch = event.page!;
 
     if (pageToFetch == 1) {
-      if (currentState is! InstructorCoursesLoaded) {
-        emit(InstructorCoursesLoading());
-      }
+      emit(InstructorCoursesLoading());
     } else {
       if (currentState is InstructorCoursesLoaded) {
         if (currentState.instructorCourseAdminUiModel.data!.currentPage >=
             currentState.instructorCourseAdminUiModel.data!.totalPages) {
           return;
         }
+        emit(currentState.copyWith(isPaginationLoading: true));
       } else {
         emit(InstructorCoursesLoading());
       }
@@ -38,11 +37,23 @@ class InstructorDetailsBloc
       pageToFetch,
       event.pageSize,
       event.slug,
+      event.search,
     );
     result.fold(
       (failure) => emit(InstructorCoursesError(message: failure.toString())),
       (responseModel) {
-        final newEntity = responseModel.toEntity();
+        var newEntity = responseModel.toEntity();
+
+        // Local Filtering Fallback
+        if (event.search != null && event.search!.isNotEmpty) {
+          final query = event.search!.toLowerCase();
+          final filteredCourses = newEntity.data!.courses.where((course) {
+            return course.title.toLowerCase().contains(query);
+          }).toList();
+          newEntity = newEntity.copyWith(
+            data: newEntity.data!.copyWith(courses: filteredCourses),
+          );
+        }
 
         if (pageToFetch == 1 || currentState is! InstructorCoursesLoaded) {
           emit(

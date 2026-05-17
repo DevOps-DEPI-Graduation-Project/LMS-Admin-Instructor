@@ -35,9 +35,7 @@ class InstructorAdminBloc
     final int pageToFetch = event.page ?? 1;
 
     if (pageToFetch == 1) {
-      if (currentState is! InstructorAdminLoaded) {
-        emit(InstructorAdminLoading());
-      }
+      emit(InstructorAdminLoading());
     } else {
       if (currentState is InstructorAdminLoaded) {
         if (currentState.instructorAdminUiModel.currentPage >=
@@ -53,12 +51,24 @@ class InstructorAdminBloc
     final result = await instructorAdminRepository.getInstructorAdmin(
       pageToFetch,
       event.pageSize,
+      event.search,
     );
 
     result.fold((failure) => emit(InstructorAdminError(message: failure)), (
       responseModel,
     ) {
-      final newEntity = responseModel.toEntity();
+      var newEntity = responseModel.toEntity();
+
+      // Local Filtering Fallback
+      if (event.search != null && event.search!.isNotEmpty) {
+        final query = event.search!.toLowerCase();
+        final filteredInstructors = newEntity.instructors.where((instructor) {
+          return instructor.first_name.toLowerCase().contains(query) ||
+              instructor.last_name.toLowerCase().contains(query) ||
+              instructor.email.toLowerCase().contains(query);
+        }).toList();
+        newEntity = newEntity.copyWith(instructors: filteredInstructors);
+      }
 
       if (pageToFetch == 1 || currentState is! InstructorAdminLoaded) {
         emit(InstructorAdminLoaded(instructorAdminUiModel: newEntity));

@@ -17,3 +17,15 @@ class CourseVideoError extends CourseVideoState {
 
   CourseVideoError({required this.message});
 }
+
+class DeleteVideoLoading extends CourseVideoState {}
+
+class DeleteVideoSuccess extends CourseVideoState {
+  final String message;
+  DeleteVideoSuccess({required this.message});
+}
+
+class DeleteVideoError extends CourseVideoState {
+  final String message;
+  DeleteVideoError({required this.message});
+}

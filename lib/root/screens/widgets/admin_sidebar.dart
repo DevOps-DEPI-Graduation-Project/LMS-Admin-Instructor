@@ -5,6 +5,7 @@ import 'package:lms_admin_instructor/core/extensions/context_extensions.dart';
 import 'package:lms_admin_instructor/core/localization/app_localizations.dart';
 import 'package:lms_admin_instructor/core/services/local/cache_helper.dart';
 import 'package:lms_admin_instructor/core/services/remote/endpoints.dart';
+import 'package:lms_admin_instructor/core/theme/app_assets.dart';
 import 'package:lms_admin_instructor/root/models/nav_items.dart';
 
 class AdminSidebar extends StatelessWidget {
@@ -21,7 +22,8 @@ class AdminSidebar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final String role = sl<CacheHelper>().getDataString(key: ApiKey.role) ?? 'instructor';
+    final String role =
+        sl<CacheHelper>().getDataString(key: ApiKey.role) ?? 'instructor';
     final bool isAdmin = role.toLowerCase() == 'admin';
 
     return Container(
@@ -39,14 +41,52 @@ class AdminSidebar extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: EdgeInsets.fromLTRB(28.w, 40.h, 28.w, 24.h),
-            child: Text(
-              context.tr(isAdmin ? 'lms_admin' : 'lms_instructor'),
-              style: context.textTheme.headlineSmall?.copyWith(
-                color: context.colorScheme.primary,
-                fontWeight: FontWeight.w900,
-                letterSpacing: -0.5,
-              ),
+            padding: EdgeInsets.fromLTRB(20.w, 32.h, 20.w, 24.h),
+            child: Row(
+              children: [
+                Container(
+                  padding: EdgeInsets.all(8.r),
+                  decoration: BoxDecoration(
+                    color: context.colorScheme.primary.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(12.r),
+                  ),
+                  child: Image.asset(
+                    AppAssets.appLogo,
+                    width: 32.r,
+                    height: 32.r,
+                    fit: BoxFit.contain,
+                  ),
+                ),
+                SizedBox(width: 12.w),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        'Commit Ma3ana',
+                        style: context.textTheme.titleMedium?.copyWith(
+                          color: context.colorScheme.onSurface,
+                          fontWeight: FontWeight.bold,
+                          height: 1.2,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      Text(
+                        context.tr(isAdmin ? 'lms_admin' : 'lms_instructor'),
+                        style: context.textTheme.labelMedium?.copyWith(
+                          color: context.colorScheme.primary,
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: 1.2,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ),
           Divider(
@@ -55,24 +95,25 @@ class AdminSidebar extends StatelessWidget {
             thickness: 1,
           ),
           SizedBox(height: 24.h),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.w),
-            child: Column(
-              children: navItems.take(5).map((item) {
-                return Padding(
-                  padding: EdgeInsets.only(bottom: 8.h),
-                  child: ResponsiveNavItem(
-                    icon: item.icon,
-                    label: item.label,
-                    index: item.index,
-                    isSelected: selectedIndex == item.index,
-                    onTap: () => onItemTap(item.index),
-                  ),
-                );
-              }).toList(),
+          Expanded(
+            child: SingleChildScrollView(
+              padding: EdgeInsets.symmetric(horizontal: 16.w),
+              child: Column(
+                children: navItems.take(5).map((item) {
+                  return Padding(
+                    padding: EdgeInsets.only(bottom: 8.h),
+                    child: ResponsiveNavItem(
+                      icon: item.icon,
+                      label: item.label,
+                      index: item.index,
+                      isSelected: selectedIndex == item.index,
+                      onTap: () => onItemTap(item.index),
+                    ),
+                  );
+                }).toList(),
+              ),
             ),
           ),
-          const Spacer(),
           Divider(
             color: context.colorScheme.onSurface.withValues(alpha: 0.1),
             height: 1,

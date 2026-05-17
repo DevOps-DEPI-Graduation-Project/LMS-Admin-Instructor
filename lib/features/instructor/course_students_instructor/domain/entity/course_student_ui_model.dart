@@ -28,6 +28,20 @@ class CourseStudentsListUIModel extends PaginatedUIModel<CourseStudentItemUIMode
       currentPage: currentPage ?? this.currentPage,
     );
   }
+
+  CourseStudentsListUIModel copyWith({
+    List<CourseStudentItemUIModel>? students,
+    int? totalStudents,
+    int? totalPages,
+    int? currentPage,
+  }) {
+    return CourseStudentsListUIModel(
+      students: students ?? this.students,
+      totalStudents: totalStudents ?? this.totalStudents,
+      totalPages: totalPages ?? this.totalPages,
+      currentPage: currentPage ?? this.currentPage,
+    );
+  }
 }
 
 class CourseStudentItemUIModel {

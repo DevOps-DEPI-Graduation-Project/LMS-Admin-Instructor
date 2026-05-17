@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
@@ -17,6 +18,7 @@ import 'package:lms_admin_instructor/features/admin/instructors_admin/presentati
 import 'package:lms_admin_instructor/features/admin/instructors_admin/presentation/screens/widgets/stats_card_widget .dart';
 import 'package:lms_admin_instructor/features/widgets/custom_data_table/custom_data_table.dart';
 import 'package:lms_admin_instructor/features/widgets/custom_data_table/custom_data_table_model.dart';
+import 'package:lms_admin_instructor/features/widgets/search_bar.dart';
 import 'package:lms_admin_instructor/features/widgets/custom_delete_dialog.dart';
 
 class InstructorDetailsDisktopAdminScreen extends StatefulWidget {
@@ -31,6 +33,8 @@ class InstructorDetailsDisktopAdminScreen extends StatefulWidget {
 class _InstructorDetailsDisktopAdminScreenState
     extends State<InstructorDetailsDisktopAdminScreen> {
   final ScrollController _scrollController = ScrollController();
+  final TextEditingController _searchController = TextEditingController();
+  Timer? _debounce;
 
   @override
   void initState() {
@@ -55,6 +59,7 @@ class _InstructorDetailsDisktopAdminScreenState
             GetInstructorCoursesEvent(
               slug: widget.slug,
               page: data.currentPage + 1,
+              search: _searchController.text,
             ),
           );
         }
@@ -62,9 +67,20 @@ class _InstructorDetailsDisktopAdminScreenState
     }
   }
 
+  void _onSearchChanged(String query) {
+    if (_debounce?.isActive ?? false) _debounce?.cancel();
+    _debounce = Timer(const Duration(milliseconds: 500), () {
+      context.read<InstructorDetailsBloc>().add(
+        GetInstructorCoursesEvent(slug: widget.slug, page: 1, search: query),
+      );
+    });
+  }
+
   @override
   void dispose() {
     _scrollController.dispose();
+    _searchController.dispose();
+    _debounce?.cancel();
     super.dispose();
   }
 
@@ -74,9 +90,9 @@ class _InstructorDetailsDisktopAdminScreenState
       listener: (context, state) {
         if (state is DeleteInstructorSuccess) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
+            SnackBar(
               content: Text("Instructor deleted successfully"),
-              backgroundColor: Colors.green,
+              backgroundColor: context.colorScheme.secondary,
             ),
           );
           context.pop();
@@ -169,15 +185,23 @@ class _InstructorDetailsDisktopAdminScreenState
                         SizedBox(height: 30.h),
 
                         //***********************************??Assigned Courses??*****************
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            "Assigned Courses",
-                            style: context.textTheme.headlineSmall?.copyWith(
-                              fontWeight: FontWeight.bold,
-                              color: context.colorScheme.onSurface,
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "Assigned Courses",
+                              style: context.textTheme.headlineSmall?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: context.colorScheme.onSurface,
+                              ),
                             ),
-                          ),
+                            CustomSearchBarr(
+                              hint: context.tr('search_courses_hint'),
+                              controller: _searchController,
+                              onChanged: _onSearchChanged,
+                              onFieldSubmitted: _onSearchChanged,
+                            ),
+                          ],
                         ),
                         SizedBox(height: 24.h),
 

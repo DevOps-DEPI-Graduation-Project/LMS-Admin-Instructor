@@ -12,8 +12,8 @@ class CustomSearchBarr extends StatefulWidget {
   final IconData? prefixIcon;
   final IconData? suffixIcon;
   final TextEditingController controller;
-  final ValueChanged<String>? onChanged;
-
+  final void Function(String)? onChanged;
+  final void Function(String)? onFieldSubmitted;
   const CustomSearchBarr({
     super.key,
     required this.hint,
@@ -25,6 +25,7 @@ class CustomSearchBarr extends StatefulWidget {
     this.suffixIcon,
     required this.controller,
     this.onChanged,
+    this.onFieldSubmitted,
   });
 
   @override
@@ -35,9 +36,7 @@ class _SearchBar extends State<CustomSearchBarr> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width:
-          widget.w ??
-          getResponsiveSize(context: context, webSize: 550, mobileSize: 250),
+      width: getResponsiveSize(context: context, webSize: 400, mobileSize: 250),
       height: getResponsiveSize(context: context, webSize: 60, mobileSize: 50),
       child: TextFormField(
         controller: widget.controller,
@@ -54,7 +53,7 @@ class _SearchBar extends State<CustomSearchBarr> {
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(widget.r ?? 8.0),
             borderSide: BorderSide(
-              color: widget.color ?? Colors.grey.shade400,
+              color: widget.color ?? context.colorScheme.outline,
               width: 1.0,
             ),
           ),
@@ -79,6 +78,7 @@ class _SearchBar extends State<CustomSearchBarr> {
             color: context.colorScheme.onSurface.withValues(alpha: 0.5),
           ),
         ),
+        onFieldSubmitted: widget.onFieldSubmitted,
         cursorHeight: 24,
         cursorColor: context.colorScheme.primary,
       ),
