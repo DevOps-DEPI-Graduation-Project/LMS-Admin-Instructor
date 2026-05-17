@@ -14,6 +14,7 @@ AddCourseRequestModel _$AddCourseRequestModelFromJson(
   price: json['price'] as String,
   category: json['category'] as String,
   level: json['level'] as String,
+  isActive: json['is_active'] as bool? ?? true,
 );
 
 Map<String, dynamic> _$AddCourseRequestModelToJson(
@@ -24,4 +25,5 @@ Map<String, dynamic> _$AddCourseRequestModelToJson(
   'price': instance.price,
   'category': instance.category,
   'level': instance.level,
+  'is_active': instance.isActive,
 };

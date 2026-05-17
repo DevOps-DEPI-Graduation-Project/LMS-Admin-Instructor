@@ -54,8 +54,7 @@ class CourseStudentsBloc extends Bloc<CourseStudentsEvent, CourseStudentsState>
       if (event.search != null && event.search!.isNotEmpty) {
         final query = event.search!.toLowerCase();
         final filteredStudents = entity.students.where((student) {
-          return student.name.toLowerCase().contains(query) ||
-              student.email.toLowerCase().contains(query);
+          return student.name.toLowerCase().contains(query);
         }).toList();
         entity = entity.copyWith(students: filteredStudents);
       }

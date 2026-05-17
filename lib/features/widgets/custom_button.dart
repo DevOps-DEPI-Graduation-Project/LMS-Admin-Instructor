@@ -52,8 +52,8 @@ class CustomPrimaryButton extends StatelessWidget {
               padding: WidgetStatePropertyAll(
                 padding ??
                     EdgeInsets.symmetric(
-                      horizontal: context.isMobile ? 16.w : 32.w,
-                      vertical: context.isMobile ? 8.h : 16.h,
+                      horizontal: context.isMobile ? 8.w : 12.w,
+                      vertical: context.isMobile ? 4.h : 8.h,
                     ),
               ),
             ) ??

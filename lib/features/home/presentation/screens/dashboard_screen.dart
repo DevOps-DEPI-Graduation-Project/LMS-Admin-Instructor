@@ -2,14 +2,15 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:lms_admin_instructor/core/common/user_model.dart';
 import 'package:lms_admin_instructor/core/di/service_locator.dart';
 import 'package:lms_admin_instructor/core/extensions/context_extensions.dart';
 import 'package:lms_admin_instructor/core/localization/app_localizations.dart';
+import 'package:lms_admin_instructor/core/routing/app_routes.dart';
 import 'package:lms_admin_instructor/core/services/local/cache_helper.dart';
 import 'package:lms_admin_instructor/core/services/remote/endpoints.dart';
 import 'package:lms_admin_instructor/core/utils/get_responsive_size.dart';
-import 'package:lms_admin_instructor/features/admin/instructors_admin/presentation/screens/widgets/custom_nav_bar.dart';
 import 'package:lms_admin_instructor/features/home/presentation/screens/widgets/dashboard_feature_card.dart';
 import 'package:lms_admin_instructor/features/home/presentation/screens/widgets/dashboard_hero.dart';
 
@@ -55,12 +56,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ),
               ),
               centerTitle: true,
+              actions: [
+                IconButton(
+                  icon: const Icon(Icons.person_outline),
+                  onPressed: () =>
+                      context.pushNamed(AppRoutes.instructorProfileScreen),
+                ),
+                SizedBox(width: 8.w),
+              ],
             )
-          : AppBar(
-              automaticallyImplyLeading: false,
-              flexibleSpace: const CustomNavBar(),
-              toolbarHeight: 70.h,
-            ),
+          : null,
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -92,8 +97,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             context.tr('about_app_desc'),
                             textAlign: TextAlign.center,
                             style: context.textTheme.bodyMedium?.copyWith(
-                              color: context.colorScheme.onSurface
-                                  .withValues(alpha: 0.6),
+                              color: context.colorScheme.onSurface.withValues(
+                                alpha: 0.6,
+                              ),
                               height: 1.6,
                               fontSize: 15.sp,
                             ),
@@ -108,24 +114,22 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   LayoutBuilder(
                     builder: (context, constraints) {
                       if (isMobile) {
-                        return Column(
-                          children: _buildFeatureCards(context),
-                        );
+                        return Column(children: _buildFeatureCards(context));
                       }
                       return Wrap(
                         spacing: 24.w,
                         runSpacing: 24.h,
                         alignment: WrapAlignment.center,
-                        children:
-                            _buildFeatureCards(context)
-                                .map(
-                                  (card) => SizedBox(
-                                    width: (constraints.maxWidth - 48.w) /
-                                        (context.isDesktop ? 3 : 2),
-                                    child: card,
-                                  ),
-                                )
-                                .toList(),
+                        children: _buildFeatureCards(context)
+                            .map(
+                              (card) => SizedBox(
+                                width:
+                                    (constraints.maxWidth - 48.w) /
+                                    (context.isDesktop ? 3 : 2),
+                                child: card,
+                              ),
+                            )
+                            .toList(),
                       );
                     },
                   ),
@@ -137,7 +141,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     width: double.infinity,
                     padding: EdgeInsets.all(32.r),
                     decoration: BoxDecoration(
-                      color: context.colorScheme.primary.withValues(alpha: 0.03),
+                      color: context.colorScheme.primary.withValues(
+                        alpha: 0.03,
+                      ),
                       borderRadius: BorderRadius.circular(32.r),
                     ),
                     child: Column(
@@ -154,8 +160,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         Text(
                           "Commit Ma3ana Administrative Hub v1.0.0",
                           style: context.textTheme.labelMedium?.copyWith(
-                            color: context.colorScheme.onSurface
-                                .withValues(alpha: 0.3),
+                            color: context.colorScheme.onSurface.withValues(
+                              alpha: 0.3,
+                            ),
                           ),
                         ),
                       ],

@@ -35,7 +35,7 @@ class _CustomCardStatusInfoDesktopState
         minHeight: context.responsiveValue(mobile: 80.h, desktop: 115.h),
       ),
       decoration: BoxDecoration(
-        color: context.colorScheme.onPrimary,
+        color: context.colorScheme.surface,
         borderRadius: BorderRadius.circular(12.r),
         boxShadow: [
           BoxShadow(
