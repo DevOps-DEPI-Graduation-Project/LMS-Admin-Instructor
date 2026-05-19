@@ -116,6 +116,8 @@ class AppTheme {
     const colorScheme = ColorScheme.light(
       primary: _primary,
       onPrimary: _onPrimary,
+      primaryContainer: _primary,
+      onPrimaryContainer: _onPrimary,
       secondary: _secondary,
       onSecondary: _onSecondary,
       onSurface: _textPrimaryLight,
@@ -131,16 +133,20 @@ class AppTheme {
 
   static ThemeData get darkTheme {
     const colorScheme = ColorScheme.dark(
-      primary: _primary,
-      onPrimary: _onPrimary,
-      secondary: _secondary,
-      onSecondary: _onSecondary,
+      primary: Color(0xFF14B8A6),
+      onPrimary: Colors.white,
+      primaryContainer: Color(0xFF0F3E4B),
+      onPrimaryContainer: Color(0xFFE2F1F3),
+      secondary: Color(0xFF34D399),
+      onSecondary: Color(0xFF022C22),
+      secondaryContainer: Color(0xFF1E3D31),
+      onSecondaryContainer: Color(0xFFD1FAE5),
       onSurface: _textPrimaryDark,
-      surface: Color(0xFF161D20),
-      surfaceContainerHighest: Color(0xFF1C2629),
+      surface: Color(0xFF0E1315),
+      surfaceContainerHighest: Color(0xFF182023),
       onSurfaceVariant: _textSecondaryDark,
-      error: _error,
-      outline: Color(0xFF2C373A),
+      error: Color(0xFFF87171),
+      outline: Color(0xFF233035),
     );
 
     return _buildTheme(colorScheme, Brightness.dark);
@@ -210,8 +216,12 @@ class AppTheme {
 
       extensions: [
         CustomColors(
-          primaryHover: const Color(0xFF084C61),
-          secondaryHover: const Color(0xFF8FCC72),
+          primaryHover: brightness == Brightness.dark
+              ? const Color(0xFF0D9488)
+              : const Color(0xFF084C61),
+          secondaryHover: brightness == Brightness.dark
+              ? const Color(0xFF059669)
+              : const Color(0xFF8FCC72),
           textTertiary: _textTertiary,
           divider: colorScheme.outline,
         ),

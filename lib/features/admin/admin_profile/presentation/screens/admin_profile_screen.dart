@@ -52,7 +52,7 @@ class AdminProfileScreen extends StatelessWidget {
           if (state is AdminProfileError) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text(state.message),
+                content: Text(context.tr(state.message)),
                 backgroundColor: context.colorScheme.error,
               ),
             );

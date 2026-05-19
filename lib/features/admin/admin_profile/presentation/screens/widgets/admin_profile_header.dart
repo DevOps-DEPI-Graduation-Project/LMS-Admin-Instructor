@@ -47,7 +47,7 @@ class AdminProfileHeader extends StatelessWidget {
                   // TODO: Implement Edit Profile for Admin when endpoint is ready
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: Text("Edit feature coming soon."),
+                      content: Text(context.tr('edit_coming_soon')),
                       backgroundColor: context.colorScheme.secondary,
                     ),
                   );
