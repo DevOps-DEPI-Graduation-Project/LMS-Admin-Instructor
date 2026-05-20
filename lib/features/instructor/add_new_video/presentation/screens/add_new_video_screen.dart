@@ -26,7 +26,6 @@ class AddNewVideoScreen extends StatefulWidget {
 class _AddNewVideoScreenState extends State<AddNewVideoScreen> {
   final _titleController = TextEditingController();
   final _urlController = TextEditingController();
-  final _durationController = TextEditingController();
   PlatformFile? _selectedFile;
   String? _errorMessage;
 
@@ -34,7 +33,6 @@ class _AddNewVideoScreenState extends State<AddNewVideoScreen> {
   void dispose() {
     _titleController.dispose();
     _urlController.dispose();
-    _durationController.dispose();
     super.dispose();
   }
 
@@ -151,14 +149,6 @@ class _AddNewVideoScreenState extends State<AddNewVideoScreen> {
                       }
                     },
                   ),
-                  SizedBox(height: 16.h),
-                  _buildLabel(context, context.tr('duration_label')),
-                  CustomTextFormField(
-                    txt: context.tr('duration_hint'),
-                    hint: context.tr('duration_hint'),
-                    controller: _durationController,
-                    prefixIcon: Icons.timer_outlined,
-                  ),
                   SizedBox(height: 24.h),
                   Row(
                     children: [
@@ -258,7 +248,6 @@ class _AddNewVideoScreenState extends State<AddNewVideoScreen> {
                                 courseSlug: widget.courseSlug,
                                 title: _titleController.text,
                                 course: widget.courseSlug,
-                                duration: _durationController.text,
                                 videoUrl: _urlController.text.isNotEmpty
                                     ? _urlController.text
                                     : null,

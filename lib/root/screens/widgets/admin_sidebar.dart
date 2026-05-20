@@ -94,7 +94,7 @@ class AdminSidebar extends StatelessWidget {
             child: SingleChildScrollView(
               padding: EdgeInsets.symmetric(horizontal: 16.w),
               child: Column(
-                children: navItems.take(5).map((item) {
+                children: navItems.take(4).map((item) {
                   return Padding(
                     padding: EdgeInsets.only(bottom: 8.h),
                     child: ResponsiveNavItem(
@@ -120,11 +120,11 @@ class AdminSidebar extends StatelessWidget {
               children: [
                 SizedBox(height: 16.h),
                 ResponsiveNavItem(
-                  icon: navItems[5].icon,
-                  label: navItems[5].label,
-                  index: navItems[5].index,
-                  isSelected: selectedIndex == navItems[5].index,
-                  onTap: () => onItemTap(navItems[5].index),
+                  icon: navItems[4].icon,
+                  label: navItems[4].label,
+                  index: navItems[4].index,
+                  isSelected: selectedIndex == navItems[4].index,
+                  onTap: () => onItemTap(navItems[4].index),
                 ),
                 SizedBox(height: 30.h),
               ],
