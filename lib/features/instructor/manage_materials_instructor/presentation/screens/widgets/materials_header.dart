@@ -26,7 +26,7 @@ class MaterialsHeader extends StatelessWidget {
           Text(
             context.tr('course_materials'),
             style: context.textTheme.labelSmall?.copyWith(
-              color: context.colorScheme.onSecondary.withValues(alpha: 0.5),
+              color: context.colorScheme.primary,
               fontWeight: FontWeight.bold,
               letterSpacing: 1.2,
             ),

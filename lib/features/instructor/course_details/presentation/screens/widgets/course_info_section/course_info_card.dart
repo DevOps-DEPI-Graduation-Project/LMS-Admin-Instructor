@@ -414,12 +414,12 @@ class CourseInfoCard extends StatelessWidget {
               icon: Icon(
                 Icons.edit_outlined,
                 size: 18.sp,
-                color: context.colorScheme.onSurface,
+                color: context.colorScheme.onSecondary,
               ),
               label: Text(
                 text,
                 style: context.textTheme.labelLarge?.copyWith(
-                  color: context.colorScheme.onSurface,
+                  color: context.colorScheme.onSecondary,
                   fontWeight: FontWeight.bold,
                 ),
               ),
