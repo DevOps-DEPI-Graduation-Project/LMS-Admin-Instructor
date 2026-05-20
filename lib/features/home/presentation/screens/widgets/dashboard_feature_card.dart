@@ -22,7 +22,7 @@ class DashboardFeatureCard extends StatelessWidget {
         color: context.colorScheme.surfaceContainerHighest.withValues(alpha: 0.15),
         borderRadius: BorderRadius.circular(28.r),
         border: Border.all(
-          color: context.colorScheme.outline.withValues(alpha: 0.08),
+          color: context.colorScheme.onSurface,
         ),
       ),
       child: Column(
@@ -55,7 +55,7 @@ class DashboardFeatureCard extends StatelessWidget {
             description,
             textAlign: TextAlign.center,
             style: context.textTheme.bodySmall?.copyWith(
-              color: context.colorScheme.onSurface.withValues(alpha: 0.5),
+              color: context.colorScheme.onSurface,
               height: 1.6,
               fontSize: 13.sp,
             ),
