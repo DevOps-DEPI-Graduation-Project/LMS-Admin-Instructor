@@ -18,6 +18,9 @@ class EndPoint {
 
   //?***********************************************************************?
 
+  //? Admin
+  static String adminProfile(String slug) => "/admin/$slug/profile/";
+
   //? Students
   static String studentsAdmin = "/admin/students/";
   static String deleteStudentAdmin(String slug) => "/admin/students/$slug/delete/";

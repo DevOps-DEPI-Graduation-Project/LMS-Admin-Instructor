@@ -19,11 +19,9 @@ class DashboardFeatureCard extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 24.h),
       decoration: BoxDecoration(
-        color: context.colorScheme.surfaceContainerHighest.withValues(alpha: 0.15),
+        color: context.colorScheme.primary.withValues(alpha: 0.03),
         borderRadius: BorderRadius.circular(28.r),
-        border: Border.all(
-          color: context.colorScheme.onSurface,
-        ),
+        border: Border.all(color: context.colorScheme.surface),
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,

@@ -47,7 +47,9 @@ import 'package:lms_admin_instructor/features/students/screens/student_details/b
 import 'package:lms_admin_instructor/features/admin/all_courses_admin/data/repository/all_courses_admin_repository_impl.dart';
 import 'package:lms_admin_instructor/features/admin/all_courses_admin/domain/repository/all_courses_admin_repository.dart';
 import 'package:lms_admin_instructor/features/admin/all_courses_admin/presentation/bloc/all_courses_admin_bloc.dart';
-
+import 'package:lms_admin_instructor/features/admin/admin_profile/domain/repositories/admin_profile_repository.dart';
+import 'package:lms_admin_instructor/features/admin/admin_profile/data/repositories/admin_profile_repository_impl.dart';
+import 'package:lms_admin_instructor/features/admin/admin_profile/presentation/bloc/admin_profile_bloc.dart';
 final sl = GetIt.instance;
 
 Future<void> setupServiceLocator() async {
@@ -154,4 +156,10 @@ Future<void> setupServiceLocator() async {
     () => AllCoursesAdminRepositoryImpl(apiConsumer: sl()),
   );
   sl.registerFactory(() => AllCoursesAdminBloc(repository: sl()));
+
+  // Admin Profile
+  sl.registerLazySingleton<AdminProfileRepository>(
+    () => AdminProfileRepositoryImpl(apiConsumer: sl()),
+  );
+  sl.registerFactory(() => AdminProfileBloc(repository: sl()));
 }

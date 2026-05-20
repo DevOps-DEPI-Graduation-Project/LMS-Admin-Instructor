@@ -44,6 +44,9 @@ import 'package:lms_admin_instructor/root/custom_view_nav_bar.dart';
 import 'package:lms_admin_instructor/features/instructor/profile_instructor/presentation/screens/instructor_profile_screen.dart';
 import 'package:lms_admin_instructor/features/instructor/profile_instructor/presentation/bloc/profile_instructor_bloc.dart';
 import 'package:lms_admin_instructor/features/instructor/profile_instructor/presentation/bloc/profile_instructor_event.dart';
+import 'package:lms_admin_instructor/features/admin/admin_profile/presentation/screens/admin_profile_screen.dart';
+import 'package:lms_admin_instructor/features/admin/admin_profile/presentation/bloc/admin_profile_bloc.dart';
+import 'package:lms_admin_instructor/features/admin/admin_profile/presentation/bloc/admin_profile_event.dart';
 
 class RouterGenerator {
   static GoRouter goRouter = GoRouter(
@@ -259,6 +262,18 @@ class RouterGenerator {
             create: (context) => sl<ProfileInstructorBloc>()
               ..add(GetProfileInstructorEvent(slug: slug)),
             child: const InstructorProfileScreen(),
+          );
+        },
+      ),
+      GoRoute(
+        path: AppRoutes.adminProfileScreen,
+        name: AppRoutes.adminProfileScreen,
+        builder: (context, state) {
+          final slug = sl<CacheHelper>().getDataString(key: ApiKey.slug) ?? '';
+          return BlocProvider(
+            create: (context) => sl<AdminProfileBloc>()
+              ..add(GetAdminProfileEvent(slug: slug)),
+            child: const AdminProfileScreen(),
           );
         },
       ),

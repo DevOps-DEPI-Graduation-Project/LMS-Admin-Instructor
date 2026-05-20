@@ -331,5 +331,7 @@
   "no_courses_enrolled": "لا توجد دورات مسجلة",
   "not_started": "لم يبدأ",
   "in_progress": "قيد التنفيذ",
-  "completed": "مكتمل"
+  "completed": "مكتمل",
+  "edit_coming_soon": "ميزة التعديل ستتوفر قريباً.",
+  "failed_to_load_profile": "فشل في تحميل الملف الشخصي."
 }

@@ -16,7 +16,7 @@ class DashboardHero extends StatelessWidget {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        color: context.colorScheme.primary,
+        color: context.colorScheme.primaryContainer,
         borderRadius: BorderRadius.only(
           bottomLeft: Radius.circular(36.r),
           bottomRight: Radius.circular(36.r),
@@ -60,7 +60,9 @@ class DashboardHero extends StatelessWidget {
           "${context.tr('welcome_back')}, $userName 👋",
           textAlign: isMobile ? TextAlign.center : TextAlign.start,
           style: context.textTheme.headlineSmall?.copyWith(
-            color: context.colorScheme.surface.withValues(alpha: 0.8),
+            color: context.colorScheme.onPrimaryContainer.withValues(
+              alpha: 0.8,
+            ),
             fontWeight: FontWeight.bold,
             fontSize: 20.sp,
           ),
@@ -73,7 +75,9 @@ class DashboardHero extends StatelessWidget {
         Container(
           width: isMobile ? double.infinity : 550.w,
           decoration: BoxDecoration(
-            color: context.colorScheme.surface.withValues(alpha: 0.05),
+            color: context.colorScheme.onPrimaryContainer.withValues(
+              alpha: 0.08,
+            ),
             borderRadius: BorderRadius.circular(24.r),
           ),
           child: Padding(
@@ -82,7 +86,7 @@ class DashboardHero extends StatelessWidget {
               context.tr('join_learners_desc'),
               textAlign: isMobile ? TextAlign.center : TextAlign.start,
               style: context.textTheme.bodyMedium!.copyWith(
-                color: context.colorScheme.surface,
+                color: context.colorScheme.onPrimaryContainer,
                 height: 1.6,
                 fontSize: 16.sp,
               ),
