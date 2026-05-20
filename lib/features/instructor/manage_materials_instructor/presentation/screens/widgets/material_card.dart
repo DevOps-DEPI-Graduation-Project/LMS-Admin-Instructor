@@ -110,9 +110,7 @@ class MaterialCard extends StatelessWidget {
                     _buildActionButton(
                       context: context,
                       icon: Icons.edit_note_outlined,
-                      color: context.colorScheme.outlineVariant.withValues(
-                        alpha: 0.5,
-                      ),
+                      color: context.colorScheme.onSurfaceVariant,
                       onTap: onEdit ?? () {},
                     ),
                     SizedBox(width: 8.w),
