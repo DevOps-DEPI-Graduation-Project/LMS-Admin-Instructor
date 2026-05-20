@@ -201,7 +201,7 @@ class _AllCoursesAdminDesktopScreenState
                             actionIconpressed: Icons.delete_outline,
                             onOptionsPressed: () {
                               context.pushNamed(
-                                AppRoutes.courseDetails,
+                                AppRoutes.courseStudents,
                                 pathParameters: {'slug': course.slug},
                               );
                             },
