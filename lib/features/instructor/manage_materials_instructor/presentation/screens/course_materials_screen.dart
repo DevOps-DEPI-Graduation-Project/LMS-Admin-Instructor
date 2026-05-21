@@ -70,9 +70,7 @@ class _CourseMaterialsScreenState extends State<CourseMaterialsScreen> {
         context.pop(_isChanged);
       },
       child: Scaffold(
-        backgroundColor: context.colorScheme.surfaceContainerHighest.withValues(
-          alpha: 0.4,
-        ),
+        backgroundColor: context.colorScheme.surfaceContainerHighest,
         appBar: AppBar(
           elevation: 0,
           backgroundColor: Colors.transparent,
@@ -85,13 +83,21 @@ class _CourseMaterialsScreenState extends State<CourseMaterialsScreen> {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(Icons.arrow_back_ios_new, size: 18.sp),
-                  SizedBox(width: 4.w),
+                  Icon(
+                    Icons.arrow_back_ios_new,
+                    size: 16.sp,
+                    color: context.colorScheme.onSurface.withValues(
+                      alpha: 0.6,
+                    ),
+                  ),
+                  SizedBox(width: 8.w),
                   Text(
                     context.tr('back'),
-                    style: context.textTheme.labelLarge?.copyWith(
+                    style: context.textTheme.bodyMedium?.copyWith(
                       fontWeight: FontWeight.bold,
-                      color: context.colorScheme.onSurface,
+                      color: context.colorScheme.onSurface.withValues(
+                        alpha: 0.6,
+                      ),
                     ),
                   ),
                 ],
