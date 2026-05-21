@@ -337,5 +337,21 @@
   "in_progress": "In Progress",
   "completed": "Completed",
   "edit_coming_soon": "Edit feature coming soon.",
-  "failed_to_load_profile": "Failed to load profile."
+  "failed_to_load_profile": "Failed to load profile.",
+  "change_password": "Change Password",
+  "update_security_desc": "Keep your account secure by updating your password regularly.",
+  "old_password": "Old Password",
+  "password_changed_successfully": "Password changed successfully",
+  "update_password": "Update Password",
+  "confirm_new_password": "Confirm New Password",
+  "security": "Security",
+  "passwords_do_not_match": "Passwords do not match",
+  "val_password_required": "Password is required",
+  "val_password_min_length": "Password must be at least 8 characters",
+  "val_password_max_length": "Password must not exceed 32 characters",
+  "val_password_uppercase": "Password must contain at least one uppercase letter",
+  "val_password_lowercase": "Password must contain at least one lowercase letter",
+  "val_password_number": "Password must contain at least one number",
+  "val_password_special": "Password must contain at least one special character (!@#$%^&*)",
+  "val_password_format": "Password must be 8-32 characters long"
 }

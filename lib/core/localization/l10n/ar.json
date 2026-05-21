@@ -334,5 +334,21 @@
   "in_progress": "قيد التنفيذ",
   "completed": "مكتمل",
   "edit_coming_soon": "ميزة التعديل ستتوفر قريباً.",
-  "failed_to_load_profile": "فشل في تحميل الملف الشخصي."
+  "failed_to_load_profile": "فشل في تحميل الملف الشخصي.",
+  "change_password": "تغيير كلمة المرور",
+  "update_security_desc": "حافظ على أمان حسابك من خلال تحديث كلمة المرور بانتظام.",
+  "old_password": "كلمة المرور القديمة",
+  "password_changed_successfully": "تم تغيير كلمة المرور بنجاح",
+  "update_password": "تحديث كلمة المرور",
+  "confirm_new_password": "تأكيد كلمة المرور الجديدة",
+  "security": "الأمان",
+  "passwords_do_not_match": "كلمتا المرور غير متطابقتين",
+  "val_password_required": "كلمة المرور مطلوبة",
+  "val_password_min_length": "يجب أن تكون كلمة المرور 8 أحرف على الأقل",
+  "val_password_max_length": "يجب ألا تتجاوز كلمة المرور 32 حرفاً",
+  "val_password_uppercase": "يجب أن تحتوي كلمة المرور على حرف كبير واحد على الأقل",
+  "val_password_lowercase": "يجب أن تحتوي كلمة المرور على حرف صغير واحد على الأقل",
+  "val_password_number": "يجب أن تحتوي كلمة المرور على رقم واحد على الأقل",
+  "val_password_special": "يجب أن تحتوي كلمة المرور على رمز خاص واحد على الأقل (!@#$%^&*)",
+  "val_password_format": "يجب أن تكون كلمة المرور من 8 إلى 32 حرفاً"
 }
