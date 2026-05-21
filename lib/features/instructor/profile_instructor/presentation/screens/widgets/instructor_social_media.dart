@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lms_admin_instructor/core/extensions/context_extensions.dart';
 import 'package:lms_admin_instructor/core/localization/app_localizations.dart';
+import 'package:lms_admin_instructor/core/theme/app_assets.dart';
 import 'package:lms_admin_instructor/features/instructor/profile_instructor/domain/entity/instructor_profile_ui_model.dart';
 import 'package:lms_admin_instructor/features/instructor/profile_instructor/presentation/bloc/profile_instructor_bloc.dart';
 import 'package:lms_admin_instructor/features/instructor/profile_instructor/presentation/bloc/profile_instructor_event.dart';
@@ -143,8 +145,9 @@ class InstructorSocialMedia extends StatelessWidget {
   }
 
   Widget _buildSocialIcon(BuildContext context, InstructorLinkUIModel link) {
-    IconData iconData;
-    Color iconColor;
+    IconData? iconData;
+    String? svgPath;
+    Color? iconColor;
     final platformKey = link.platformName.toLowerCase();
 
     switch (platformKey) {
@@ -153,8 +156,7 @@ class InstructorSocialMedia extends StatelessWidget {
         iconColor = const Color(0xFF1877F2);
         break;
       case 'instagram':
-        iconData = Icons.camera_alt_rounded;
-        iconColor = const Color(0xFFE4405F);
+        svgPath = AppAssets.instegramIcon;
         break;
       case 'youtube':
         iconData = Icons.play_circle_fill;
@@ -166,11 +168,10 @@ class InstructorSocialMedia extends StatelessWidget {
         iconColor = Colors.black;
         break;
       case 'linkedin':
-        iconData = Icons.business;
-        iconColor = const Color(0xFF0A66C2);
+        svgPath = AppAssets.linkedInIcon;
         break;
       case 'github':
-        iconData = Icons.code;
+        svgPath = AppAssets.githubIcon;
         iconColor = const Color(0xFF181717);
         break;
       case 'tiktok':
@@ -224,10 +225,29 @@ class InstructorSocialMedia extends StatelessWidget {
                   width: 54.w,
                   height: 54.w,
                   decoration: BoxDecoration(
-                    color: iconColor.withValues(alpha: 0.1),
+                    color: iconColor!=null? iconColor.withValues(alpha: 0.1):
+                    context.colorScheme.primary.withValues(alpha: 0.1),
                     shape: BoxShape.circle,
                   ),
-                  child: Icon(iconData, color: iconColor, size: 26.sp),
+                  child: Center(
+                    child: svgPath != null
+                        ? SvgPicture.asset(
+                            svgPath,
+                            colorFilter: iconColor != null
+                                ? ColorFilter.mode(
+                                    iconColor,
+                                    BlendMode.srcIn,
+                                  )
+                                : null,
+                            width: 26.sp,
+                            height: 26.sp,
+                          )
+                        : Icon(
+                            iconData ?? Icons.link,
+                            color: iconColor,
+                            size: 26.sp,
+                          ),
+                  ),
                 ),
                 SizedBox(height: 8.h),
                 Text(
