@@ -143,6 +143,7 @@
   "quizzes": "الاختبارات",
   "manage": "إدارة",
   "upload_new_material": "رفع مادة جديدة",
+  "add_material": "إضافة مادة",
   "create_new_quiz": "إنشاء اختبار جديد",
   "content_tips": "نصائح المحتوى",
   "course_title_placeholder": "Advanced React Patterns",

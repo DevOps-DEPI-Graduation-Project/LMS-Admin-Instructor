@@ -148,6 +148,7 @@
   "quizzes": "Quizzes",
   "manage": "Manage",
   "upload_new_material": "Upload New Material",
+  "add_material": "Add Material",
   "create_new_quiz": "Create New Quiz",
   "content_tips": "Content Tips",
   "course_title_placeholder": "Advanced React Patterns",
