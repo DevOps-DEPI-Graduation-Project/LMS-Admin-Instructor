@@ -42,6 +42,8 @@ import 'package:lms_admin_instructor/features/students/screens/students_list/blo
 import 'package:lms_admin_instructor/root/bloc/root_bloc.dart';
 import 'package:lms_admin_instructor/root/custom_view_nav_bar.dart';
 import 'package:lms_admin_instructor/features/instructor/profile_instructor/presentation/screens/instructor_profile_screen.dart';
+import 'package:lms_admin_instructor/features/change_password/presentation/screens/change_password_screen.dart';
+import 'package:lms_admin_instructor/features/change_password/presentation/bloc/change_password_bloc.dart';
 import 'package:lms_admin_instructor/features/instructor/profile_instructor/presentation/bloc/profile_instructor_bloc.dart';
 import 'package:lms_admin_instructor/features/instructor/profile_instructor/presentation/bloc/profile_instructor_event.dart';
 import 'package:lms_admin_instructor/features/admin/admin_profile/presentation/screens/admin_profile_screen.dart';
@@ -285,6 +287,16 @@ class RouterGenerator {
           return PdfViewerScreen(
             url: extra?['url'] as String? ?? '',
             title: extra?['title'] as String? ?? 'PDF Viewer',
+          );
+        },
+      ),
+      GoRoute(
+        path: AppRoutes.changePasswordScreen,
+        name: AppRoutes.changePasswordScreen,
+        builder: (context, state) {
+          return BlocProvider(
+            create: (context) => sl<ChangePasswordBloc>(),
+            child: const ChangePasswordScreen(),
           );
         },
       ),

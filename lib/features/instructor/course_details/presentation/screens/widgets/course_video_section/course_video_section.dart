@@ -36,8 +36,8 @@ class CourseVideoSection extends StatelessWidget {
             listener: (context, state) {
               if (state is AddNewVideoSuccess) {
                 context.read<CourseVideoBloc>().add(
-                      GetCourseVideosEvent(courseSlug: slug),
-                    );
+                  GetCourseVideosEvent(courseSlug: slug),
+                );
               }
             },
           ),
@@ -128,7 +128,10 @@ class CourseVideoSection extends StatelessWidget {
                       return _buildEmptyOrError(context, state.message);
                     } else if (state is CourseVideoLoaded) {
                       if (state.videos.isEmpty) {
-                        return _buildEmptyOrError(context, context.tr('no_videos_found'));
+                        return _buildEmptyOrError(
+                          context,
+                          context.tr('no_videos_found'),
+                        );
                       }
                       return _buildLoadedVideos(context, state.videos);
                     }
@@ -212,11 +215,7 @@ class CourseVideoSection extends StatelessWidget {
         ...videos.asMap().entries.map((entry) {
           final index = entry.key;
           final video = entry.value;
-          return _buildSubsectionItem(
-            context,
-            video,
-            index: index,
-          );
+          return _buildSubsectionItem(context, video, index: index);
         }),
       ],
     );
@@ -379,11 +378,8 @@ class CourseVideoSection extends StatelessWidget {
                   consequencesMessage: context.tr('delete_video_consequences'),
                   onDelete: () {
                     context.read<CourseVideoBloc>().add(
-                          DeleteVideoEvent(
-                            videoSlug: video.slug,
-                            courseSlug: slug,
-                          ),
-                        );
+                      DeleteVideoEvent(videoSlug: video.slug, courseSlug: slug),
+                    );
                   },
                 ),
               );

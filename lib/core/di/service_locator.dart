@@ -50,6 +50,9 @@ import 'package:lms_admin_instructor/features/admin/all_courses_admin/presentati
 import 'package:lms_admin_instructor/features/admin/admin_profile/domain/repositories/admin_profile_repository.dart';
 import 'package:lms_admin_instructor/features/admin/admin_profile/data/repositories/admin_profile_repository_impl.dart';
 import 'package:lms_admin_instructor/features/admin/admin_profile/presentation/bloc/admin_profile_bloc.dart';
+import 'package:lms_admin_instructor/features/change_password/data/repositories/change_password_repository_impl.dart';
+import 'package:lms_admin_instructor/features/change_password/domain/repositories/change_password_repository.dart';
+import 'package:lms_admin_instructor/features/change_password/presentation/bloc/change_password_bloc.dart';
 final sl = GetIt.instance;
 
 Future<void> setupServiceLocator() async {
@@ -147,6 +150,12 @@ Future<void> setupServiceLocator() async {
     () => ProfileInstructorRepositoryImpl(apiConsumer: sl()),
   );
   sl.registerFactory(() => ProfileInstructorBloc(repository: sl()));
+
+  // Features - Change Password
+  sl.registerLazySingleton<ChangePasswordRepository>(
+    () => ChangePasswordRepositoryImpl(apiConsumer: sl()),
+  );
+  sl.registerFactory(() => ChangePasswordBloc(repository: sl()));
 
   // Locale and Theme
   sl.registerLazySingleton(() => LocaleCubit());

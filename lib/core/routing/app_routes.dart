@@ -21,4 +21,5 @@ class AppRoutes {
   static const String courseMaterials = '/course_materials/:slug';
   static const String instructorProfileScreen = '/instructor_profile_screen';
   static const String adminProfileScreen = '/admin_profile_screen';
+  static const String changePasswordScreen = '/change_password_screen';
 }

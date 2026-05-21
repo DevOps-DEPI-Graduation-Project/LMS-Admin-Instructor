@@ -12,7 +12,7 @@ import 'package:lms_admin_instructor/features/widgets/error_feedback_widget.dart
 import 'package:lms_admin_instructor/features/widgets/loading_indicator_widget.dart';
 import 'package:lms_admin_instructor/features/instructor/course_details/presentation/screens/widgets/course_material_section/custom_course_sidebar.dart';
 import 'package:lms_admin_instructor/features/widgets/custom_button.dart';
-import 'package:lms_admin_instructor/features/widgets/delete_confirmation_dialog.dart';
+import 'package:lms_admin_instructor/features/widgets/custom_delete_dialog.dart';
 
 class CourseQuizSection extends StatefulWidget {
   final String courseSlug;
@@ -33,84 +33,103 @@ class _CourseQuizSectionState extends State<CourseQuizSection> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<CourseQuizBloc, CourseQuizState>(
-      builder: (context, state) {
-        if (state is CourseQuizLoading) {
-          return const LoadingIndicatorWidget();
-        }
-
-        if (state is CourseQuizError) {
-          return ErrorFeedbackWidget(
-            errorMessage: state.message,
-            onRetry: () {
-              context.read<CourseQuizBloc>().add(
-                GetQuizzesForCourseEvent(courseSlug: widget.courseSlug),
-              );
-            },
+    return BlocListener<CourseQuizBloc, CourseQuizState>(
+      listener: (context, state) {
+        if (state is DeleteQuizSuccess) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(context.tr('quiz_deleted_success'))),
           );
+          context.read<CourseQuizBloc>().add(
+            GetQuizzesForCourseEvent(
+              courseSlug: widget.courseSlug,
+              pageSize: 4,
+            ),
+          );
+        } else if (state is DeleteQuizError) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(state.message)));
         }
+      },
+      child: BlocBuilder<CourseQuizBloc, CourseQuizState>(
+        builder: (context, state) {
+          if (state is CourseQuizLoading) {
+            return const LoadingIndicatorWidget();
+          }
 
-        if (state is CourseQuizLoaded) {
-          final quizzes = state.uiModel?.quizzes ?? [];
-          final hasMore =
-              (state.uiModel?.currentPage ?? 1) <
-              (state.uiModel?.totalPages ?? 1);
+          if (state is CourseQuizError) {
+            return ErrorFeedbackWidget(
+              errorMessage: state.message,
+              onRetry: () {
+                context.read<CourseQuizBloc>().add(
+                  GetQuizzesForCourseEvent(courseSlug: widget.courseSlug),
+                );
+              },
+            );
+          }
 
-          return CustomCourseSidebar(
-            title: context.tr('quizzes'),
-            icon: Icons.quiz,
-            color: Colors.purple,
-            children: [
-              ...quizzes.map(
-                (quiz) => _buildQuizItem(
-                  context,
-                  quiz.quizName,
-                  "${quiz.totalMark} ${context.tr('marks')}",
-                  quiz.slug,
-                ),
-              ),
-              if (hasMore)
-                Padding(
-                  padding: EdgeInsets.symmetric(vertical: 8.h),
-                  child: Center(
-                    child: TextButton(
-                      onPressed: state.isPaginationLoading
-                          ? null
-                          : () {
-                              context.read<CourseQuizBloc>().add(
-                                GetQuizzesForCourseEvent(
-                                  courseSlug: widget.courseSlug,
-                                  page: (state.uiModel?.currentPage ?? 1) + 1,
-                                  pageSize: 4,
-                                ),
-                              );
-                            },
-                      child: state.isPaginationLoading
-                          ? SizedBox(
-                              height: 16.h,
-                              width: 16.h,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2.w,
-                                color: context.colorScheme.primary,
-                              ),
-                            )
-                          : Text(
-                              context.tr("show_more"),
-                              style: context.textTheme.labelMedium?.copyWith(
-                                color: context.colorScheme.primary,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                    ),
+          if (state is CourseQuizLoaded) {
+            final quizzes = state.uiModel?.quizzes ?? [];
+            final hasMore =
+                (state.uiModel?.currentPage ?? 1) <
+                (state.uiModel?.totalPages ?? 1);
+
+            return CustomCourseSidebar(
+              title: context.tr('quizzes'),
+              icon: Icons.quiz,
+              color: Colors.purple,
+              children: [
+                ...quizzes.map(
+                  (quiz) => _buildQuizItem(
+                    context,
+                    quiz.quizName,
+                    "${quiz.totalMark} ${context.tr('marks')}",
+                    quiz.slug,
                   ),
                 ),
-              _buildUploadButton(context, context.tr("add_quiz")),
-            ],
-          );
-        }
+                if (hasMore)
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 8.h),
+                    child: Center(
+                      child: TextButton(
+                        onPressed: state.isPaginationLoading
+                            ? null
+                            : () {
+                                context.read<CourseQuizBloc>().add(
+                                  GetQuizzesForCourseEvent(
+                                    courseSlug: widget.courseSlug,
+                                    page: (state.uiModel?.currentPage ?? 1) + 1,
+                                    pageSize: 4,
+                                  ),
+                                );
+                              },
+                        child: state.isPaginationLoading
+                            ? SizedBox(
+                                height: 16.h,
+                                width: 16.h,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2.w,
+                                  color: context.colorScheme.primary,
+                                ),
+                              )
+                            : Text(
+                                context.tr("show_more"),
+                                style: context.textTheme.labelMedium?.copyWith(
+                                  color: context.colorScheme.primary,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                      ),
+                    ),
+                  ),
+                _buildUploadButton(context, context.tr("add_quiz")),
+              ],
+            );
+          }
 
-        return const SizedBox.shrink();
-      },
+          return const SizedBox.shrink();
+        },
+      ),
     );
   }
 
@@ -119,47 +138,16 @@ class _CourseQuizSectionState extends State<CourseQuizSection> {
 
     showDialog(
       context: context,
-      builder: (dialogContext) {
-        return BlocProvider.value(
-          value: context.read<CourseQuizBloc>(),
-          child: BlocConsumer<CourseQuizBloc, CourseQuizState>(
-            listener: (context, state) {
-              if (state is DeleteQuizSuccess) {
-                Navigator.of(context).pop();
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text(context.tr('quiz_deleted_success'))),
-                );
-                // Refresh the list
-                context.read<CourseQuizBloc>().add(
-                  GetQuizzesForCourseEvent(
-                    courseSlug: widget.courseSlug,
-                    pageSize: 4,
-                  ),
-                );
-              } else if (state is DeleteQuizError) {
-                ScaffoldMessenger.of(
-                  context,
-                ).showSnackBar(SnackBar(content: Text(state.message)));
-              }
-            },
-            builder: (context, state) {
-              return DeleteConfirmationDialog(
-                title: context.tr('delete_quiz'),
-                message: context.tr('are_you_sure_delete_quiz'),
-                isLoading: state is DeleteQuizLoading,
-                onConfirm: () {
-                  context.read<CourseQuizBloc>().add(
-                    DeleteQuizEvent(
-                      courseSlug: widget.courseSlug,
-                      quizSlug: slug,
-                    ),
-                  );
-                },
-              );
-            },
-          ),
-        );
-      },
+      builder: (dialogContext) => CustomDeleteDialog(
+        title: context.tr('delete_quiz'),
+        warningMessage: context.tr('delete_student_warning_message'),
+        consequencesMessage: context.tr('are_you_sure_delete_quiz'),
+        onDelete: () {
+          context.read<CourseQuizBloc>().add(
+            DeleteQuizEvent(courseSlug: widget.courseSlug, quizSlug: slug),
+          );
+        },
+      ),
     );
   }
 

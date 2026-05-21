@@ -9,6 +9,7 @@ import 'package:lms_admin_instructor/features/instructor/manage_materials_instru
 import 'package:lms_admin_instructor/features/instructor/manage_materials_instructor/presentation/bloc/course_material_event.dart';
 import 'package:lms_admin_instructor/features/instructor/manage_materials_instructor/presentation/bloc/course_material_state.dart';
 import 'package:lms_admin_instructor/features/instructor/manage_materials_instructor/presentation/screens/widgets/upload_material_dialog.dart';
+import 'package:lms_admin_instructor/features/widgets/custom_delete_dialog.dart';
 import 'package:lms_admin_instructor/features/instructor/manage_materials_instructor/presentation/screens/widgets/material_card.dart';
 import 'package:lms_admin_instructor/features/instructor/manage_materials_instructor/presentation/screens/widgets/materials_empty_state.dart';
 import 'package:lms_admin_instructor/features/instructor/manage_materials_instructor/presentation/screens/widgets/materials_header.dart';
@@ -86,9 +87,7 @@ class _CourseMaterialsScreenState extends State<CourseMaterialsScreen> {
                   Icon(
                     Icons.arrow_back_ios_new,
                     size: 16.sp,
-                    color: context.colorScheme.onSurface.withValues(
-                      alpha: 0.6,
-                    ),
+                    color: context.colorScheme.onSurface.withValues(alpha: 0.6),
                   ),
                   SizedBox(width: 8.w),
                   Text(
@@ -213,36 +212,23 @@ class _CourseMaterialsScreenState extends State<CourseMaterialsScreen> {
     );
   }
 
-  void _handleDelete(CourseMaterialItemUIModel material) async {
-    final confirm = await showDialog<bool>(
+  void _handleDelete(CourseMaterialItemUIModel material) {
+    showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text(context.tr('delete_material')),
-        content: Text(context.tr('are_you_sure_delete_material')),
-        actions: [
-          TextButton(
-            onPressed: () => context.pop(false),
-            child: Text(context.tr('cancel')),
-          ),
-          TextButton(
-            onPressed: () => context.pop(true),
-            child: Text(
-              context.tr('delete'),
-              style: TextStyle(color: context.colorScheme.error),
+      builder: (dialogContext) => CustomDeleteDialog(
+        title: context.tr('delete_material'),
+        warningMessage: context.tr('delete_student_warning_message'),
+        consequencesMessage: context.tr('are_you_sure_delete_material'),
+        onDelete: () {
+          context.read<CourseMaterialsBloc>().add(
+            DeleteMaterialEvent(
+              courseSlug: widget.slug,
+              materialSlug: material.slug,
             ),
-          ),
-        ],
+          );
+        },
       ),
     );
-
-    if (confirm == true && mounted) {
-      context.read<CourseMaterialsBloc>().add(
-        DeleteMaterialEvent(
-          courseSlug: widget.slug,
-          materialSlug: material.slug,
-        ),
-      );
-    }
   }
 
   void _showUploadDialog(

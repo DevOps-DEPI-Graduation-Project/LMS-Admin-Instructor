@@ -6,7 +6,6 @@ import 'package:lms_admin_instructor/core/extensions/context_extensions.dart';
 import 'package:lms_admin_instructor/core/localization/app_localizations.dart';
 import 'package:lms_admin_instructor/core/routing/app_routes.dart';
 import 'package:lms_admin_instructor/core/utils/get_responsive_size.dart';
-import 'package:lms_admin_instructor/features/admin/instructors_admin/presentation/screens/widgets/custom_nav_bar.dart';
 import 'package:lms_admin_instructor/features/auth/presentation/bloc/auth_admin_bloc.dart';
 import 'package:lms_admin_instructor/features/settings/presentation/screens/widgets/settings_section.dart';
 import 'package:lms_admin_instructor/features/settings/presentation/screens/widgets/settings_tile.dart';
@@ -17,7 +16,6 @@ import 'package:lms_admin_instructor/core/di/service_locator.dart';
 import 'package:lms_admin_instructor/core/services/local/cache_helper.dart';
 import 'package:lms_admin_instructor/core/services/remote/endpoints.dart';
 import 'package:lms_admin_instructor/core/common/user_role_enum.dart';
-import 'package:lms_admin_instructor/root/bloc/root_bloc.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -26,39 +24,25 @@ class SettingsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final isMobile = context.isMobile;
 
-    return Scaffold(
-      backgroundColor: context.colorScheme.surface,
-      appBar: isMobile
-          ? AppBar(
-              title: Text(
-                context.tr('settings'),
-                style: context.textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              centerTitle: true,
-            )
-          : AppBar(
-              automaticallyImplyLeading: false,
-              flexibleSpace: const CustomNavBar(showSearch: false),
-              toolbarHeight: 70.h,
+    return BlocListener<AuthBloc, AuthState>(
+      listener: (context, state) {
+        if (state is LogoutSuccess) {
+          context.goNamed(AppRoutes.loginScreen);
+        } else if (state is AuthError) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(state.message),
+              backgroundColor: context.colorScheme.error,
             ),
-      body: BlocListener<AuthBloc, AuthState>(
-        listener: (context, state) {
-          if (state is LogoutSuccess) {
-            context.read<RootBloc>().add(ChangeIndexRootEvent(index: 0));
-            context.go(AppRoutes.loginScreen);
-          }
-          if (state is AuthError) {
-            ScaffoldMessenger.of(
-              context,
-            ).showSnackBar(SnackBar(content: Text(state.message)));
-          }
-        },
-        child: SingleChildScrollView(
+          );
+        }
+      },
+      child: Scaffold(
+        backgroundColor: context.colorScheme.surface,
+        body: SingleChildScrollView(
           padding: EdgeInsets.symmetric(
             horizontal: isMobile ? 24.w : 60.w,
-            vertical: 40.h,
+            vertical: 80.h,
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -127,6 +111,21 @@ class SettingsScreen extends StatelessWidget {
                       builder: (context) => const LanguageDialog(),
                     ),
                     iconColor: context.colorScheme.secondary,
+                  ),
+                ],
+              ),
+              SizedBox(height: 24.h),
+              SettingsSection(
+                title: context.tr('security'),
+                items: [
+                  SettingsTile(
+                    icon: Icons.lock_outline_rounded,
+                    title: context.tr('change_password'),
+                    subtitle: context.tr('update_security_desc'),
+                    iconColor: context.colorScheme.onSurface,
+                    onTap: () {
+                      context.pushNamed(AppRoutes.changePasswordScreen);
+                    },
                   ),
                 ],
               ),
