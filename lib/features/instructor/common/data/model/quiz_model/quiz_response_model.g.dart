@@ -25,17 +25,17 @@ Map<String, dynamic> _$QuizResponseModelToJson(QuizResponseModel instance) =>
     };
 
 QuizData _$QuizDataFromJson(Map<String, dynamic> json) => QuizData(
-  totalPages: (json['total_pages'] as num?)?.toInt(),
-  currentPage: (json['current_page'] as num?)?.toInt(),
-  totalQuizzes: (json['total_quizzes'] as num?)?.toInt(),
-  quizzes: (json['quizzes'] as List<dynamic>?)
-      ?.map((e) => QuizModel.fromJson(e as Map<String, dynamic>))
-      .toList(),
-);
+      totalPages: (json['total_pages'] as num?)?.toInt(),
+      currentPage: (json['current_page'] as num?)?.toInt(),
+      totalQuizzes: (json['total_quizzes'] as num?)?.toInt(),
+      quizzes: (json['quizzes'] as List<dynamic>?)
+          ?.map((e) => QuizModel.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    );
 
 Map<String, dynamic> _$QuizDataToJson(QuizData instance) => <String, dynamic>{
-  'total_pages': instance.totalPages,
-  'current_page': instance.currentPage,
-  'total_quizzes': instance.totalQuizzes,
-  'quizzes': instance.quizzes,
-};
+      'total_pages': instance.totalPages,
+      'current_page': instance.currentPage,
+      'total_quizzes': instance.totalQuizzes,
+      'quizzes': instance.quizzes,
+    };

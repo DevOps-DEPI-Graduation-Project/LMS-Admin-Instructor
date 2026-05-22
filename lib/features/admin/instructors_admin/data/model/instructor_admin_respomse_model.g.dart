@@ -7,22 +7,22 @@ part of 'instructor_admin_respomse_model.dart';
 // **************************************************************************
 
 InstructorAdminResponseModel _$InstructorAdminResponseModelFromJson(
-  Map<String, dynamic> json,
-) => InstructorAdminResponseModel(
-  success: json['success'] as bool,
-  status: (json['status'] as num).toInt(),
-  message: json['message'] as String,
-  data: InstructorAdminData.fromJson(json['data'] as Map<String, dynamic>),
-);
+        Map<String, dynamic> json) =>
+    InstructorAdminResponseModel(
+      success: json['success'] as bool,
+      status: (json['status'] as num).toInt(),
+      message: json['message'] as String,
+      data: InstructorAdminData.fromJson(json['data'] as Map<String, dynamic>),
+    );
 
 Map<String, dynamic> _$InstructorAdminResponseModelToJson(
-  InstructorAdminResponseModel instance,
-) => <String, dynamic>{
-  'success': instance.success,
-  'status': instance.status,
-  'message': instance.message,
-  'data': instance.data,
-};
+        InstructorAdminResponseModel instance) =>
+    <String, dynamic>{
+      'success': instance.success,
+      'status': instance.status,
+      'message': instance.message,
+      'data': instance.data,
+    };
 
 InstructorAdminData _$InstructorAdminDataFromJson(Map<String, dynamic> json) =>
     InstructorAdminData(
@@ -35,10 +35,10 @@ InstructorAdminData _$InstructorAdminDataFromJson(Map<String, dynamic> json) =>
     );
 
 Map<String, dynamic> _$InstructorAdminDataToJson(
-  InstructorAdminData instance,
-) => <String, dynamic>{
-  'total_pages': instance.totalPages,
-  'current_page': instance.currentPage,
-  'total_instructors': instance.totalInstructors,
-  'instructors': instance.instructors,
-};
+        InstructorAdminData instance) =>
+    <String, dynamic>{
+      'total_pages': instance.totalPages,
+      'current_page': instance.currentPage,
+      'total_instructors': instance.totalInstructors,
+      'instructors': instance.instructors,
+    };

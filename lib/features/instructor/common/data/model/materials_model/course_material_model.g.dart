@@ -19,12 +19,12 @@ CourseMaterialModel _$CourseMaterialModelFromJson(Map<String, dynamic> json) =>
     );
 
 Map<String, dynamic> _$CourseMaterialModelToJson(
-  CourseMaterialModel instance,
-) => <String, dynamic>{
-  'course': instance.course,
-  'slug': instance.slug,
-  'Material_Name': instance.materialName,
-  'file': instance.file,
-  'file_size': instance.fileSize,
-  'created_at': instance.createdAt?.toIso8601String(),
-};
+        CourseMaterialModel instance) =>
+    <String, dynamic>{
+      'course': instance.course,
+      'slug': instance.slug,
+      'Material_Name': instance.materialName,
+      'file': instance.file,
+      'file_size': instance.fileSize,
+      'created_at': instance.createdAt?.toIso8601String(),
+    };

@@ -7,15 +7,15 @@ part of 'create_link_request_model.dart';
 // **************************************************************************
 
 CreateLinkRequestModel _$CreateLinkRequestModelFromJson(
-  Map<String, dynamic> json,
-) => CreateLinkRequestModel(
-  platformName: json['platformName'] as String,
-  url: json['url'] as String,
-);
+        Map<String, dynamic> json) =>
+    CreateLinkRequestModel(
+      platformName: json['platformName'] as String,
+      url: json['url'] as String,
+    );
 
 Map<String, dynamic> _$CreateLinkRequestModelToJson(
-  CreateLinkRequestModel instance,
-) => <String, dynamic>{
-  'platformName': instance.platformName,
-  'url': instance.url,
-};
+        CreateLinkRequestModel instance) =>
+    <String, dynamic>{
+      'platformName': instance.platformName,
+      'url': instance.url,
+    };

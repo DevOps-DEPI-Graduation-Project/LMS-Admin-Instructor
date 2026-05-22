@@ -16,7 +16,6 @@ class EndPoint {
   static String checkToken = "/auth/check-token/";
   static String resendOtp = "/auth/resend-otp/";
 
-
   //?***********************************************************************?
 
   //? Admin
@@ -24,18 +23,29 @@ class EndPoint {
 
   //? Students
   static String studentsAdmin = "/admin/students/";
-  static String deleteStudentAdmin(String slug) => "/admin/students/$slug/delete/";
-  static String studentsInstructor(String instructorSlug) => "/instructor/$instructorSlug/students/";
-  static String studentsDetailsInstructor(String studentSlug) => "/instructor/students/$studentSlug/summary/";
-  static String studentsDetailsAdmin(String studentSlug) => "/admin/students/$studentSlug/details/";
+  static String deleteStudentAdmin(String slug) =>
+      "/admin/students/$slug/delete/";
+  static String studentsInstructor(String instructorSlug) =>
+      "/instructor/$instructorSlug/students/";
+  static String studentsDetailsInstructor(String studentSlug) =>
+      "/instructor/students/$studentSlug/summary/";
+  static String studentsDetailsAdmin(String studentSlug) =>
+      "/admin/students/$studentSlug/details/";
 
   static String allCoursesAdmin = "/courses/all/";
   static String deleteCourseAdmin(String slug) => "/courses/delete/$slug/";
+
+  static String createPackage = "/packages/create/";
+  static String deletePackage(String slug) => "/packages/delete/$slug/";
+  static String packageDetails(String slug) => "/packages/$slug/";
+  static String updatePackage(String slug) => "/packages/update/$slug/";
 
   //?***********************************************************************?
   //? Courses' Instructor
   static String coursesInstructor(String instructorSlug) =>
       "/instructor/$instructorSlug/courses/";
+  static String packagesInstructor(String instructorSlug) =>
+      "/instructor/$instructorSlug/packages/";
 
   //? instructor
   static String instructorAdmin = "/instructors/";
@@ -90,17 +100,20 @@ class EndPoint {
     String quizSlug,
     String questionSlug,
     String choiceSlug,
-  ) => "/quizzes/$quizSlug/questions/$questionSlug/choices/$choiceSlug/";
+  ) =>
+      "/quizzes/$quizSlug/questions/$questionSlug/choices/$choiceSlug/";
   static String updateChoice(
     String quizSlug,
     String questionSlug,
     String choiceSlug,
-  ) => "/quizzes/$quizSlug/questions/$questionSlug/choices/$choiceSlug/update/";
+  ) =>
+      "/quizzes/$quizSlug/questions/$questionSlug/choices/$choiceSlug/update/";
   static String deleteChoice(
     String quizSlug,
     String questionSlug,
     String choiceSlug,
-  ) => "/quizzes/$quizSlug/questions/$questionSlug/choices/$choiceSlug/delete/";
+  ) =>
+      "/quizzes/$quizSlug/questions/$questionSlug/choices/$choiceSlug/delete/";
 }
 
 class ApiKey {
