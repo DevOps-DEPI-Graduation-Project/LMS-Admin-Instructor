@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lms_admin_instructor/features/instructor/package_details/presentation/bloc/package_details_bloc.dart';
+import 'package:lms_admin_instructor/features/instructor/package_details/presentation/bloc/package_details_event.dart';
+import 'package:lms_admin_instructor/features/instructor/package_details/presentation/screens/package_details_screen.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lms_admin_instructor/core/di/service_locator.dart';
 import 'package:lms_admin_instructor/core/routing/app_routes.dart';
@@ -172,6 +175,20 @@ class RouterGenerator {
             slug: state.extra as String? ?? '',
           ),
         ),
+      ),
+
+
+      GoRoute(
+        path: AppRoutes.packageDetails,
+        name: AppRoutes.packageDetails,
+        builder: (context, state) {
+          final slug = state.pathParameters['slug'] ?? '';
+          return BlocProvider(
+            create: (context) => sl<PackageDetailsBloc>()
+              ..add(GetPackageDetailsEvent(slug: slug)),
+            child: PackageDetailsScreen(slug: slug),
+          );
+        },
       ),
 
 

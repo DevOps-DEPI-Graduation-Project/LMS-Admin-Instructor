@@ -7,24 +7,24 @@ part of 'course_students_response_model.dart';
 // **************************************************************************
 
 CourseStudentsResponseModel _$CourseStudentsResponseModelFromJson(
-  Map<String, dynamic> json,
-) => CourseStudentsResponseModel(
-  totalStudents: (json['total_students'] as num).toInt(),
-  totalPages: (json['total_pages'] as num).toInt(),
-  currentPage: (json['current_page'] as num).toInt(),
-  students: (json['students'] as List<dynamic>)
-      .map((e) => CourseStudentModel.fromJson(e as Map<String, dynamic>))
-      .toList(),
-);
+        Map<String, dynamic> json) =>
+    CourseStudentsResponseModel(
+      totalStudents: (json['total_students'] as num).toInt(),
+      totalPages: (json['total_pages'] as num).toInt(),
+      currentPage: (json['current_page'] as num).toInt(),
+      students: (json['students'] as List<dynamic>)
+          .map((e) => CourseStudentModel.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    );
 
 Map<String, dynamic> _$CourseStudentsResponseModelToJson(
-  CourseStudentsResponseModel instance,
-) => <String, dynamic>{
-  'total_students': instance.totalStudents,
-  'total_pages': instance.totalPages,
-  'current_page': instance.currentPage,
-  'students': instance.students,
-};
+        CourseStudentsResponseModel instance) =>
+    <String, dynamic>{
+      'total_students': instance.totalStudents,
+      'total_pages': instance.totalPages,
+      'current_page': instance.currentPage,
+      'students': instance.students,
+    };
 
 CourseStudentModel _$CourseStudentModelFromJson(Map<String, dynamic> json) =>
     CourseStudentModel(

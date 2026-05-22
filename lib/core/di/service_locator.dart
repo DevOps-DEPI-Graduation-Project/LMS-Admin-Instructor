@@ -1,5 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
+import 'package:lms_admin_instructor/features/instructor/packages_instructor/data/repository/packages_instructor_repository_impl.dart';
+import 'package:lms_admin_instructor/features/instructor/packages_instructor/domain/repository/packages_instructor_repository.dart';
+import 'package:lms_admin_instructor/features/instructor/packages_instructor/presentation/bloc/packages_instructor_bloc.dart';
+import 'package:lms_admin_instructor/features/instructor/package_details/data/repositories/package_details_repository_impl.dart';
+import 'package:lms_admin_instructor/features/instructor/package_details/domain/repositories/package_details_repository.dart';
+import 'package:lms_admin_instructor/features/instructor/package_details/presentation/bloc/package_details_bloc.dart';
 import 'package:lms_admin_instructor/features/instructor/course_students_instructor/data/repositories/course_students_repository_impl.dart';
 import 'package:lms_admin_instructor/features/instructor/course_students_instructor/domain/repositories/course_students_repository.dart';
 import 'package:lms_admin_instructor/features/instructor/course_students_instructor/presentation/bloc/course_students_bloc.dart';
@@ -149,9 +155,27 @@ Future<void> setupServiceLocator() async {
   // Locale and Theme
   sl.registerLazySingleton(() => LocaleCubit());
   sl.registerLazySingleton(() => ThemeCubit());
+
   // Features - All Courses Admin
   sl.registerLazySingleton<AllCoursesAdminRepository>(
     () => AllCoursesAdminRepositoryImpl(apiConsumer: sl()),
   );
   sl.registerFactory(() => AllCoursesAdminBloc(repository: sl()));
+
+  // Features - Packages Instructor
+  sl.registerLazySingleton<PackagesInstructorRepository>(
+    () => PackagesInstructorRepositoryImpl(apiConsumer: sl()),
+  );
+  sl.registerFactory(
+    () => PackagesInstructorBloc(
+      packagesRepository: sl(),
+      coursesRepository: sl(),
+    ),
+  );
+
+  // Features - Package Details
+  sl.registerLazySingleton<PackageDetailsRepository>(
+    () => PackageDetailsRepositoryImpl(apiConsumer: sl()),
+  );
+  sl.registerFactory(() => PackageDetailsBloc(packageDetailsRepository: sl()));
 }

@@ -108,7 +108,7 @@ class CourseAdminItemUIModel extends CustomDataTableRowModel {
         title,
         NumberFormatter.formatCount(studentsCount),
         NumberFormatter.formatCount(ratingsCount),
-        createdAt ?? 'N/A',
+        createdAt?.split('T').first ?? 'N/A',
         instructorName,
       ];
 

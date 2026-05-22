@@ -7,5 +7,7 @@ part of 'upload_material_request_model.dart';
 // **************************************************************************
 
 Map<String, dynamic> _$UploadMaterialRequestModelToJson(
-  UploadMaterialRequestModel instance,
-) => <String, dynamic>{'Material_Name': instance.materialName};
+        UploadMaterialRequestModel instance) =>
+    <String, dynamic>{
+      'Material_Name': instance.materialName,
+    };

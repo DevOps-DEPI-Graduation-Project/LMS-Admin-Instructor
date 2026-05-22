@@ -7,24 +7,24 @@ part of 'quiz_detail_model.dart';
 // **************************************************************************
 
 QuizDetailResponseModel _$QuizDetailResponseModelFromJson(
-  Map<String, dynamic> json,
-) => QuizDetailResponseModel(
-  success: json['success'] as bool?,
-  status: (json['status'] as num?)?.toInt(),
-  message: json['message'] as String?,
-  data: json['data'] == null
-      ? null
-      : QuizDetailModel.fromJson(json['data'] as Map<String, dynamic>),
-);
+        Map<String, dynamic> json) =>
+    QuizDetailResponseModel(
+      success: json['success'] as bool?,
+      status: (json['status'] as num?)?.toInt(),
+      message: json['message'] as String?,
+      data: json['data'] == null
+          ? null
+          : QuizDetailModel.fromJson(json['data'] as Map<String, dynamic>),
+    );
 
 Map<String, dynamic> _$QuizDetailResponseModelToJson(
-  QuizDetailResponseModel instance,
-) => <String, dynamic>{
-  'success': instance.success,
-  'status': instance.status,
-  'message': instance.message,
-  'data': instance.data?.toJson(),
-};
+        QuizDetailResponseModel instance) =>
+    <String, dynamic>{
+      'success': instance.success,
+      'status': instance.status,
+      'message': instance.message,
+      'data': instance.data?.toJson(),
+    };
 
 QuizDetailModel _$QuizDetailModelFromJson(Map<String, dynamic> json) =>
     QuizDetailModel(
@@ -73,10 +73,10 @@ Map<String, dynamic> _$QuestionModelToJson(QuestionModel instance) =>
     };
 
 ChoiceModel _$ChoiceModelFromJson(Map<String, dynamic> json) => ChoiceModel(
-  choiceName: json['choice_name'] as String?,
-  slug: json['slug'] as String?,
-  isCorrect: json['is_correct'] as bool?,
-);
+      choiceName: json['choice_name'] as String?,
+      slug: json['slug'] as String?,
+      isCorrect: json['is_correct'] as bool?,
+    );
 
 Map<String, dynamic> _$ChoiceModelToJson(ChoiceModel instance) =>
     <String, dynamic>{

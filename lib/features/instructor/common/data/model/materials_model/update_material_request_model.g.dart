@@ -7,8 +7,8 @@ part of 'update_material_request_model.dart';
 // **************************************************************************
 
 Map<String, dynamic> _$UpdateMaterialRequestModelToJson(
-  UpdateMaterialRequestModel instance,
-) => <String, dynamic>{
-  'slug': instance.slug,
-  'Material_Name': instance.materialName,
-};
+        UpdateMaterialRequestModel instance) =>
+    <String, dynamic>{
+      'slug': instance.slug,
+      'Material_Name': instance.materialName,
+    };
