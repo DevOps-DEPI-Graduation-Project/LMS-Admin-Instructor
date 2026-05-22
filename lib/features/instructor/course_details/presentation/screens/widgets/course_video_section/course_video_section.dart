@@ -36,8 +36,8 @@ class CourseVideoSection extends StatelessWidget {
             listener: (context, state) {
               if (state is AddNewVideoSuccess) {
                 context.read<CourseVideoBloc>().add(
-                  GetCourseVideosEvent(courseSlug: slug),
-                );
+                      GetCourseVideosEvent(courseSlug: slug),
+                    );
               }
             },
           ),
@@ -160,15 +160,15 @@ class CourseVideoSection extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               _buildHeaderTitle(context),
-              _buildHeaderActions(context),
+              // _buildHeaderActions(context),
             ],
           )
         : Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _buildHeaderTitle(context),
-              SizedBox(height: 8.h),
-              _buildHeaderActions(context),
+              // SizedBox(height: 8.h),
+              // _buildHeaderActions(context),
             ],
           );
   }
@@ -230,28 +230,28 @@ class CourseVideoSection extends StatelessWidget {
     );
   }
 
-  Widget _buildHeaderActions(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        TextButton(
-          onPressed: () {},
-          child: Text(
-            context.tr('expand_all'),
-            style: TextStyle(fontSize: 12.sp),
-          ),
-        ),
-        const Text("|"),
-        TextButton(
-          onPressed: () {},
-          child: Text(
-            context.tr('collapse_all'),
-            style: TextStyle(fontSize: 12.sp),
-          ),
-        ),
-      ],
-    );
-  }
+  // Widget _buildHeaderActions(BuildContext context) {
+  //   return Row(
+  //     mainAxisSize: MainAxisSize.min,
+  //     children: [
+  //       TextButton(
+  //         onPressed: () {},
+  //         child: Text(
+  //           context.tr('expand_all'),
+  //           style: TextStyle(fontSize: 12.sp),
+  //         ),
+  //       ),
+  //       const Text("|"),
+  //       TextButton(
+  //         onPressed: () {},
+  //         child: Text(
+  //           context.tr('collapse_all'),
+  //           style: TextStyle(fontSize: 12.sp),
+  //         ),
+  //       ),
+  //     ],
+  //   );
+  // }
 
   Widget _buildSectionItem(
     BuildContext context,
@@ -269,7 +269,7 @@ class CourseVideoSection extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Icon(Icons.keyboard_arrow_down, size: 20.sp),
+          Icon(Icons.video_call, size: 20.sp),
           SizedBox(width: 12.w),
           Expanded(
             child: Column(
@@ -291,17 +291,17 @@ class CourseVideoSection extends StatelessWidget {
               ],
             ),
           ),
-          Icon(
-            Icons.edit_outlined,
-            size: 18.sp,
-            color: context.colorScheme.outline,
-          ),
-          SizedBox(width: 12.w),
-          Icon(
-            Icons.delete_outline,
-            size: 18.sp,
-            color: context.colorScheme.outline,
-          ),
+          // Icon(
+          //   Icons.edit_outlined,
+          //   size: 18.sp,
+          //   color: context.colorScheme.outline,
+          // ),
+          // SizedBox(width: 12.w),
+          // Icon(
+          //   Icons.delete_outline,
+          //   size: 18.sp,
+          //   color: context.colorScheme.outline,
+          // ),
         ],
       ),
     );
@@ -378,8 +378,9 @@ class CourseVideoSection extends StatelessWidget {
                   consequencesMessage: context.tr('delete_video_consequences'),
                   onDelete: () {
                     context.read<CourseVideoBloc>().add(
-                      DeleteVideoEvent(videoSlug: video.slug, courseSlug: slug),
-                    );
+                          DeleteVideoEvent(
+                              videoSlug: video.slug, courseSlug: slug),
+                        );
                   },
                 ),
               );
@@ -408,8 +409,8 @@ class CourseVideoSection extends StatelessWidget {
         );
         if (result == true && context.mounted) {
           context.read<CourseVideoBloc>().add(
-            GetCourseVideosEvent(courseSlug: slug),
-          );
+                GetCourseVideosEvent(courseSlug: slug),
+              );
         }
       },
       text: text,

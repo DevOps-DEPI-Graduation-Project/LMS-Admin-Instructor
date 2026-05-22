@@ -208,7 +208,7 @@ class _AddPackageDialogState extends State<AddPackageDialog> {
                                   borderRadius: BorderRadius.circular(20.r),
                                 ),
                                 child: Text(
-                                  '${_selectedCourseSlugs.length} Courses Selected',
+                                  '${_selectedCourseSlugs.length} ${context.tr('courses_selected')}',
                                   style: context.textTheme.labelMedium
                                       ?.copyWith(
                                         color: context.colorScheme.primary,
@@ -291,7 +291,7 @@ class _AddPackageDialogState extends State<AddPackageDialog> {
                                             color: context.colorScheme.primary,
                                           ),
                                           label: Text(
-                                            'Browse More Courses',
+                                            context.tr('browse_more_courses'),
                                             style: context.textTheme.titleMedium
                                                 ?.copyWith(
                                                   color: context

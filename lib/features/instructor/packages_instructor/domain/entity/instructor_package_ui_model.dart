@@ -133,7 +133,7 @@ class InstructorPackageItemUIModel extends CustomDataTableRowModel {
   IconData? get actionIcon => actionIconpressed ?? Icons.arrow_forward_ios_rounded;
 
   @override
-  VoidCallback? get onRowTap => onOptionsPressed;
+  VoidCallback? get onRowTap => onActionPressed;
 
   @override
   VoidCallback? get onOptions => onOptionsPressed;

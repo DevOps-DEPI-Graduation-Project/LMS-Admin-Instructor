@@ -30,7 +30,7 @@ class CourseCardHorizontal extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: width?.w ?? double.infinity,
-      padding: EdgeInsets.all(12.w),
+      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
       decoration: BoxDecoration(
         color: context.colorScheme.surface,
         borderRadius: BorderRadius.circular(20.r),
@@ -47,11 +47,11 @@ class CourseCardHorizontal extends StatelessWidget {
         child: Column(
           children: [
             Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 // image
                 SizedBox(
-                  width: 110.w,
+                  width: 110.h,
                   child: AspectRatio(
                     aspectRatio: 1,
                     child: Container(
