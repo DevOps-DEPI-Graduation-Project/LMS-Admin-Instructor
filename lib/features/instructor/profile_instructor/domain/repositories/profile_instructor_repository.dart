@@ -10,7 +10,8 @@ abstract class ProfileInstructorRepository {
     String slug,
   );
 
-  Future<Either<String, InstructorProfileResponseModel>> updateInstructorProfile({
+  Future<Either<String, InstructorProfileResponseModel>>
+  updateInstructorProfile({
     required String slug,
     required UpdateInstructorRequestModel requestModel,
     Uint8List? imageBytes,

@@ -53,6 +53,12 @@ import 'package:lms_admin_instructor/features/students/screens/student_details/b
 import 'package:lms_admin_instructor/features/admin/all_courses_admin/data/repository/all_courses_admin_repository_impl.dart';
 import 'package:lms_admin_instructor/features/admin/all_courses_admin/domain/repository/all_courses_admin_repository.dart';
 import 'package:lms_admin_instructor/features/admin/all_courses_admin/presentation/bloc/all_courses_admin_bloc.dart';
+import 'package:lms_admin_instructor/features/admin/admin_profile/domain/repositories/admin_profile_repository.dart';
+import 'package:lms_admin_instructor/features/admin/admin_profile/data/repositories/admin_profile_repository_impl.dart';
+import 'package:lms_admin_instructor/features/admin/admin_profile/presentation/bloc/admin_profile_bloc.dart';
+import 'package:lms_admin_instructor/features/change_password/data/repositories/change_password_repository_impl.dart';
+import 'package:lms_admin_instructor/features/change_password/domain/repositories/change_password_repository.dart';
+import 'package:lms_admin_instructor/features/change_password/presentation/bloc/change_password_bloc.dart';
 
 final sl = GetIt.instance;
 
@@ -152,6 +158,12 @@ Future<void> setupServiceLocator() async {
   );
   sl.registerFactory(() => ProfileInstructorBloc(repository: sl()));
 
+  // Features - Change Password
+  sl.registerLazySingleton<ChangePasswordRepository>(
+    () => ChangePasswordRepositoryImpl(apiConsumer: sl()),
+  );
+  sl.registerFactory(() => ChangePasswordBloc(repository: sl()));
+
   // Locale and Theme
   sl.registerLazySingleton(() => LocaleCubit());
   sl.registerLazySingleton(() => ThemeCubit());
@@ -178,4 +190,9 @@ Future<void> setupServiceLocator() async {
     () => PackageDetailsRepositoryImpl(apiConsumer: sl()),
   );
   sl.registerFactory(() => PackageDetailsBloc(packageDetailsRepository: sl()));
+  // Admin Profile
+  sl.registerLazySingleton<AdminProfileRepository>(
+    () => AdminProfileRepositoryImpl(apiConsumer: sl()),
+  );
+  sl.registerFactory(() => AdminProfileBloc(repository: sl()));
 }

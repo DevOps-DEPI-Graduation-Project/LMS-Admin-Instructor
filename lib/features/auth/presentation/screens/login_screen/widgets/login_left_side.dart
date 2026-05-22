@@ -65,24 +65,13 @@ class LoginLeftSide extends StatelessWidget {
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Container(
+                            SizedBox(
                               width: 320.w,
                               height: 320.h,
-                              decoration: BoxDecoration(
-                                color: context.colorScheme.surface,
-                                borderRadius: BorderRadius.circular(24),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: context.colorScheme.onSecondary
-                                        .withValues(alpha: 0.2),
-                                    blurRadius: 30.r,
-                                    offset: Offset(0, 15.h),
-                                  ),
-                                ],
-                              ),
-                              padding: const EdgeInsets.all(32),
                               child: Image.asset(
                                 AppAssets.authImage,
+                                width: 320.w,
+                                height: 320.h,
                                 fit: BoxFit.contain,
                               ),
                             ),

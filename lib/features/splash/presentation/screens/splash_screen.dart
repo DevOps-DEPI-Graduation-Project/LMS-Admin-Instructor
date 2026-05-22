@@ -1,10 +1,12 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lms_admin_instructor/core/extensions/context_extensions.dart';
 import 'package:lms_admin_instructor/core/localization/app_localizations.dart';
 import 'package:lms_admin_instructor/core/routing/app_routes.dart';
+import 'package:lms_admin_instructor/core/theme/app_assets.dart';
 import 'package:lms_admin_instructor/features/splash/presentation/bloc/splash_bloc.dart';
 import 'package:lms_admin_instructor/features/splash/presentation/bloc/splash_event.dart';
 import 'package:lms_admin_instructor/features/splash/presentation/bloc/splash_state.dart';
@@ -152,13 +154,50 @@ class _SplashScreenState extends State<SplashScreen>
                           ],
                         ),
                         child: ClipOval(
-                          child: BackdropFilter(
-                            filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
-                            child: Icon(
-                              Icons.code_rounded,
-                              size: 85,
-                              color: context.colorScheme.primary,
-                            ),
+                          child: Stack(
+                            children: [
+                              BackdropFilter(
+                                filter: ImageFilter.blur(
+                                  sigmaX: 12,
+                                  sigmaY: 12,
+                                ),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    gradient: LinearGradient(
+                                      begin: Alignment.topLeft,
+                                      end: Alignment.bottomRight,
+                                      colors: [
+                                        context.colorScheme.surface.withValues(
+                                          alpha: 0.7,
+                                        ),
+                                        context.colorScheme.surface.withValues(
+                                          alpha: 0.3,
+                                        ),
+                                      ],
+                                    ),
+                                    border: Border.all(
+                                      color: context.colorScheme.surface,
+                                      width: 1.5.r,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              // Logo
+                              Center(
+                                child: Padding(
+                                  padding: EdgeInsets.all(35.r),
+                                  child: Image.asset(
+                                    AppAssets.appLogo,
+                                    width: 100.r,
+                                    height: 100.r,
+                                    cacheHeight: 300,
+                                    cacheWidth: 300,
+                                    fit: BoxFit.contain,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ),
@@ -213,22 +252,22 @@ class _SplashScreenState extends State<SplashScreen>
           ),
         );
       } else {
-        String msg = context.tr('authentication_failed');
-        if (state.message == "No token found") {
-          msg = context.tr('no_token_found');
-        } else if (state.message == "Session expired") {
-          msg = context.tr('session_expired');
-        } else if (state.isActive == false) {
-          msg = context.tr('account_inactive');
-        } else if (state.isVerified == false) {
-          msg = context.tr('account_unverified');
-        }
+        // String msg = context.tr('authentication_failed');
+        // if (state.message == "No token found") {
+        //   msg = context.tr('no_token_found');
+        // } else if (state.message == "Session expired") {
+        //   msg = context.tr('session_expired');
+        // } else if (state.isActive == false) {
+        //   msg = context.tr('account_inactive');
+        // } else if (state.isVerified == false) {
+        //   msg = context.tr('account_unverified');
+        // }
 
-        if (msg != context.tr('authentication_failed')) {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text(msg)));
-        }
+        // if (msg != context.tr('authentication_failed')) {
+        //   ScaffoldMessenger.of(
+        //     context,
+        //   ).showSnackBar(SnackBar(content: Text(msg)));
+        // }
         context.go(AppRoutes.loginScreen);
       }
     }

@@ -58,9 +58,7 @@ class _StudentScreenState extends State<StudentScreen> {
   void _onSearchChanged(String query) {
     if (_debounce?.isActive ?? false) _debounce!.cancel();
     _debounce = Timer(const Duration(milliseconds: 500), () {
-      context.read<StudentBloc>().add(
-        GetStudentsEvent(page: 1, search: query),
-      );
+      context.read<StudentBloc>().add(GetStudentsEvent(page: 1, search: query));
     });
   }
 
@@ -99,7 +97,9 @@ class _StudentScreenState extends State<StudentScreen> {
             BlocBuilder<StudentBloc, StudentState>(
               buildWhen: (previous, current) => current is StudentLoaded,
               builder: (context, state) {
-                return Row(
+                return Wrap(
+                  spacing: 16.w,
+                  runSpacing: 16.h,
                   children: [
                     CustomCardStatusInfoDesktop(
                       title: context.tr('total_enrollments'),
@@ -109,7 +109,6 @@ class _StudentScreenState extends State<StudentScreen> {
                       icon: Icons.assignment_outlined,
                       color: context.colorScheme.primary,
                     ),
-                    SizedBox(width: 16.w),
                     CustomCardStatusInfoDesktop(
                       title: context.tr('total_students'),
                       value: state is StudentLoaded

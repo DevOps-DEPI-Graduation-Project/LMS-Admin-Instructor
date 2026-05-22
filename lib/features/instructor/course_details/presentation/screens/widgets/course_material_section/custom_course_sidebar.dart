@@ -8,6 +8,7 @@ class CustomCourseSidebar extends StatelessWidget {
   final IconData icon;
   final Color color;
   final VoidCallback? onManage;
+  final String? manageText;
   final List<Widget> children;
   const CustomCourseSidebar({
     super.key,
@@ -15,6 +16,7 @@ class CustomCourseSidebar extends StatelessWidget {
     required this.icon,
     required this.color,
     this.onManage,
+    this.manageText,
     required this.children,
   });
 
@@ -56,7 +58,7 @@ class CustomCourseSidebar extends StatelessWidget {
                   TextButton(
                     onPressed: onManage,
                     child: Text(
-                      context.tr('manage'),
+                      manageText ?? context.tr('show_more'),
                       style: TextStyle(fontSize: 12.sp),
                     ),
                   ),

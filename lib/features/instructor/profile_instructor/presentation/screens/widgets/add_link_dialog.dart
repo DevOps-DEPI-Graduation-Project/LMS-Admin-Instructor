@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lms_admin_instructor/core/extensions/context_extensions.dart';
 import 'package:lms_admin_instructor/core/localization/app_localizations.dart';
+import 'package:lms_admin_instructor/core/theme/app_assets.dart';
 import 'package:lms_admin_instructor/core/utils/get_responsive_size.dart';
 import 'package:lms_admin_instructor/features/instructor/profile_instructor/data/models/create_link_request_model.dart';
 import 'package:lms_admin_instructor/features/instructor/profile_instructor/presentation/bloc/profile_instructor_bloc.dart';
@@ -58,45 +60,19 @@ class _AddLinkDialogState extends State<AddLinkDialog> {
     }
   }
 
-  IconData _getPlatformIcon(String platform) {
-    switch (platform) {
-      case 'facebook':
-        return Icons.facebook;
-      case 'linkedin':
-        return Icons.business;
-      case 'twitter':
-        return Icons.close;
-      case 'instagram':
-        return Icons.camera_alt_rounded;
-      case 'youtube':
-        return Icons.play_circle_fill;
-      case 'github':
-        return Icons.code;
-      case 'tiktok':
-        return Icons.music_note;
-      case 'whatsapp':
-        return Icons.chat;
-      case 'website':
-        return Icons.language;
-      default:
-        return Icons.link;
-    }
-  }
-
-  Color _getPlatformColor(String platform) {
+  Color? _getPlatformColor(String platform) {
     switch (platform) {
       case 'facebook':
         return const Color(0xFF1877F2);
       case 'linkedin':
-        return const Color(0xFF0A66C2);
-      case 'twitter':
-        return Colors.black;
       case 'instagram':
-        return const Color(0xFFE4405F);
+        return null;
       case 'youtube':
         return const Color(0xFFFF0000);
       case 'github':
         return const Color(0xFF181717);
+      case 'twitter':
+        return Colors.black;
       case 'tiktok':
         return Colors.black;
       case 'whatsapp':
@@ -105,6 +81,55 @@ class _AddLinkDialogState extends State<AddLinkDialog> {
         return context.colorScheme.primary;
       default:
         return context.colorScheme.primary;
+    }
+  }
+
+  Widget _getPlatformIconWidget(String platform) {
+    final color = _getPlatformColor(platform);
+    final size = 20.sp;
+
+    switch (platform) {
+      case 'facebook':
+        return Icon(Icons.facebook, size: size, color: color);
+      case 'instagram':
+        return SvgPicture.asset(
+          AppAssets.instegramIcon,
+          width: size,
+          height: size,
+          colorFilter: color != null
+              ? ColorFilter.mode(color, BlendMode.srcIn)
+              : null,
+        );
+      case 'youtube':
+        return Icon(Icons.play_circle_fill, size: size, color: color);
+      case 'twitter':
+        return Icon(Icons.close, size: size, color: color);
+      case 'linkedin':
+        return SvgPicture.asset(
+          AppAssets.linkedInIcon,
+          width: size,
+          height: size,
+          colorFilter: color != null
+              ? ColorFilter.mode(color, BlendMode.srcIn)
+              : null,
+        );
+      case 'github':
+        return SvgPicture.asset(
+          AppAssets.githubIcon,
+          width: size,
+          height: size,
+          colorFilter: color != null
+              ? ColorFilter.mode(color, BlendMode.srcIn)
+              : null,
+        );
+      case 'tiktok':
+        return Icon(Icons.music_note, size: size, color: color);
+      case 'whatsapp':
+        return Icon(Icons.chat, size: size, color: color);
+      case 'website':
+        return Icon(Icons.language, size: size, color: color);
+      default:
+        return Icon(Icons.link, size: size, color: color);
     }
   }
 
@@ -227,11 +252,7 @@ class _AddLinkDialogState extends State<AddLinkDialog> {
                             value: platform,
                             child: Row(
                               children: [
-                                Icon(
-                                  _getPlatformIcon(platform),
-                                  size: 20.sp,
-                                  color: _getPlatformColor(platform),
-                                ),
+                                _getPlatformIconWidget(platform),
                                 SizedBox(width: 12.w),
                                 Text(
                                   context.tr(platform),

@@ -2,6 +2,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
+import 'package:lms_admin_instructor/core/routing/app_routes.dart';
 import 'package:lms_admin_instructor/core/extensions/context_extensions.dart';
 import 'package:lms_admin_instructor/core/localization/app_localizations.dart';
 import 'package:lms_admin_instructor/features/admin/all_courses_admin/presentation/bloc/all_courses_admin_bloc.dart';
@@ -204,6 +206,12 @@ class _AllCoursesAdminDesktopScreenState
                               );
                             },
                             actionIconpressed: Icons.delete_outline,
+                            onOptionsPressed: () {
+                              context.pushNamed(
+                                AppRoutes.courseStudents,
+                                pathParameters: {'slug': course.slug},
+                              );
+                            },
                           );
                         }).toList(),
                         scrollController: _scrollController,

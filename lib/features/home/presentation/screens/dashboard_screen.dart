@@ -46,7 +46,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     final isMobile = context.isMobile;
 
     return Scaffold(
-      backgroundColor: context.colorScheme.surface,
+      backgroundColor: context.colorScheme.primary.withValues(alpha: 0.005),
       appBar: isMobile
           ? AppBar(
               title: Text(

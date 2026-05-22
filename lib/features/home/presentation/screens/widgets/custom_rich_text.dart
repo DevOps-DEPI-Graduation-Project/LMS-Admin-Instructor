@@ -14,7 +14,7 @@ class CustomRichText extends StatelessWidget {
           TextSpan(
             text: context.tr('commit_today'),
             style: context.textTheme.displayMedium!.copyWith(
-              color: context.colorScheme.surface,
+              color: context.colorScheme.onPrimaryContainer,
               fontWeight: FontWeight.w900,
               fontSize: 48.sp,
             ),

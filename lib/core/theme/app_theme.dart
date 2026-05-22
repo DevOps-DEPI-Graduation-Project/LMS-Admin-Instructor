@@ -9,11 +9,8 @@ class AppTheme {
   static const _secondary = Color(0xFFA8DF8E);
   static const _onSecondary = Color(0xFF0A3D2E);
   static const _backgroundLight = Color(0xFFF3F7F8);
-  // static const _backgroundDark = Color(0xFF0E1416);
   static const _textPrimaryLight = Color(0xFF102A33);
-  static const _textPrimaryDark = Color(0xFFF3F7F8);
   static const _textSecondaryLight = Color(0xFF37474F);
-  static const _textSecondaryDark = Color(0xFFB0BEC5);
   static const _textTertiary = Color(0xFF607D8B);
   static const _outline = Color(0xFFD1DDE1);
   static const _error = Color(0xFFD32F2F);
@@ -31,7 +28,7 @@ class AppTheme {
     return mobileSize.sp;
   }
 
-  static TextTheme _buildTextTheme(ColorScheme colorScheme) {
+  static TextTheme _buildTextTheme(ColorScheme colorScheme, Color textTertiary) {
     const base = TextStyle(fontFamily: 'Inter');
     return TextTheme(
       displayLarge: base.copyWith(
@@ -92,7 +89,7 @@ class AppTheme {
       bodySmall: base.copyWith(
         fontSize: getResponsiveSize(14, 11, 12),
         fontWeight: FontWeight.normal,
-        color: _textTertiary,
+        color: textTertiary,
       ),
       labelLarge: base.copyWith(
         fontSize: getResponsiveSize(16, 12, 14),
@@ -116,6 +113,8 @@ class AppTheme {
     const colorScheme = ColorScheme.light(
       primary: _primary,
       onPrimary: _onPrimary,
+      primaryContainer: _primary,
+      onPrimaryContainer: _onPrimary,
       secondary: _secondary,
       onSecondary: _onSecondary,
       onSurface: _textPrimaryLight,
@@ -131,32 +130,39 @@ class AppTheme {
 
   static ThemeData get darkTheme {
     const colorScheme = ColorScheme.dark(
-      primary: _primary,
-      onPrimary: _onPrimary,
+      primary: Color(0xFF1A8FAD),
+      onPrimary: Colors.white,
       secondary: _secondary,
       onSecondary: _onSecondary,
-      onSurface: _textPrimaryDark,
-      surface: Color(0xFF161D20),
-      surfaceContainerHighest: Color(0xFF1C2629),
-      onSurfaceVariant: _textSecondaryDark,
-      error: _error,
-      outline: Color(0xFF2C373A),
+      onSurface: Color(0xFFE0E7EB),
+      surface: Color(0xFF1A242B),
+      surfaceContainerHighest: Color(0xFF121A1F),
+      onSurfaceVariant: Color(0xFFB0BEC5),
+      error: Color(0xFFEF5350),
+      onError: Colors.white,
+      outline: Color(0xFF2C3A40),
     );
 
     return _buildTheme(colorScheme, Brightness.dark);
   }
 
   static ThemeData _buildTheme(ColorScheme colorScheme, Brightness brightness) {
+    final isDark = brightness == Brightness.dark;
+    final textTertiaryColor = isDark ? const Color(0xFF90A4AE) : _textTertiary;
+    final disabledBtnBg = isDark ? const Color(0xFF2C3A40) : const Color(0xFFB0BEC5);
+    final disabledBtnFg = isDark ? const Color(0xFF607D8B) : const Color(0xFF78909C);
+    final primaryHoverColor = isDark ? const Color(0xFF157791) : const Color(0xFF084C61);
+
     return ThemeData(
       useMaterial3: true,
       brightness: brightness,
       colorScheme: colorScheme,
-      textTheme: _buildTextTheme(colorScheme),
-      scaffoldBackgroundColor: colorScheme.surface,
+      textTheme: _buildTextTheme(colorScheme, textTertiaryColor),
+      scaffoldBackgroundColor: isDark ? const Color(0xFF121A1F) : colorScheme.surface,
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: colorScheme.surface,
-        hintStyle: const TextStyle(color: _textTertiary),
+        fillColor: isDark ? const Color(0xFF121A1F) : colorScheme.surface,
+        hintStyle: TextStyle(color: textTertiaryColor),
         labelStyle: TextStyle(color: colorScheme.onSurfaceVariant),
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 16,
@@ -183,8 +189,8 @@ class AppTheme {
         style: ElevatedButton.styleFrom(
           backgroundColor: colorScheme.primary,
           foregroundColor: colorScheme.onPrimary,
-          disabledBackgroundColor: const Color(0xFFB0BEC5),
-          disabledForegroundColor: const Color(0xFF78909C),
+          disabledBackgroundColor: disabledBtnBg,
+          disabledForegroundColor: disabledBtnFg,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           textStyle: TextStyle(
             fontSize: getResponsiveSize(16, 14),
@@ -210,9 +216,9 @@ class AppTheme {
 
       extensions: [
         CustomColors(
-          primaryHover: const Color(0xFF084C61),
+          primaryHover: primaryHoverColor,
           secondaryHover: const Color(0xFF8FCC72),
-          textTertiary: _textTertiary,
+          textTertiary: textTertiaryColor,
           divider: colorScheme.outline,
         ),
       ],

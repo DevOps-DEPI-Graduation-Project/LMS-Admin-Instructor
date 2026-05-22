@@ -48,17 +48,17 @@ final List<NavItemModel> adminNavItems = [
     screen: AllCoursesAdminScreen(),
     index: 3,
   ),
-  const NavItemModel(
-    icon: Icons.campaign_outlined,
-    label: 'announcement',
-    screen: Ttt(),
-    index: 4,
-  ),
+  // const NavItemModel(
+  //   icon: Icons.campaign_outlined,
+  //   label: 'announcement',
+  //   screen: Ttt(),
+  //   index: 4,
+  // ),
   const NavItemModel(
     icon: Icons.settings_outlined,
     label: 'settings',
     screen: SettingsScreen(),
-    index: 5,
+    index: 4,
   ),
 ];
 
@@ -87,16 +87,16 @@ final List<NavItemModel> instructorNavItems = [
     screen: PackagesInstructorScreen(),
     index: 3,
   ),
-  const NavItemModel(
-    icon: Icons.campaign_outlined,
-    label: 'announcement',
-    screen: Ttt(),
-    index: 4,
-  ),
+  // const NavItemModel(
+  //   icon: Icons.campaign_outlined,
+  //   label: 'announcement',
+  //   screen: Ttt(),
+  //   index: 4,
+  // ),
   const NavItemModel(
     icon: Icons.settings_outlined,
     label: 'settings',
     screen: SettingsScreen(),
-    index: 5,
+    index: 4,
   ),
 ];

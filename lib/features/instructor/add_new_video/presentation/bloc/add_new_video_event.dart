@@ -8,7 +8,6 @@ class AddVideoEvent extends AddNewVideoEvent {
   final String course;
   final String? videoUrl;
   final PlatformFile? videoFile;
-  final String duration;
 
   AddVideoEvent({
     required this.courseSlug,
@@ -16,7 +15,6 @@ class AddVideoEvent extends AddNewVideoEvent {
     required this.course,
     this.videoUrl,
     this.videoFile,
-    required this.duration,
   });
 }
 class ResetAddVideoEvent extends AddNewVideoEvent {}
