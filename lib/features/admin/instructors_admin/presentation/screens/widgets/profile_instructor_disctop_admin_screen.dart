@@ -91,7 +91,7 @@ class _InstructorDetailsDisktopAdminScreenState
         if (state is DeleteInstructorSuccess) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text("Instructor deleted successfully"),
+              content: const Text("Instructor deleted successfully"),
               backgroundColor: context.colorScheme.secondary,
             ),
           );
@@ -167,18 +167,18 @@ class _InstructorDetailsDisktopAdminScreenState
                               icon: Icons.people_alt_rounded,
                               iconColor: context.colorScheme.primary,
                             ),
-                            SizedBox(width: 24.w),
-                            StatsCardWidget(
-                              title: "Avg. Total Course Rating",
-                              value: "4.9",
-                              icon: Icons.star_border_outlined,
-                              iconColor: Colors.amber,
-                              backGroundIconColor: Colors.amber.withValues(
-                                alpha: 0.1,
-                              ),
-                              subtitle: "/5",
-                              footerText: "Based on 3,420 reviews",
-                            ),
+                            // SizedBox(width: 24.w),
+                            // StatsCardWidget(
+                            //   title: "Avg. Total Course Rating",
+                            //   value: "4.9",
+                            //   icon: Icons.star_border_outlined,
+                            //   iconColor: Colors.amber,
+                            //   backGroundIconColor: Colors.amber.withValues(
+                            //     alpha: 0.1,
+                            //   ),
+                            //   subtitle: "/5",
+                            //   footerText: "Based on 3,420 reviews",
+                            // ),
                           ],
                         ),
 
