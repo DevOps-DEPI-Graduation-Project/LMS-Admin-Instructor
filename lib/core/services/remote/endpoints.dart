@@ -1,9 +1,8 @@
 class EndPoint {
-  static String localUrl = "http://lcoalhost/api/";
-  static String remoteUrl =
-      "http://lms-env.eba-8nbnpx42.us-east-1.elasticbeanstalk.com/api";
-
-  static String baseUrl = remoteUrl;
+    static const String baseUrl = String.fromEnvironment(
+    'BASE_URL',
+    defaultValue: 'http://localhost:8000/api/',
+  );
 
   // auth
   static String login = "/auth/login/";
